@@ -1,0 +1,26 @@
+<body>
+<div class="flex-container">
+    <mat-card class="profile-card" alt="Profile Picture">
+        <img mat-card-img length="100dp" width="100dp" id="pp">
+        
+        <h3 class="profile-text">{{username}}</h3>
+        <p class="profile-text">{{bio}}</p>
+        
+    </mat-card>
+    <div class="profile-button-container">
+        <mat-list class="profile-button-list">
+            <button mat-raised-button class="profile-button" routerLink="/mylog">Log</button>
+            <mat-divider></mat-divider>
+            <button mat-raised-button class="profile-button" (click)="openImageDialog('0ms', '0ms')">Change Profile Picture</button>
+            <mat-divider></mat-divider>
+            <button mat-raised-button class="profile-button" (click)="openUsernameDialog('0ms', '0ms')">Change Username</button>
+            <mat-divider></mat-divider>
+            <button mat-raised-button class="profile-button" (click)="openPasswordDialog('0ms', '0ms')">Change Password</button>
+            <mat-divider></mat-divider>
+            <button mat-raised-button class="profile-button" (click)="openBioDialog('0ms', '0ms')">Change Bio</button>
+            <span class="logout_button" (click) = "logout()">Logout</span>
+        </mat-list>
+    </div>
+    
+</div>
+</body>

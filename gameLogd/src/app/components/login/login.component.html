@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset = "UTF-8">
+    <title>Login</title>
+    <link rel = "stylesheet" href = "login.component.css">
+</head>
+<body>
+    <div class = "container">
+        <div class = "form-container">
+            <h1>Login</h1>
+            <form [formGroup] = "form" (ngSubmit) = "onSubmit()">
+                <div class = "form-group">
+                    <input type = "text" placeholder = "Email" formControlName = "email" />
+                </div>
+                <div class = "form-group">
+                    <input type = "password" placeholder = "Password" formControlName = "password" />
+                </div>
+                <div class = "form-group">
+                    <button type = "submit">Sign in</button>
+                </div>
+            </form>
+            <div class = "resetPass">
+                <a routerLink = "../reset_password">Reset Password?</a>
+            </div>
+            <div class = "error-messages">
+                @if (errorMessage == "auth/invalid-email") {
+                    Error: Invalid Email
+                }@else if (errorMessage == "auth/missing-password") {
+                    Error: No Password
+                }@else if (errorMessage == "auth/invalid-credential") {
+                    Error: Invalid Password
+                }@else if (errorMessage) {
+                    {{ errorMessage }}
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>

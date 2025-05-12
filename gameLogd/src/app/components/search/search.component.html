@@ -1,0 +1,13 @@
+<div class="search-container">
+  <h2 *ngIf="searchQuery" class="search-title">
+    Search results for "{{ searchQuery }}"
+  </h2>
+
+  <app-game-search-list
+    [games]="searchResults"
+    [loading]="isLoading"
+    [error]="error"
+    [emptyMessage]="'No games found matching \'' + searchQuery + '\''"
+  >
+  </app-game-search-list>
+</div>

@@ -1,0 +1,29 @@
+<!--Eventually separate these into their own components and add individual filters for each carousel-->
+<!--Currently displays all games in database-->
+
+<h2>Trending: </h2>
+<p-carousel [value]="games" [numVisible]="5" [numScroll]="1" [circular]="true">
+    <ng-template let-game pTemplate="item">
+      <a [href]="'games/' + game.id">
+        <img class="thumbnail" [src]="game.imageUrl" [alt]="game.title">
+      </a>
+    </ng-template> 
+</p-carousel>
+
+<h2>Top Rated: </h2>
+<p-carousel [value]="games" [numVisible]="5" [numScroll]="1" [circular]="true">
+  <ng-template let-game pTemplate="item">
+    <a [href]="'games/' + game.id">
+      <img class="thumbnail" [src]="game.imageUrl" [alt]="game.title">
+    </a>
+  </ng-template> 
+</p-carousel>
+
+<h2>Most Popular:</h2>
+<p-carousel [value]="games" [numVisible]="5" [numScroll]="1" [circular]="true">
+  <ng-template let-game pTemplate="item">
+    <a [href]="'games/' + game.id">
+      <img class="thumbnail" [src]="game.imageUrl" [alt]="game.title">
+    </a>
+  </ng-template> 
+</p-carousel>

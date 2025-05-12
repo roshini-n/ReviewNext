@@ -1,0 +1,65 @@
+<div class="diary-container">
+  <h1>My Game Log</h1>
+
+  <div class="diary-list">
+    <div class="diary-entry" *ngFor="let log of combinedLogs">
+      <div class="dates-column">
+        <div class="date-block start" *ngIf="log.startDate">
+          <span class="date-label">Started</span>
+          <span class="month">{{ log.startDate | date : "MMM" }}</span>
+          <span class="day">{{ log.startDate | date : "dd" }}</span>
+          <span class="year">{{ log.startDate | date : "yyyy" }}</span>
+        </div>
+        <div class="arrow">→</div>
+        <div class="date-block end" *ngIf="log.endDate">
+          <span class="date-label">Finished</span>
+          <span class="month">{{ log.endDate | date : "MMM" }}</span>
+          <span class="day">{{ log.endDate | date : "dd" }}</span>
+          <span class="year">{{ log.endDate | date : "yyyy" }}</span>
+        </div>
+      </div>
+      
+      <div class="entry-image">
+        <img [src]="log.imageUrl" [alt]="log.title" />
+      </div>
+
+      <div class="entry-details">
+        <h3 class="game-title">{{ log.title }}</h3>
+        <div class="rating">
+          <span
+            class="star"
+            *ngFor="let star of [].constructor(log.rating || 0)"
+            >★</span
+          >
+        </div>
+
+        <div class="review-section" *ngIf="log.review">
+          <div class="review-content">
+            <p class="review-text">"{{ log.review }}"</p>
+          </div>
+        </div>
+
+        <div class="meta">
+          <span class="platforms">{{ log.platforms.join(", ") }}</span>
+          <span class="developer">{{ log.developer }}</span>
+        </div>
+        
+        <div class="entry-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="editGameLog(log)"
+            class="action-button edit-button"
+          >
+            Edit Log
+          </button>
+          <app-general-delete-button
+            [objectToDelete]="log"
+            (deleteConfirmed)="deleteLog($event)"
+            class="action-button"
+          ></app-general-delete-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

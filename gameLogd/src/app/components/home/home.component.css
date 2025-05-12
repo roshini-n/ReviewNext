@@ -1,0 +1,116 @@
+.big-text {
+    font-family: "Arial", sans-serif;
+    font-size: 2.5vmax;
+    color: white;
+}
+
+.medium-text {
+    font-family: "Arial", sans-serif;
+    font-size: 1.6vmax;
+    color: white;
+}
+
+body {
+    background-image: url('../../../../public/Games.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    height: calc(100vh - 238px);
+  }
+
+.title {
+    font-weight: bold;
+}
+
+.title-yellow{
+    font-weight: bold;
+    color: #fee715;
+}
+
+.small-text {
+    text-align: center;
+    font-size: 1.1vmax;
+    color: white;
+}
+
+.main-container {
+    position: absolute;
+    margin: 5% 4% 0% 4%;
+    padding: 1.1%;
+    width: 70%;
+    height: fit-content;
+    border-radius: 10px;
+    background-color: rgb(255,255,255,.8);
+}
+
+@media screen and (max-width: 1200px) {
+    .main-container{
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .main-container{
+        width: 85%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .main-container{
+        width: 90%;
+    }
+
+    .small-text{
+        font-size: 1vmax;
+    }
+}
+
+.title-container {
+    text-align: center;
+    margin-bottom: 1%;
+    background-color: black;
+    border-radius: 10px;
+    padding: .75% 4% 1% 4%;
+    height: fit-content;
+    width: fit-content;
+    opacity: .85;
+}
+
+.container {
+    text-align: center;
+    margin-bottom: 1%;
+    padding: .75% 4% 1.25% 4%;
+    background-color: black;
+    width: 100%;
+    height: fit-content;
+    border-radius: 10px;
+    opacity: .85;
+}
+
+.sign-up {
+    text-align: center;
+    background-color: black;
+    width: fit-content;
+    padding: .75% 4% 1.25% 4%;
+    height: fit-content;
+    border-radius: 10px;
+    float: right;
+    opacity: .85;
+}
+
+.button {
+    width: 100%;
+    padding: 4%;
+    bottom: 0px;
+    justify-content: center;
+    background-color: #404147;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1vmax;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: gray;
+}

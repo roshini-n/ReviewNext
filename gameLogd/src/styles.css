@@ -1,0 +1,29 @@
+.center {
+  text-align: center;
+}
+
+.white {
+  color: white;
+}
+
+.blue {
+  color: #1870e4;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+h1 {
+  margin-top: 0;
+}
+/* You can add global styles to this file, and also import other style files */
+
+
+
+.navbar_button {
+    color: #FEE715;
+    font-size: large;
+}
