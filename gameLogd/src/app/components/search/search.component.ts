@@ -35,25 +35,32 @@ export class SearchComponent implements OnInit {
   }
 
   performSearch() {
-    if (!this.searchQuery.trim()) {
-      this.searchResults = [];
-      return;
-    }
-
-    console.log('Searching for:', this.searchQuery);
-    this.isLoading = true;
-    this.error = null;
-
-    this.gameFirebaseService.searchGames(this.searchQuery, 'title').subscribe({
-      next: (results) => {
-        this.searchResults = results;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error searching games:', err);
-        this.error = 'Failed to search games. Please try again.';
-        this.isLoading = false;
-      },
-    });
+  if (!this.searchQuery.trim()) {
+    this.searchResults = [];
+    return;
   }
+
+  console.log('Searching for:', this.searchQuery);
+  this.isLoading = true;
+  this.error = null;
+
+  this.gameFirebaseService.getGames().subscribe({
+    next: (results: Game[]) => {
+      // Normalize query: lowercase and remove all extra spaces
+      const normalizedQuery = this.searchQuery.toLowerCase().replace(/\s+/g, '');
+
+      this.searchResults = results.filter((game: Game) => {
+        const normalizedTitle = game.title.toLowerCase().replace(/\s+/g, '');
+        return normalizedTitle.includes(normalizedQuery);
+      });
+
+      this.isLoading = false;
+    },
+    error: (err: any) => {
+      console.error('Error searching games:', err);
+      this.error = 'Failed to search games. Please try again.';
+      this.isLoading = false;
+    },
+  });
+}
 }
