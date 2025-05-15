@@ -35,43 +35,64 @@ app-root {
     height: 300px;
   }
 
-.game-container {
+.book-container {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.header-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-}
-
-.header-section h1 {
-  margin: 0;
+.book-container h1 {
   color: #FEE715;
+  margin-bottom: 2rem;
   font-size: 2rem;
   font-weight: 500;
 }
 
-.header-section button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #FEE715;
-  color: #000;
-}
-
-.header-section button:hover {
-  background-color: #e6d100;
-}
-
-h2 {
+.book-container h2 {
   color: #FEE715;
   margin: 1.5rem 0;
   font-size: 1.5rem;
   font-weight: 500;
+}
+
+.book-card {
+  padding: 10px;
+  height: 100%;
+}
+
+.book-card mat-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.book-card img {
+  height: 300px;
+  object-fit: cover;
+}
+
+.book-card mat-card-content {
+  flex-grow: 1;
+}
+
+.book-card h2 {
+  margin: 10px 0;
+  font-size: 1.2em;
+}
+
+.book-card p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.book-card mat-card-actions {
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.book-card button {
+  color: #FEE715;
 }
 
 .thumbnail {
@@ -100,4 +121,42 @@ h2 {
 
 :host ::ng-deep .p-carousel .p-carousel-indicators .p-carousel-indicator.p-highlight button {
   background-color: #FEE715;
+}
+
+@media (max-width: 768px) {
+  .book-container {
+    padding: 10px;
+  }
+
+  .book-card img {
+    height: 250px;
+  }
+
+  .thumbnail {
+    width: 150px;
+    height: 225px;
+  }
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.header-section h1 {
+  margin: 0;
+}
+
+.header-section button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #FEE715;
+  color: #000;
+}
+
+.header-section button:hover {
+  background-color: #e6d100;
 }

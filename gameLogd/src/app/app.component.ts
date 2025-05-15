@@ -11,7 +11,7 @@ import { FooterComponent } from './components/footer/footer.component';
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  title = 'NEXTUP';
+  title = 'ReviewNext';
   authService = inject(AuthService);
 
   ngOnInit(): void {

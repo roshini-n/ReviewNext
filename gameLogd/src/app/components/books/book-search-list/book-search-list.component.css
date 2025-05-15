@@ -1,0 +1,36 @@
+.book-list-item {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.book-list-item:hover {
+  background-color: var(--form-background);
+}
+
+.book-thumbnail {
+  width: 50px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 16px;
+}
+
+.rating {
+  color: #FEE715;
+  font-weight: 500;
+}
+
+.no-results {
+  padding: 20px;
+  text-align: center;
+  color: var(--label-color);
+}
+
+:host ::ng-deep .mat-mdc-list-item-title {
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+:host ::ng-deep .mat-mdc-list-item-line {
+  color: var(--label-color);
+}

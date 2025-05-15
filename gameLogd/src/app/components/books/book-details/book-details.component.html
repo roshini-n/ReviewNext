@@ -1,0 +1,80 @@
+<div class="book-details-container">
+  <div class="main-content">
+    <div class="book-info-section">
+      <div class="book-header">
+        <h1>{{ book?.title }}</h1>
+        <img [src]="book?.imageUrl" [alt]="book?.title" class="book-image" />
+      </div>
+
+      <div class="logging-buttons">
+        <div class="logging-buttons-container">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="openLogBookPopup()"
+            [disabled]="disabled"
+          >
+            Log Book
+          </button>
+          <button mat-raised-button color="primary">Add to Reading List</button>
+        </div>
+      </div>
+      <div class="logging-buttons">
+        <h2 id="rating">Rating: {{ book?.rating }}/5</h2>
+      </div>
+
+      <div class="book-details">
+        <div class="book-header">
+          <img [src]="book?.imageUrl" [alt]="book?.title" class="book-cover">
+          <div class="book-info">
+            <h1>{{ book?.title }}</h1>
+            <p class="author">by {{ book?.author }}</p>
+            <p class="publisher">Published by {{ book?.publisher }}</p>
+            <p>Publication Date: {{ book?.publicationDate | date }}</p>
+            <p>Pages: {{ book?.pages }}</p>
+            <div class="genres">
+              <mat-chip-listbox>
+                <mat-chip *ngFor="let genre of book?.genres">
+                  {{ genre }}
+                </mat-chip>
+              </mat-chip-listbox>
+            </div>
+          </div>
+        </div>
+        <div class="book-description">
+          <h2>Description</h2>
+          <p>{{ book?.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <h2>Similar Books</h2>
+      <!-- Similar books logic here -->
+    </div>
+  </div>
+
+  <!-- Reviews section -->
+  <div class="reviews-section">
+    <h2>Reviews</h2>
+    <div class="reviews-list">
+      <mat-card *ngFor="let review of reviews" class="review-card">
+        <mat-card-header>
+          <mat-card-title>{{ review.username }}</mat-card-title>
+          <mat-card-subtitle>{{ review.datePosted | date }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Rating: {{ review.rating }}/5</p>
+          <p>{{ review.reviewText }}</p>
+        </mat-card-content>
+        <mat-card-actions *ngIf="currentUserId === review.userId">
+          <button mat-button (click)="editReview(review)">Edit</button>
+          <app-general-delete-button
+            [objectToDelete]="review"
+            (deleteConfirmed)="deleteReview($event)"
+          ></app-general-delete-button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>
