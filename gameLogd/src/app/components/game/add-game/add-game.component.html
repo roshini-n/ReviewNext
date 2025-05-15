@@ -1,17 +1,17 @@
-<div class="add-book-container">
-  <h1>Add New Book</h1>
-  <form [formGroup]="bookForm" (ngSubmit)="sendDataToFirebase()">
+<div class="add-game-container">
+  <h1>Add New Game</h1>
+  <form [formGroup]="gameForm" (ngSubmit)="sendDataToFirebase()">
     <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Title</mat-label>
         <input matInput formControlName="title" required>
-        <mat-error *ngIf="bookForm.get('title')?.hasError('required')">Title is required</mat-error>
+        <mat-error *ngIf="gameForm.get('title')?.hasError('required')">Title is required</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Description</mat-label>
         <textarea matInput formControlName="description" required rows="3"></textarea>
-        <mat-error *ngIf="bookForm.get('description')?.hasError('required')">Description is required</mat-error>
+        <mat-error *ngIf="gameForm.get('description')?.hasError('required')">Description is required</mat-error>
       </mat-form-field>
     </div>
 
@@ -30,14 +30,14 @@
       </mat-form-field>
 
       <div class="selected-items">
-        <mat-chip-listbox>
-          <mat-chip *ngFor="let platform of platforms" (removed)="removePlatform(platform)">
+        <mat-chip-grid>
+          <mat-chip-row *ngFor="let platform of platforms" (removed)="removePlatform(platform)">
             {{platform}}
             <button matChipRemove>
               <mat-icon>cancel</mat-icon>
             </button>
-          </mat-chip>
-        </mat-chip-listbox>
+          </mat-chip-row>
+        </mat-chip-grid>
       </div>
     </div>
 
@@ -56,30 +56,30 @@
       </mat-form-field>
 
       <div class="selected-items">
-        <mat-chip-listbox>
-          <mat-chip *ngFor="let genre of selectedGenres" (removed)="removeGenre(genre)">
+        <mat-chip-grid>
+          <mat-chip-row *ngFor="let genre of selectedGenres" (removed)="removeGenre(genre)">
             {{genre}}
             <button matChipRemove>
               <mat-icon>cancel</mat-icon>
             </button>
-          </mat-chip>
-        </mat-chip-listbox>
+          </mat-chip-row>
+        </mat-chip-grid>
       </div>
     </div>
 
     <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Release Date</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="publicationDate" required>
+        <input matInput [matDatepicker]="picker" formControlName="releaseDate" required>
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
-        <mat-error *ngIf="bookForm.get('publicationDate')?.hasError('required')">Release date is required</mat-error>
+        <mat-error *ngIf="gameForm.get('releaseDate')?.hasError('required')">Release date is required</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Developer</mat-label>
-        <input matInput formControlName="author" required>
-        <mat-error *ngIf="bookForm.get('author')?.hasError('required')">Developer is required</mat-error>
+        <input matInput formControlName="developer" required>
+        <mat-error *ngIf="gameForm.get('developer')?.hasError('required')">Developer is required</mat-error>
       </mat-form-field>
     </div>
 
@@ -87,7 +87,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Publisher</mat-label>
         <input matInput formControlName="publisher" required>
-        <mat-error *ngIf="bookForm.get('publisher')?.hasError('required')">Publisher is required</mat-error>
+        <mat-error *ngIf="gameForm.get('publisher')?.hasError('required')">Publisher is required</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -98,10 +98,10 @@
     </div>
 
     <div class="form-actions">
-      <button mat-raised-button color="primary" type="submit" [disabled]="!bookForm.valid">
-        Add Book
+      <button mat-raised-button color="primary" type="submit" [disabled]="!gameForm.valid">
+        Add Game
       </button>
-      <button mat-button type="button" routerLink="/books">Cancel</button>
+      <button mat-button type="button" routerLink="/games">Cancel</button>
     </div>
   </form>
-</div>
+</div> 

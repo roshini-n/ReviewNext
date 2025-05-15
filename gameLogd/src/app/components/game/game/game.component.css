@@ -46,6 +46,10 @@ app-root {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: var(--background-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header-section h1 {
@@ -61,10 +65,22 @@ app-root {
   gap: 8px;
   background-color: #FEE715;
   color: #000;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
 }
 
 .header-section button:hover {
   background-color: #e6d100;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(254, 231, 21, 0.2);
+}
+
+.header-section button mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 h2 {
@@ -74,16 +90,41 @@ h2 {
   font-weight: 500;
 }
 
+.game-card {
+  padding: 10px;
+  transition: transform 0.2s;
+}
+
+.game-card:hover {
+  transform: scale(1.05);
+}
+
+.game-card a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.game-info {
+  padding: 10px;
+  text-align: center;
+}
+
+.game-info h3 {
+  margin: 5px 0;
+  color: #FEE715;
+  font-size: 1.1rem;
+}
+
+.game-info p {
+  margin: 5px 0;
+  color: #fff;
+}
+
 .thumbnail {
   width: 200px;
   height: 300px;
   object-fit: cover;
   border-radius: 4px;
-  transition: transform 0.2s;
-}
-
-.thumbnail:hover {
-  transform: scale(1.05);
 }
 
 :host ::ng-deep .p-carousel {

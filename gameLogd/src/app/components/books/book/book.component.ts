@@ -24,13 +24,22 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './book.component.css',
 })
 export class BookComponent implements OnInit {
-  books: Book[] = [];
+  allBooks: Book[] = [];
+  trendingBooks: Book[] = [];
+  topRatedBooks: Book[] = [];
+  popularBooks: Book[] = [];
   bookFirebaseService = inject(BookFirebaseService);
 
   ngOnInit(): void {
-    this.books = [];
-    this.bookFirebaseService.getBooks().subscribe(books => {
-      this.books = books;
+    this.loadBooks();
+  }
+
+  loadBooks(): void {
+    this.bookFirebaseService.getBooks().subscribe((books: Book[]) => {
+      this.allBooks = books;
+      this.trendingBooks = books;
+      this.topRatedBooks = books.filter(book => book.rating >= 3.5);
+      this.popularBooks = books;
     });
   }
 }

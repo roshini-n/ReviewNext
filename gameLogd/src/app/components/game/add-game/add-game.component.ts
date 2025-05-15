@@ -9,7 +9,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { BookFirebaseService } from '../../../services/bookFirebase.service';
+import { GameFirebaseService } from '../../../services/gameFirebase.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -17,9 +17,10 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-add-book',
+  selector: 'app-add-game',
   standalone: true,
   imports: [
     CommonModule,
@@ -32,18 +33,19 @@ import { map, startWith } from 'rxjs/operators';
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    RouterModule
   ],
-  templateUrl: './add-book.component.html',
-  styleUrl: './add-book.component.css'
+  templateUrl: './add-game.component.html',
+  styleUrl: './add-game.component.css'
 })
-export class AddBookComponent implements OnInit {
+export class AddGameComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private bookService = inject(BookFirebaseService);
+  private gameService = inject(GameFirebaseService);
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
-  bookForm: FormGroup;
+  gameForm: FormGroup;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   platforms: string[] = [];
   selectedGenres: string[] = [];
@@ -51,20 +53,20 @@ export class AddBookComponent implements OnInit {
 
   // Available options for platforms and genres
   options: string[] = [
-    "Library", "Amazon Kindle", "Google Books", "Apple Books", "Wattpad", 
-    "Scribd", "Project Gutenberg", "Goodreads"
+    "PC", "PlayStation 5", "PlayStation 4", "Xbox Series X", "Xbox One",
+    "Nintendo Switch", "Mobile", "VR", "Mac", "Linux"
   ];
 
   genres: string[] = [
-    "Action", "Adventure", "Horror", "Fantasy", "Romance", "Thriller", 
-    "Mystery", "Historical Fiction", "Biography", "Travel", "Philosophy", "True Crime"
+    "Action", "Adventure", "RPG", "Strategy", "Sports", "Racing",
+    "Puzzle", "Horror", "Fighting", "Platformer", "Simulation", "MMO"
   ];
 
   filteredOptions!: Observable<string[]>;
   filteredGenres!: Observable<string[]>;
 
   constructor() {
-    this.bookForm = this.fb.group({
+    this.gameForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(1)]],
       description: ['', [Validators.required, Validators.minLength(10)]],
       platformInput: [''],
@@ -78,12 +80,12 @@ export class AddBookComponent implements OnInit {
 
   ngOnInit() {
     // Filter options for platforms and genres
-    this.filteredOptions = this.bookForm.get('platformInput')?.valueChanges.pipe(
+    this.filteredOptions = this.gameForm.get('platformInput')?.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '', this.options))
     ) || new Observable<string[]>();
 
-    this.filteredGenres = this.bookForm.get('genreInput')?.valueChanges.pipe(
+    this.filteredGenres = this.gameForm.get('genreInput')?.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '', this.genres))
     ) || new Observable<string[]>();
@@ -97,11 +99,11 @@ export class AddBookComponent implements OnInit {
 
   // Add platform to selected platforms list
   addPlatform() {
-    const platformValue = this.bookForm.get('platformInput')?.value;
+    const platformValue = this.gameForm.get('platformInput')?.value;
     if (platformValue && !this.platforms.includes(platformValue)) {
       this.platforms.push(platformValue);
     }
-    this.bookForm.get('platformInput')?.setValue('');
+    this.gameForm.get('platformInput')?.setValue('');
   }
 
   // Remove platform from selected platforms list
@@ -111,11 +113,11 @@ export class AddBookComponent implements OnInit {
 
   // Add genre to selected genres list
   addGenre() {
-    const genreValue = this.bookForm.get('genreInput')?.value;
+    const genreValue = this.gameForm.get('genreInput')?.value;
     if (genreValue && !this.selectedGenres.includes(genreValue)) {
       this.selectedGenres.push(genreValue);
     }
-    this.bookForm.get('genreInput')?.setValue('');
+    this.gameForm.get('genreInput')?.setValue('');
   }
 
   // Remove genre from selected genres list
@@ -124,11 +126,11 @@ export class AddBookComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/books']);
+    this.router.navigate(['/games']);
   }
 
   async sendDataToFirebase() {
-    if (!this.bookForm.valid || this.selectedGenres.length === 0) {
+    if (!this.gameForm.valid || this.selectedGenres.length === 0) {
       this.snackBar.open('Please fill in all required fields and add at least one genre', 'Close', {
         duration: 5000
       });
@@ -136,18 +138,17 @@ export class AddBookComponent implements OnInit {
     }
 
     // Default image URL if not provided
-    const finalImageUrl = this.bookForm.value.imageUrl || 'https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
+    const finalImageUrl = this.gameForm.value.imageUrl || 'https://images.pexels.com/photos/3165335/pexels-photo-3165335.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
 
-    const bookData = {
-      title: this.bookForm.value.title || '',
-      author: this.bookForm.value.developer || '', // Using developer field as author
-      description: this.bookForm.value.description || '',
-      publisher: this.bookForm.value.publisher || '',
-      publicationDate: this.bookForm.value.releaseDate || '',
+    const gameData = {
+      title: this.gameForm.value.title || '',
+      developer: this.gameForm.value.developer || '',
+      description: this.gameForm.value.description || '',
+      publisher: this.gameForm.value.publisher || '',
+      releaseDate: this.gameForm.value.releaseDate || '',
       genres: this.selectedGenres,
       platforms: this.platforms,
-      pages: 0, // Not used in this form
-      readersRead: 0,
+      playersPlayed: 0,
       rating: 0,
       imageUrl: finalImageUrl,
       totalRatingScore: 0,
@@ -156,14 +157,14 @@ export class AddBookComponent implements OnInit {
     };
 
     try {
-      await this.bookService.addBook(bookData);
-      this.snackBar.open('Book added successfully!', 'Close', {
+      await this.gameService.addGame(gameData);
+      this.snackBar.open('Game added successfully!', 'Close', {
         duration: 3000
       });
-      this.router.navigate(['/books']);
+      this.router.navigate(['/games']);
     } catch (error) {
-      console.error('Error adding book:', error);
-      this.snackBar.open('Error adding book: ' + (error as Error).message, 'Close', {
+      console.error('Error adding game:', error);
+      this.snackBar.open('Error adding game: ' + (error as Error).message, 'Close', {
         duration: 5000
       });
     }
