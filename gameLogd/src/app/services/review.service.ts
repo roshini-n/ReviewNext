@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, doc, addDoc, updateDoc, deleteDoc, query, where, getDoc, orderBy, collectionData } from '@angular/fire/firestore';
-import { Observable, from, map, switchMap } from 'rxjs';
+import { Observable, from, map, switchMap, catchError, throwError } from 'rxjs';
 import { Review } from '../models/review.model';
 import { AuthService } from './auth.service';
 
@@ -58,6 +58,17 @@ export class ReviewService {
     
     return collectionData(reviewsQuery, { idField: 'id' }) as Observable<Review[]>;
   }
+
+  // get all reviews for a specific book
+  getReviewsByBookId(bookId: string): Observable<Review[]> {
+    const reviewsQuery = query(
+      collection(this.firestore, 'reviews'),
+      where('bookId', '==', bookId),
+      orderBy('datePosted', 'desc')
+    );
+    
+    return collectionData(reviewsQuery, { idField: 'id' }) as Observable<Review[]>;
+  }
   
   // get all reviews by a specific user
   getReviewsByUserId(userId: string): Observable<Review[]> {
@@ -94,6 +105,25 @@ export class ReviewService {
         const reviewsQuery = query(
           collection(this.firestore, 'reviews'),
           where('gameId', '==', gameId),
+          where('userId', '==', user.uid)
+        );
+        
+        return collectionData(reviewsQuery).pipe(
+          map(reviews => reviews.length > 0)
+        );
+      })
+    );
+  }
+
+  // check if the current user has already reviewed a book
+  hasUserReviewedBook(bookId: string): Observable<boolean> {
+    return this.authService.user$.pipe(
+      switchMap(user => {
+        if (!user) return from([false]);
+        
+        const reviewsQuery = query(
+          collection(this.firestore, 'reviews'),
+          where('bookId', '==', bookId),
           where('userId', '==', user.uid)
         );
         

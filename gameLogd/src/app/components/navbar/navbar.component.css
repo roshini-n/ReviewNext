@@ -110,3 +110,24 @@
 .dropdown{
   color: #FEE715 !important;
 }
+
+/* Dropdown styling */
+.dropdown {
+  
+  height: 40px;
+  border-radius: 8px;
+  padding: 0 10px;
+  background-color: #292929;
+  color: #FEE715;
+  border: 1px solid #FEE715;
+  font-size: 1rem;
+  appearance: none; /* optional: removes default arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.dropdown:focus {
+  outline: none;
+  border-color: #ffffff;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}

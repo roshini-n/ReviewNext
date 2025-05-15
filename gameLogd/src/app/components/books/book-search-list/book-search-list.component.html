@@ -1,0 +1,14 @@
+<mat-list>
+  <mat-list-item *ngFor="let book of books" (click)="onBookClick(book)" class="book-list-item">
+    <img matListItemAvatar [src]="book.imageUrl" [alt]="book.title" class="book-thumbnail">
+    <div matListItemTitle>{{ book.title }}</div>
+    <div matListItemLine>{{ book.author }}</div>
+    <div matListItemMeta>
+      <span class="rating">{{ book.rating }}/5</span>
+    </div>
+  </mat-list-item>
+</mat-list>
+
+<div *ngIf="books.length === 0" class="no-results">
+  No books found
+</div>

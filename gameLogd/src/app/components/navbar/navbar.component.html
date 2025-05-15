@@ -24,8 +24,9 @@
     </button>
     
     <div class = "divider"></div>
-    <button mat-button color="grey-back" routerLink="games">
-      <span class="navbar_button">Games</span>
+    <button mat-button [matMenuTriggerFor]="categoryMenu" color="grey-back">
+      <span class="navbar_button">Categories</span>
+      <mat-icon>arrow_drop_down</mat-icon>
     </button>
     
     <button mat-button color="grey-back" routerLink="my_lists">
@@ -37,11 +38,28 @@
     </button>
     <div class = "divider"></div>
     
-    <button mat-button color="grey-back" routerLink="add_game">
-      <span class="navbar_button">Add Game</span>
-    </button>
+    
   }
   </div>
+
+  <mat-menu #categoryMenu="matMenu">
+    <button mat-menu-item routerLink="games">
+      <mat-icon>sports_esports</mat-icon>
+      <span>Games</span>
+    </button>
+    <button mat-menu-item routerLink="books">
+      <mat-icon>menu_book</mat-icon>
+      <span>Books</span>
+    </button>
+    <button mat-menu-item routerLink="movies">
+      <mat-icon>movie</mat-icon>
+      <span>Movies</span>
+    </button>
+    <button mat-menu-item routerLink="gadgets">
+      <mat-icon>devices</mat-icon>
+      <span>Electronic Gadgets</span>
+    </button>
+  </mat-menu>
 
   <span class="example-spacer"></span>
 
@@ -81,12 +99,13 @@
       } @if (authService.currentUserSig()) {
       <button mat-button class="menu-btn" routerLink="profile">Profile</button>
       }
-      <button mat-button class="menu-btn" routerLink="games">Games</button>
+      <button mat-button class="menu-btn" [matMenuTriggerFor]="mobileCategoryMenu">Categories</button>
       <button mat-button class="menu-btn" routerLink="myLog">Lists</button>
       @if (authService.currentUserSig()) {
       <button mat-button class="menu-btn" routerLink="mylog">My Log</button>
       }
       <button mat-button class="menu-btn" routerLink="add_game">Add Game</button>
+      <button mat-button class="menu-btn" routerLink="add_book">Add Book</button>
     </div>
       <div class="ms-auto">
         <form class="d-flex search-form responsive">
@@ -110,6 +129,25 @@
         </form>
       </div>
 
+  </mat-menu>
+
+  <mat-menu #mobileCategoryMenu="matMenu">
+    <button mat-menu-item routerLink="games">
+      <mat-icon>sports_esports</mat-icon>
+      <span>Games</span>
+    </button>
+    <button mat-menu-item routerLink="books">
+      <mat-icon>menu_book</mat-icon>
+      <span>Books</span>
+    </button>
+    <button mat-menu-item routerLink="movies">
+      <mat-icon>movie</mat-icon>
+      <span>Movies</span>
+    </button>
+    <button mat-menu-item routerLink="gadgets">
+      <mat-icon>devices</mat-icon>
+      <span>Electronic Gadgets</span>
+    </button>
   </mat-menu>
 
 </mat-toolbar>

@@ -1,0 +1,26 @@
+.full-width {
+  width: 100%;
+}
+
+.rating-select {
+  margin-bottom: 16px;
+}
+
+.stars-container {
+  display: flex;
+}
+
+.stars-container mat-icon {
+  cursor: pointer;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.stars-container mat-icon.filled {
+  color: gold;
+}
+
+.stars-container mat-icon.empty {
+  color: #ccc;
+}

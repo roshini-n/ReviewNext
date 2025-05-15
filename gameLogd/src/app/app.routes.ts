@@ -12,10 +12,16 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { MylogComponent } from './components/mylog/mylog.component';
 import { MyListsComponent } from './components/my-lists/my-lists.component';
 import { EditListComponent } from './components/edit-list/edit-list.component';
+import { BookComponent } from './components/books/book/book.component';
+import { BookDetailsComponent } from './components/books/book-details/book-details.component';
+import { AddBookComponent } from './components/books/add-book/add-book.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent }, // default route
   { path: 'games', component: GameComponent },
+  { path: 'books', component: BookComponent },
+  { path: 'books/:id', component: BookDetailsComponent },
+  { path: 'add_book', component: AddBookComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'create_list', component: CreateListComponent },
   { path: 'my_lists', component: MyListsComponent},
