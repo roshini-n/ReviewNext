@@ -21,7 +21,10 @@ import { Game } from '../../../models/game.model';
   styleUrls: ['./game.component.css']
 })
 export class GameComponent implements OnInit {
-  games: Game[] = [];
+  allGames: Game[] = [];
+  trendingGames: Game[] = [];
+  topRatedGames: Game[] = [];
+  popularGames: Game[] = [];
   gameFirebaseService = inject(GameFirebaseService);
 
   ngOnInit(): void {
@@ -30,7 +33,10 @@ export class GameComponent implements OnInit {
 
   loadGames(): void {
     this.gameFirebaseService.getGames().subscribe((games: Game[]) => {
-      this.games = games;
+      this.allGames = games;
+      this.trendingGames = games;
+      this.topRatedGames = games.filter(game => game.rating >= 3.5);
+      this.popularGames = games;
     });
   }
 }
