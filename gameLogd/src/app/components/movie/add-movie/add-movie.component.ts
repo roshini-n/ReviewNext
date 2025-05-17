@@ -9,7 +9,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { GameFirebaseService } from '../../services/gameFirebase.service';
+import { MovieFirebaseService } from '../../../services/movieFirebase.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -19,7 +19,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-add-game',
+  selector: 'app-add-movie',
   standalone: true,
   imports: [
     CommonModule,
@@ -34,16 +34,16 @@ import { map, startWith } from 'rxjs/operators';
     MatNativeDateModule,
     MatAutocompleteModule
   ],
-  templateUrl: './add-game.component.html',
-  styleUrl: './add-game.component.css'
+  templateUrl: './add-movie.component.html',
+  styleUrls: ['./add-movie.component.css']
 })
-export class AddGameComponent implements OnInit {
+export class AddMovieComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private gameService = inject(GameFirebaseService);
+  private movieService = inject(MovieFirebaseService);
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
-  gameForm: FormGroup;
+  movieForm: FormGroup;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   platforms: string[] = [];
   selectedGenres: string[] = [];
@@ -51,42 +51,44 @@ export class AddGameComponent implements OnInit {
 
   // Available options for platforms and genres
   options: string[] = [
-    "NES", "SNES", "N64", "PS", "PS2", "PS3", "PS4", "PS5",
-    "Xbox", "Xbox 360", "Xbox One", "Xbox Series X|S", "PC", "Switch", "Wii", 
-    "Wii U", "Gamecube", "Gameboy", "Gameboy Color", "Gameboy Advance", 
-    "DS", "3DS", "PSP", "PS Vita", "Mobile", "Other"
+    "Netflix", "Amazon Prime", "Disney+", "HBO Max", "Hulu", 
+    "Apple TV+", "Paramount+", "Peacock", "Theater", "Blu-ray", 
+    "DVD", "VOD", "Other"
   ];
-  
+
   genres: string[] = [
-    "Action", "Adventure", "RPG", "Shooter", "Horror", "Platformer", 
-    "Puzzle", "Fighting", "Racing", "Strategy", "Simulation", "Sports", 
-    "Looter Shooter", "MMO", "Roguelike", "Metroidvania", "Visual Novel"
+    "Action", "Adventure", "Animation", "Comedy", "Crime", "Documentary",
+    "Drama", "Family", "Fantasy", "Horror", "Mystery", "Romance",
+    "Sci-Fi", "Thriller", "War", "Western", "Biography", "History",
+    "Music", "Musical", "Sport"
   ];
 
   filteredOptions!: Observable<string[]>;
   filteredGenres!: Observable<string[]>;
 
   constructor() {
-    this.gameForm = this.fb.group({
+    this.movieForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(1)]],
       description: ['', [Validators.required, Validators.minLength(10)]],
       platformInput: [''],
       genreInput: [''],
       releaseDate: ['', Validators.required],
-      developer: ['', [Validators.required, Validators.minLength(1)]],
-      publisher: ['', [Validators.required, Validators.minLength(1)]],
-      imageUrl: ['', [Validators.pattern('https?://.*')]]
+      director: ['', [Validators.required, Validators.minLength(1)]],
+      duration: ['', [Validators.required, Validators.min(1)]],
+      imageUrl: ['', [Validators.pattern('https?://.*')]],
+      language: [''],
+      country: ['']
     });
   }
 
   ngOnInit() {
     // Filter options for platforms and genres
-    this.filteredOptions = this.gameForm.get('platformInput')?.valueChanges.pipe(
+    this.filteredOptions = this.movieForm.get('platformInput')?.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '', this.options))
     ) || new Observable<string[]>();
 
-    this.filteredGenres = this.gameForm.get('genreInput')?.valueChanges.pipe(
+    this.filteredGenres = this.movieForm.get('genreInput')?.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '', this.genres))
     ) || new Observable<string[]>();
@@ -100,11 +102,11 @@ export class AddGameComponent implements OnInit {
   }
 
   addPlatform() {
-    const platformValue = this.gameForm.get('platformInput')?.value;
+    const platformValue = this.movieForm.get('platformInput')?.value;
     if (platformValue && !this.platforms.includes(platformValue)) {
       this.platforms.push(platformValue);
     }
-    this.gameForm.get('platformInput')?.setValue('');
+    this.movieForm.get('platformInput')?.setValue('');
   }
 
   removePlatform(platform: string) {
@@ -112,11 +114,11 @@ export class AddGameComponent implements OnInit {
   }
 
   addGenre() {
-    const genreValue = this.gameForm.get('genreInput')?.value;
+    const genreValue = this.movieForm.get('genreInput')?.value;
     if (genreValue && !this.selectedGenres.includes(genreValue)) {
       this.selectedGenres.push(genreValue);
     }
-    this.gameForm.get('genreInput')?.setValue('');
+    this.movieForm.get('genreInput')?.setValue('');
   }
 
   removeGenre(genre: string) {
@@ -124,7 +126,7 @@ export class AddGameComponent implements OnInit {
   }
 
   async sendDataToFirebase() {
-    if (!this.gameForm.valid) {
+    if (!this.movieForm.valid) {
       this.snackBar.open('Please fill in all required fields', 'Close', {
         duration: 5000
       });
@@ -139,37 +141,41 @@ export class AddGameComponent implements OnInit {
     }
 
     // Default image URL if not provided
-    const finalImageUrl = this.gameForm.value.imageUrl || 'https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
+    const finalImageUrl = this.movieForm.value.imageUrl || 'https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
+
+    const movieData = {
+      title: this.movieForm.value.title || '',
+      description: this.movieForm.value.description || '',
+      director: this.movieForm.value.director || '',
+      releaseDate: this.movieForm.value.releaseDate || '',
+      genres: this.selectedGenres,
+      duration: this.movieForm.value.duration || 0,
+      rating: 0,
+      imageUrl: finalImageUrl,
+      totalRatingScore: 0,
+      numRatings: 0,
+      dateAdded: new Date().toISOString(),
+      platforms: this.platforms,
+      language: this.movieForm.value.language || '',
+      country: this.movieForm.value.country || ''
+    };
 
     try {
-      await this.gameService.addGame(
-        this.gameForm.value.title || '',
-        this.platforms,
-        this.gameForm.value.developer || '',
-        this.gameForm.value.description || '',
-        this.gameForm.value.releaseDate || '',
-        this.gameForm.value.publisher || '',
-        this.selectedGenres,
-        finalImageUrl,
-        0, // rating
-        0, // numRatings
-        0  // totalRatingScore
-      ).toPromise();
-
-      this.snackBar.open('Game added successfully!', 'Close', {
+      await this.movieService.addMovie(movieData);
+      this.snackBar.open('Movie added successfully!', 'Close', {
         duration: 3000
       });
-      this.router.navigate(['/games']);
+      this.router.navigate(['/movies']);
     } catch (error: unknown) {
-      console.error('Error adding game:', error);
+      console.error('Error adding movie:', error);
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      this.snackBar.open('Error adding game: ' + errorMessage, 'Close', {
+      this.snackBar.open('Error adding movie: ' + errorMessage, 'Close', {
         duration: 5000
       });
     }
   }
 
   onCancel(): void {
-    this.router.navigate(['/games']);
+    this.router.navigate(['/movies']);
   }
-}
+} 

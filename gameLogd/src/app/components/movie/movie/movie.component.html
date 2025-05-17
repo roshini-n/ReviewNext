@@ -1,0 +1,69 @@
+<!--Eventually separate these into their own components and add individual filters for each carousel-->
+<!--Currently displays all movies in database-->
+
+<div class="movie-container">
+  <div class="header-section">
+    <h1>Movies</h1>
+    <button mat-raised-button color="primary" routerLink="/add_movie">
+      <mat-icon>add</mat-icon>
+      Add Movie
+    </button>
+  </div>
+  
+  <h2>Trending</h2>
+  <p-carousel [value]="trendingMovies" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
+    <ng-template let-movie pTemplate="item">
+      <div class="movie-card">
+        <mat-card>
+          <img mat-card-image [src]="movie.imageUrl" [alt]="movie.title">
+          <mat-card-content>
+            <h3>{{ movie.title }}</h3>
+            <p>By {{ movie.director }}</p>
+            <p>Rating: {{ movie.rating }}/5</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button [routerLink]="['/movies', movie.id]">View Details</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </ng-template>
+  </p-carousel>
+
+  <h2>Top Rated</h2>
+  <p-carousel [value]="topRatedMovies" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
+    <ng-template let-movie pTemplate="item">
+      <div class="movie-card">
+        <mat-card>
+          <img mat-card-image [src]="movie.imageUrl" [alt]="movie.title">
+          <mat-card-content>
+            <h3>{{ movie.title }}</h3>
+            <p>By {{ movie.director }}</p>
+            <p>Rating: {{ movie.rating }}/5</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button [routerLink]="['/movies', movie.id]">View Details</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </ng-template>
+  </p-carousel>
+
+  <h2>Most Popular</h2>
+  <p-carousel [value]="popularMovies" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
+    <ng-template let-movie pTemplate="item">
+      <div class="movie-card">
+        <mat-card>
+          <img mat-card-image [src]="movie.imageUrl" [alt]="movie.title">
+          <mat-card-content>
+            <h3>{{ movie.title }}</h3>
+            <p>By {{ movie.director }}</p>
+            <p>Rating: {{ movie.rating }}/5</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button [routerLink]="['/movies', movie.id]">View Details</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </ng-template>
+  </p-carousel>
+</div> 

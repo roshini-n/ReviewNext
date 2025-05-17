@@ -17,7 +17,6 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-add-game',
@@ -33,8 +32,7 @@ import { RouterModule } from '@angular/router';
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatAutocompleteModule,
-    RouterModule
+    MatAutocompleteModule
   ],
   templateUrl: './add-game.component.html',
   styleUrl: './add-game.component.css'
@@ -53,13 +51,11 @@ export class AddGameComponent implements OnInit {
 
   // Available options for platforms and genres
   options: string[] = [
-    "PC", "PlayStation 5", "PlayStation 4", "Xbox Series X", "Xbox One",
-    "Nintendo Switch", "Mobile", "VR", "Mac", "Linux"
+    "PC", "PlayStation", "Xbox", "Nintendo Switch", "Mobile", "Steam", "Epic Games", "GOG"
   ];
 
   genres: string[] = [
-    "Action", "Adventure", "RPG", "Strategy", "Sports", "Racing",
-    "Puzzle", "Horror", "Fighting", "Platformer", "Simulation", "MMO"
+    "Action", "Adventure", "Horror", "Fantasy", "RPG", "Shooter", "Strategy", "Puzzle", "Sports", "Racing", "Simulation", "Indie"
   ];
 
   filteredOptions!: Observable<string[]>;
@@ -138,7 +134,7 @@ export class AddGameComponent implements OnInit {
     }
 
     // Default image URL if not provided
-    const finalImageUrl = this.gameForm.value.imageUrl || 'https://images.pexels.com/photos/3165335/pexels-photo-3165335.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
+    const finalImageUrl = this.gameForm.value.imageUrl || 'https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
 
     const gameData = {
       title: this.gameForm.value.title || '',
@@ -148,7 +144,6 @@ export class AddGameComponent implements OnInit {
       releaseDate: this.gameForm.value.releaseDate || '',
       genres: this.selectedGenres,
       platforms: this.platforms,
-      playersPlayed: 0,
       rating: 0,
       imageUrl: finalImageUrl,
       totalRatingScore: 0,

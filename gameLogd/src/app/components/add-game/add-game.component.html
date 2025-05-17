@@ -1,72 +1,107 @@
-<form [formGroup]="gameForm" class="example-form">
-    <mat-form-field class="example-full-width">
-      <mat-label>Title</mat-label>
-      <input matInput formControlName="title" placeholder="Ex. Super Mario Bros">
-      <mat-error *ngIf="gameForm.controls.title.hasError('required')">Title is <strong>required</strong></mat-error>
-    </mat-form-field>
-  
-    <mat-form-field class="example-full-width">
-      <mat-label>Description</mat-label>
-      <input matInput formControlName="description" placeholder="Ex. A game about a plumber.">
-    </mat-form-field>
-  
-    <mat-form-field class="example-full-width">
-      <mat-label>Platforms</mat-label>
-      <input matInput 
-             formControlName="platformInput"
-             placeholder="Choose platform" 
-             [matAutocomplete]="auto">
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-          {{option}}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-    <button type="button" mat-button (click)="addPlatform()">Add Platform</button>
-  
-    <div *ngFor="let platform of platforms">
-      {{ platform }} <button type="button" mat-button color="warn" (click)="removePlatform(platform)">Remove</button>
+<div class="add-game-container">
+  <h1>Add New Game</h1>
+  <form [formGroup]="gameForm" (ngSubmit)="sendDataToFirebase()">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" required>
+        <mat-error *ngIf="gameForm.get('title')?.hasError('required')">Title is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" required rows="3"></textarea>
+        <mat-error *ngIf="gameForm.get('description')?.hasError('required')">Description is required</mat-error>
+      </mat-form-field>
     </div>
-  
-    <mat-form-field class="example-full-width">
-      <mat-label>Genres</mat-label>
-      <input matInput 
-             formControlName="genreInput" 
-             placeholder="Choose genre" 
-             [matAutocomplete]="genreAuto">
-      <mat-autocomplete #genreAuto="matAutocomplete">
-        <mat-option *ngFor="let genre of filteredGenres | async" [value]="genre">
-          {{ genre }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-    <button type="button" mat-button (click)="addGenre()">Add Genre</button>
-  
-    <div *ngFor="let genre of selectedGenres">
-      {{ genre }} <button type="button" mat-button color="warn" (click)="removeGenre(genre)">Remove</button>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Platforms</mat-label>
+        <input matInput formControlName="platformInput" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+        <button matSuffix mat-icon-button type="button" (click)="addPlatform()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <div class="selected-items">
+        <mat-chip-listbox>
+          <mat-chip *ngFor="let platform of platforms" (removed)="removePlatform(platform)">
+            {{platform}}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        </mat-chip-listbox>
+      </div>
     </div>
-  
-    <mat-form-field class="example-full-width">
-      <mat-label>Release Date</mat-label>
-      <input matInput type="date" formControlName="releaseDate">
-    </mat-form-field>
-  
-    <mat-form-field class="example-full-width">
-      <mat-label>Developer</mat-label>
-      <input matInput formControlName="developer" placeholder="Ex. Nintendo">
-    </mat-form-field>
-  
-    <mat-form-field class="example-full-width">
-      <mat-label>Publisher</mat-label>
-      <input matInput formControlName="publisher" placeholder="Ex. Nintendo">
-    </mat-form-field>
-  
-    <mat-form-field class="example-full-width">
-      <mat-label>Image URL</mat-label>
-      <input matInput formControlName="imageUrl" placeholder="Leave empty for default image">
-    </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Genres</mat-label>
+        <input matInput formControlName="genreInput" [matAutocomplete]="autoGenres">
+        <mat-autocomplete #autoGenres="matAutocomplete">
+          <mat-option *ngFor="let genre of filteredGenres | async" [value]="genre">
+            {{genre}}
+          </mat-option>
+        </mat-autocomplete>
+        <button matSuffix mat-icon-button type="button" (click)="addGenre()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <div class="selected-items">
+        <mat-chip-listbox>
+          <mat-chip *ngFor="let genre of selectedGenres" (removed)="removeGenre(genre)">
+            {{genre}}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        </mat-chip-listbox>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Release Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="releaseDate" required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="gameForm.get('releaseDate')?.hasError('required')">Release date is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Developer</mat-label>
+        <input matInput formControlName="developer" required>
+        <mat-error *ngIf="gameForm.get('developer')?.hasError('required')">Developer is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Publisher</mat-label>
+        <input matInput formControlName="publisher" required>
+        <mat-error *ngIf="gameForm.get('publisher')?.hasError('required')">Publisher is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Image URL</mat-label>
+        <input matInput formControlName="imageUrl">
+        <mat-hint>Optional - will use default image if not provided</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="!gameForm.valid">
+        Add Game
+      </button>
+      <button mat-button type="button" (click)="onCancel()">Cancel</button>
+    </div>
   </form>
-  
-  <div class="submit-button">
-    <button mat-button color="primary" (click)="sendDataToFirebase()">Submit</button>
-  </div>
+</div>
