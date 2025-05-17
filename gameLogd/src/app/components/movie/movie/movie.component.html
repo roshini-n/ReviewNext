@@ -14,17 +14,13 @@
   <p-carousel [value]="trendingMovies" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
     <ng-template let-movie pTemplate="item">
       <div class="movie-card">
-        <mat-card>
-          <img mat-card-image [src]="movie.imageUrl" [alt]="movie.title">
-          <mat-card-content>
+        <a [routerLink]="['/movies', movie.id]">
+          <img class="thumbnail" [src]="movie.imageUrl" [alt]="movie.title">
+          <div class="movie-info">
             <h3>{{ movie.title }}</h3>
-            <p>By {{ movie.director }}</p>
             <p>Rating: {{ movie.rating }}/5</p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button mat-button [routerLink]="['/movies', movie.id]">View Details</button>
-          </mat-card-actions>
-        </mat-card>
+          </div>
+        </a>
       </div>
     </ng-template>
   </p-carousel>
@@ -33,17 +29,13 @@
   <p-carousel [value]="topRatedMovies" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
     <ng-template let-movie pTemplate="item">
       <div class="movie-card">
-        <mat-card>
-          <img mat-card-image [src]="movie.imageUrl" [alt]="movie.title">
-          <mat-card-content>
+        <a [routerLink]="['/movies', movie.id]">
+          <img class="thumbnail" [src]="movie.imageUrl" [alt]="movie.title">
+          <div class="movie-info">
             <h3>{{ movie.title }}</h3>
-            <p>By {{ movie.director }}</p>
             <p>Rating: {{ movie.rating }}/5</p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button mat-button [routerLink]="['/movies', movie.id]">View Details</button>
-          </mat-card-actions>
-        </mat-card>
+          </div>
+        </a>
       </div>
     </ng-template>
   </p-carousel>
@@ -52,18 +44,14 @@
   <p-carousel [value]="popularMovies" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
     <ng-template let-movie pTemplate="item">
       <div class="movie-card">
-        <mat-card>
-          <img mat-card-image [src]="movie.imageUrl" [alt]="movie.title">
-          <mat-card-content>
+        <a [routerLink]="['/movies', movie.id]">
+          <img class="thumbnail" [src]="movie.imageUrl" [alt]="movie.title">
+          <div class="movie-info">
             <h3>{{ movie.title }}</h3>
-            <p>By {{ movie.director }}</p>
             <p>Rating: {{ movie.rating }}/5</p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button mat-button [routerLink]="['/movies', movie.id]">View Details</button>
-          </mat-card-actions>
-        </mat-card>
+          </div>
+        </a>
       </div>
     </ng-template>
   </p-carousel>
-</div> 
+</div>
