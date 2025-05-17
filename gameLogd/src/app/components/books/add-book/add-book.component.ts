@@ -69,8 +69,8 @@ export class AddBookComponent implements OnInit {
       description: ['', [Validators.required, Validators.minLength(10)]],
       platformInput: [''],
       genreInput: [''],
-      releaseDate: ['', Validators.required],
-      developer: ['', [Validators.required, Validators.minLength(1)]],
+      publicationDate: ['', Validators.required],
+      author: ['', [Validators.required, Validators.minLength(1)]],
       publisher: ['', [Validators.required, Validators.minLength(1)]],
       imageUrl: ['', [Validators.pattern('https?://.*')]]
     });
@@ -147,10 +147,10 @@ export class AddBookComponent implements OnInit {
 
     const bookData = {
       title: this.bookForm.value.title || '',
-      author: this.bookForm.value.developer || '', // Using developer field as author
+      author: this.bookForm.value.author || '',
       description: this.bookForm.value.description || '',
       publisher: this.bookForm.value.publisher || '',
-      publicationDate: this.bookForm.value.releaseDate || '',
+      publicationDate: this.bookForm.value.publicationDate || '',
       genres: this.selectedGenres,
       platforms: this.platforms,
       pages: 0, // Not used in this form
