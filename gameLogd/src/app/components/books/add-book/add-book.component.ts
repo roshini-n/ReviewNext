@@ -128,8 +128,15 @@ export class AddBookComponent implements OnInit {
   }
 
   async sendDataToFirebase() {
-    if (!this.bookForm.valid || this.selectedGenres.length === 0) {
-      this.snackBar.open('Please fill in all required fields and add at least one genre', 'Close', {
+    if (!this.bookForm.valid) {
+      this.snackBar.open('Please fill in all required fields', 'Close', {
+        duration: 5000
+      });
+      return;
+    }
+
+    if (this.selectedGenres.length === 0) {
+      this.snackBar.open('Please add at least one genre', 'Close', {
         duration: 5000
       });
       return;

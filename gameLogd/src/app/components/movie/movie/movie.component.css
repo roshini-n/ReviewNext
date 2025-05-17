@@ -1,0 +1,137 @@
+.movie-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: var(--background-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-section h1 {
+  margin: 0;
+  color: #FEE715;
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.header-section button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #FEE715;
+  color: #000;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.header-section button:hover {
+  background-color: #e6d100;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(254, 231, 21, 0.2);
+}
+
+.header-section button mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.movie-container h2 {
+  color: #FEE715;
+  margin: 1.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.movie-card {
+  padding: 10px;
+  height: 100%;
+}
+
+.movie-card mat-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.movie-card img {
+  height: 300px;
+  object-fit: cover;
+}
+
+.movie-card mat-card-content {
+  flex-grow: 1;
+}
+
+.movie-card h3 {
+  margin: 10px 0;
+  font-size: 1.2em;
+}
+
+.movie-card p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.movie-card mat-card-actions {
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.movie-card button {
+  color: #FEE715;
+}
+
+.thumbnail {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 4px;
+  transition: transform 0.2s;
+}
+
+.thumbnail:hover {
+  transform: scale(1.05);
+}
+
+:host ::ng-deep .p-carousel {
+  padding: 20px 0;
+}
+
+:host ::ng-deep .p-carousel-indicators {
+  margin-top: 20px;
+}
+
+:host ::ng-deep .p-carousel .p-carousel-indicators .p-carousel-indicator button {
+  background-color: var(--label-color);
+}
+
+:host ::ng-deep .p-carousel .p-carousel-indicators .p-carousel-indicator.p-highlight button {
+  background-color: #FEE715;
+}
+
+@media (max-width: 768px) {
+  .movie-container {
+    padding: 10px;
+  }
+
+  .movie-card img {
+    height: 250px;
+  }
+
+  .thumbnail {
+    width: 150px;
+    height: 225px;
+  }
+} 

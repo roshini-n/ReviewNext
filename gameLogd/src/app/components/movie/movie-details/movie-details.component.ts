@@ -5,10 +5,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
-import { BookFirebaseService } from '../../../services/bookFirebase.service';
-import { Book } from '../../../models/book.model';
-import { BookLogService } from '../../../services/bookLog.service';
-import { BookReviewService } from '../../../services/bookReview.service';
+import { MovieFirebaseService } from '../../../services/movieFirebase.service';
+import { Movie } from '../../../models/movie.model';
+import { MovieLogService } from '../../../services/movieLog.service';
+import { MovieReviewService } from '../../../services/movieReview.service';
 import { AuthService } from '../../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
@@ -32,7 +32,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-book-details',
+  selector: 'app-movie-details',
   standalone: true,
   imports: [
     CommonModule,
@@ -56,20 +56,20 @@ import { map, startWith } from 'rxjs/operators';
     MatNativeDateModule,
     MatAutocompleteModule
   ],
-  templateUrl: './book-details.component.html',
-  styleUrls: ['./book-details.component.css']
+  templateUrl: './movie-details.component.html',
+  styleUrls: ['./movie-details.component.css']
 })
-export class BookDetailsComponent implements OnInit {
+export class MovieDetailsComponent implements OnInit {
   private route = inject(ActivatedRoute);
-  public router = inject(Router);
-  private bookService = inject(BookFirebaseService);
-  private bookLogService = inject(BookLogService);
-  private bookReviewService = inject(BookReviewService);
+  private router = inject(Router);
+  private movieService = inject(MovieFirebaseService);
+  private movieLogService = inject(MovieLogService);
+  private movieReviewService = inject(MovieReviewService);
   private authService = inject(AuthService);
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
 
-  book: Book | undefined;
+  movie: Movie | undefined;
   isLoggedIn = false;
   currentUserId: string | null = null;
   selectedTab = 0;
@@ -79,27 +79,29 @@ export class BookDetailsComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    // Subscribe to user state changes
-    this.authService.user$.subscribe(user => {
-      this.isLoggedIn = !!user;
+    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    this.authService.currentUser$.subscribe(user => {
       this.currentUserId = user?.uid || null;
     });
 
-    const bookId = this.route.snapshot.paramMap.get('id');
-    if (bookId) {
-      this.loadBookDetails(bookId);
+    const movieId = this.route.snapshot.paramMap.get('id');
+    if (movieId) {
+      this.loadMovieDetails(movieId);
     }
   }
 
-  private loadBookDetails(bookId: string) {
-    this.bookService.getBookById(bookId).subscribe({
-      next: (book) => {
-        this.book = book;
+  private loadMovieDetails(movieId: string) {
+    this.movieService.getMovieById(movieId).subscribe({
+      next: (movie) => {
+        this.movie = movie;
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading book details:', error);
-        this.error = 'Failed to load book details';
+        console.error('Error loading movie details:', error);
+        this.error = 'Failed to load movie details';
         this.isLoading = false;
       }
     });
@@ -107,7 +109,7 @@ export class BookDetailsComponent implements OnInit {
 
   onAddToLog() {
     if (!this.isLoggedIn) {
-      this.snackBar.open('Please log in to add books to your log', 'Close', {
+      this.snackBar.open('Please log in to add movies to your log', 'Close', {
         duration: 3000
       });
       return;
@@ -125,27 +127,27 @@ export class BookDetailsComponent implements OnInit {
     // Implement add review functionality
   }
 
-  onEditBook() {
+  onEditMovie() {
     if (!this.isLoggedIn) {
-      this.snackBar.open('Please log in to edit books', 'Close', {
+      this.snackBar.open('Please log in to edit movies', 'Close', {
         duration: 3000
       });
       return;
     }
-    // Implement edit book functionality
+    // Implement edit movie functionality
   }
 
-  onDeleteBook() {
+  onDeleteMovie() {
     if (!this.isLoggedIn) {
-      this.snackBar.open('Please log in to delete books', 'Close', {
+      this.snackBar.open('Please log in to delete movies', 'Close', {
         duration: 3000
       });
       return;
     }
-    // Implement delete book functionality
+    // Implement delete movie functionality
   }
 
   onTabChange(index: number) {
     this.selectedTab = index;
   }
-}
+} 

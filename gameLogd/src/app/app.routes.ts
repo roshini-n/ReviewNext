@@ -15,13 +15,17 @@ import { EditListComponent } from './components/edit-list/edit-list.component';
 import { BookComponent } from './components/books/book/book.component';
 import { BookDetailsComponent } from './components/books/book-details/book-details.component';
 import { AddBookComponent } from './components/books/add-book/add-book.component';
+import { MovieComponent } from './components/movie/movie/movie.component';
+import { AddMovieComponent } from './components/movie/add-movie/add-movie.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent }, // default route
   { path: 'games', component: GameComponent },
   { path: 'books', component: BookComponent },
+  { path: 'movies', component: MovieComponent },
   { path: 'books/:id', component: BookDetailsComponent },
   { path: 'add_book', component: AddBookComponent },
+  { path: 'add_movie', component: AddMovieComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'create_list', component: CreateListComponent },
   { path: 'my_lists', component: MyListsComponent},
