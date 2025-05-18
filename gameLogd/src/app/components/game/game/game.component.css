@@ -6,39 +6,21 @@ html, body {
 app-root {
   display: flex;
   flex-direction: column;
-  min-height: 100vh
+  min-height: 100vh;
 }
-
-.games-container {
-    flex: 1;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 20px;
-  }
-  
-  /* .game-card {
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  } */
-  
-  .game-card h2 {
-    margin-top: 0;
-    color: #333;
-  }
-
-  img.thumbnail {
-    width: 200px;
-    height: 300px;
-  }
 
 .game-container {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.games-container {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
 }
 
 .header-section {
@@ -83,7 +65,14 @@ app-root {
   height: 20px;
 }
 
-h2 {
+.game-container h1 {
+  color: #FEE715;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.game-container h2 {
   color: #FEE715;
   margin: 1.5rem 0;
   font-size: 1.5rem;
@@ -91,33 +80,47 @@ h2 {
 }
 
 .game-card {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 420px;
+  margin: 0 8px;
   padding: 10px;
-  transition: transform 0.2s;
 }
 
-.game-card:hover {
-  transform: scale(1.05);
+.game-card mat-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.game-card a {
-  text-decoration: none;
-  color: inherit;
+.game-card img {
+  height: 300px;
+  object-fit: cover;
 }
 
-.game-info {
-  padding: 10px;
-  text-align: center;
+.game-card mat-card-content {
+  flex-grow: 1;
 }
 
-.game-info h3 {
+.game-card h2 {
+  margin: 10px 0;
+  font-size: 1.2em;
+}
+
+.game-card p {
   margin: 5px 0;
+  color: #666;
+}
+
+.game-card mat-card-actions {
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.game-card button {
   color: #FEE715;
-  font-size: 1.1rem;
-}
-
-.game-info p {
-  margin: 5px 0;
-  color: #fff;
 }
 
 .thumbnail {
@@ -125,6 +128,11 @@ h2 {
   height: 300px;
   object-fit: cover;
   border-radius: 4px;
+  transition: transform 0.2s;
+}
+
+.thumbnail:hover {
+  transform: scale(1.05);
 }
 
 :host ::ng-deep .p-carousel {
@@ -141,4 +149,92 @@ h2 {
 
 :host ::ng-deep .p-carousel .p-carousel-indicators .p-carousel-indicator.p-highlight button {
   background-color: #FEE715;
+}
+
+.custom-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 12px 12px 12px;
+  height: 400px;
+  width: 240px;
+  justify-content: flex-start;
+  transition: box-shadow 0.2s;
+}
+
+.custom-card:hover {
+  box-shadow: 0 4px 16px rgba(254,231,21,0.15);
+}
+
+.card-image-wrapper {
+  width: 200px;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #e0e0e0;
+}
+
+.card-title {
+  text-align: center;
+  font-weight: bold;
+  color: #FEE715;
+  font-size: 1.15rem;
+  margin-top: auto;
+  margin-bottom: 0;
+  word-break: break-word;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .game-container {
+    padding: 10px;
+  }
+
+  .game-card {
+    height: 320px;
+  }
+
+  .game-card img {
+    height: 250px;
+  }
+
+  .thumbnail {
+    width: 150px;
+    height: 225px;
+  }
+
+  .custom-card {
+    width: 160px;
+    height: 300px;
+    padding: 10px 6px 6px 6px;
+  }
+
+  .card-image-wrapper {
+    width: 120px;
+    height: 150px;
+    margin-bottom: 10px;
+  }
+
+  .card-title {
+    font-size: 1rem;
+    min-height: 32px;
+  }
 }

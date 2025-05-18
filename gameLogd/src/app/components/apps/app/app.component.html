@@ -1,0 +1,54 @@
+<div class="app-container">
+  <div class="header-section">
+    <h1>Apps</h1>
+    <button mat-raised-button color="primary" routerLink="/add_app">
+      <mat-icon>add</mat-icon>
+      Add App
+    </button>
+  </div>
+
+  <h2>Trending</h2>
+  <p-carousel [value]="trendingApps" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
+    <ng-template let-app pTemplate="item">
+      <div class="app-card">
+        <a [routerLink]="['/apps', app.id]">
+          <img class="thumbnail" [src]="app.imageUrl" [alt]="app.title">
+          <div class="app-info">
+            <h3>{{ app.title }}</h3>
+            <p>Rating: {{ app.rating }}/5</p>
+          </div>
+        </a>
+      </div>
+    </ng-template>
+  </p-carousel>
+
+  <h2>Top Rated</h2>
+  <p-carousel [value]="topRatedApps" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
+    <ng-template let-app pTemplate="item">
+      <div class="app-card">
+        <a [routerLink]="['/apps', app.id]">
+          <img class="thumbnail" [src]="app.imageUrl" [alt]="app.title">
+          <div class="app-info">
+            <h3>{{ app.title }}</h3>
+            <p>Rating: {{ app.rating }}/5</p>
+          </div>
+        </a>
+      </div>
+    </ng-template>
+  </p-carousel>
+
+  <h2>Most Popular</h2>
+  <p-carousel [value]="popularApps" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
+    <ng-template let-app pTemplate="item">
+      <div class="app-card">
+        <a [routerLink]="['/apps', app.id]">
+          <img class="thumbnail" [src]="app.imageUrl" [alt]="app.title">
+          <div class="app-info">
+            <h3>{{ app.title }}</h3>
+            <p>Rating: {{ app.rating }}/5</p>
+          </div>
+        </a>
+      </div>
+    </ng-template>
+  </p-carousel>
+</div> 
