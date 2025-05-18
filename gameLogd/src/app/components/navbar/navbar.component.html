@@ -19,26 +19,15 @@
       <span class="navbar_button">Register</span>
     </button>
     } @if (authService.currentUserSig()) {
-    <button mat-button color="grey-back" routerLink="profile">
-      <span class="navbar_button">Profile</span>
-    </button>
-    
-    <div class = "divider"></div>
     <button mat-button [matMenuTriggerFor]="categoryMenu" color="grey-back">
       <span class="navbar_button">Categories</span>
       <mat-icon>arrow_drop_down</mat-icon>
     </button>
     
-    <button mat-button color="grey-back" routerLink="my_lists">
-      <span class="navbar_button">Lists</span>
-    </button>
-    
-    <button mat-button color="grey-back" routerLink="mylog">
-      <span class="navbar_button">My Log</span>
-    </button>
     <div class = "divider"></div>
-    
-    
+    <button mat-button [matMenuTriggerFor]="profileMenu" class="profile-button">
+      <img [src]="avatarUrl" alt="Profile" class="profile-image">
+    </button>
   }
   </div>
 
@@ -113,17 +102,13 @@
     <div class="menu-container">
       @if (authService.currentUserSig() == null){
       <button mat-button class="menu-btn" color="grey-back" routerLink="login">Login</button>
-
       <button mat-button class="menu-btn" routerLink="register">Register</button>
-
       } @if (authService.currentUserSig()) {
       <button mat-button class="menu-btn" routerLink="profile">Profile</button>
-      }
-      <button mat-button class="menu-btn" [matMenuTriggerFor]="mobileCategoryMenu">Categories</button>
-      <button mat-button class="menu-btn" routerLink="myLog">Lists</button>
-      @if (authService.currentUserSig()) {
+      <button mat-button class="menu-btn" routerLink="my_lists">My Lists</button>
       <button mat-button class="menu-btn" routerLink="mylog">My Log</button>
       }
+      <button mat-button class="menu-btn" [matMenuTriggerFor]="mobileCategoryMenu">Categories</button>
       <button mat-button class="menu-btn" routerLink="add_game">Add Game</button>
       <button mat-button class="menu-btn" routerLink="add_book">Add Book</button>
       <button mat-button class="menu-btn" routerLink="add_movie">Add Movie</button>
@@ -189,6 +174,14 @@
       <mat-icon>home</mat-icon>
       <span>Home Appliances</span>
     </button>
+  </mat-menu>
+
+  <mat-menu #profileMenu="matMenu" class="custom-menu">
+    <div class="menu-container">
+      @if (authService.currentUserSig()) {
+      <button mat-button class="menu-btn" routerLink="profile">Profile</button>
+      }
+    </div>
   </mat-menu>
 
 </mat-toolbar>

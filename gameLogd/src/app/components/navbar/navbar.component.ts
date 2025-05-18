@@ -6,6 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-navbar',
@@ -23,9 +24,25 @@ import { FormsModule } from '@angular/forms';
 })
 export class NavbarComponent {
   authService = inject(AuthService);
+  userService = inject(UserService);
   searchQuery: string = '';
+  avatarUrl: string = 'assets/default-avatar.png';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    this.loadUserAvatar();
+  }
+
+  loadUserAvatar() {
+    this.authService.getUid().then(uid => {
+      if (uid) {
+        this.userService.getUserById(uid).subscribe(user => {
+          if (user?.avatarUrl) {
+            this.avatarUrl = user.avatarUrl;
+          }
+        });
+      }
+    });
+  }
 
   onSearch() {
     if (this.searchQuery.trim()) {
@@ -33,5 +50,10 @@ export class NavbarComponent {
         queryParams: { q: this.searchQuery }
       });
     }
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigateByUrl('/');
   }
 }

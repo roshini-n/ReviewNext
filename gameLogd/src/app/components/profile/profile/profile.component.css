@@ -13,16 +13,182 @@ body {
     gap: 20px;
 }
 
-.profile-card {
+.profile-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: #1a1a1a;
+    border-radius: 8px;
+}
+
+.profile-image-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.profile-image-container:hover .image-overlay {
+    opacity: 1;
+}
+
+.profile-image-container:hover .profile-image {
+    transform: scale(1.1);
+}
+
+.profile-info {
     flex: 1;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.username {
+    font-size: 2rem;
+    margin: 0;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.username mat-icon {
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.username:hover mat-icon {
+    opacity: 1;
+}
+
+.bio {
+    color: #ccc;
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.bio mat-icon {
+    font-size: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.bio:hover mat-icon {
+    opacity: 1;
+}
+
+.profile-content {
+    background: #1a1a1a;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.tab-content {
+    padding: 1rem;
+}
+
+.list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.list-card {
+    background: #2a2a2a;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.list-card:hover {
+    transform: translateY(-5px);
+}
+
+.list-card mat-card-content {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    padding: 1.5rem;
+}
+
+.list-card mat-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #FEE715;
+}
+
+.list-card h3 {
+    margin: 0;
+    color: #fff;
+}
+
+.list-card p {
+    margin: 0.5rem 0 0;
+    color: #ccc;
+}
+
+.profile-actions {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Material tabs customization */
+::ng-deep .mat-mdc-tab-group {
+    --mdc-tab-indicator-active-indicator-color: #FEE715;
+    --mat-tab-header-active-label-text-color: #FEE715;
+    --mat-tab-header-active-ripple-color: #FEE715;
+    --mat-tab-header-active-background-color: #2a2a2a;
+    --mat-tab-header-active-focus-label-text-color: #FEE715;
+    --mat-tab-header-active-hover-label-text-color: #FEE715;
+    --mat-tab-header-active-background-color: #2a2a2a;
+}
+
+::ng-deep .mat-mdc-tab-header {
+    background: #2a2a2a;
+    border-radius: 8px 8px 0 0;
+}
+
+::ng-deep .mat-mdc-tab {
+    color: #fff;
+}
+
+::ng-deep .mat-mdc-tab:hover {
+    color: #FEE715;
 }
 
 .profile-button-container {
@@ -62,4 +228,44 @@ body {
 
 .profile-text{
     background-color: grey;
+}
+
+/* Dialog Styles */
+.dialog-container {
+  padding: 20px;
+  min-width: 300px;
+}
+
+.dialog-content {
+  padding: 20px 0;
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-form-field {
+  margin-bottom: 16px;
+}
+
+mat-dialog-actions {
+  padding: 16px 0 0 0;
+  margin: 0;
+}
+
+mat-dialog-actions button {
+  margin-left: 8px;
+}
+
+mat-dialog-title {
+  margin: 0;
+  padding: 0;
+  font-size: 24px;
+  font-weight: 500;
+  color: #333;
+}
+
+mat-dialog-content p {
+  margin: 0 0 16px 0;
+  color: #666;
 }
