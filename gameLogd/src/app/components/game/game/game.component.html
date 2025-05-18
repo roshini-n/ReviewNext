@@ -11,7 +11,7 @@
   </div>
 
   <h2>Trending</h2>
-  <p-carousel [value]="trendingGames" [numVisible]="5" [numScroll]="1" [circular]="true">
+  <p-carousel [value]="trendingGames" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
     <ng-template let-game pTemplate="item">
       <div class="game-card">
         <a [routerLink]="['/games', game.id]">
@@ -26,7 +26,7 @@
   </p-carousel>
 
   <h2>Top Rated</h2>
-  <p-carousel [value]="topRatedGames" [numVisible]="5" [numScroll]="1" [circular]="true">
+  <p-carousel [value]="topRatedGames" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
     <ng-template let-game pTemplate="item">
       <div class="game-card">
         <a [routerLink]="['/games', game.id]">
@@ -41,7 +41,7 @@
   </p-carousel>
 
   <h2>Most Popular</h2>
-  <p-carousel [value]="popularGames" [numVisible]="5" [numScroll]="1" [circular]="true">
+  <p-carousel [value]="popularGames" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
     <ng-template let-game pTemplate="item">
       <div class="game-card">
         <a [routerLink]="['/games', game.id]">
