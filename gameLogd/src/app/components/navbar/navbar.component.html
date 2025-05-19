@@ -4,29 +4,10 @@
     Review<span class="highlight">Next</span>
   </h1>
 
-  <!--Categories in the middle (was search)-->
+  <!--Search in the middle-->
   @if (authService.currentUserSig()) {
   <div class="search-container">
-    <button mat-button [matMenuTriggerFor]="categoryMenu" color="grey-back">
-      <span class="navbar_button">Categories</span>
-      <mat-icon>arrow_drop_down</mat-icon>
-    </button>
-  </div>
-  }
-
-  <!--Buttons on the right-->
-  <div class="right-buttons">
-    @if (authService.currentUserSig() == null){
-    <button mat-button color="grey-back" routerLink="login">
-      <span class="navbar_button">Login</span>
-    </button>
-    <div class="divider"></div>
-    <button mat-button color="grey-back" routerLink="register">
-      <span class="navbar_button">Register</span>
-    </button>
-    } @if (authService.currentUserSig()) {
-    <!--Search field moved to right-->
-    <form class="d-flex search-form" style="margin-right: 16px;">
+    <form class="d-flex search-form">
       <input
         class="form-control me-2 search-input"
         type="search"
@@ -42,6 +23,24 @@
         Search
       </button>
     </form>
+  </div>
+  }
+
+  <!--Buttons on the right-->
+  <div class="right-buttons">
+    @if (authService.currentUserSig() == null){
+    <button mat-button color="grey-back" routerLink="login">
+      <span class="navbar_button">Login</span>
+    </button>
+    <div class="divider"></div>
+    <button mat-button color="grey-back" routerLink="register">
+      <span class="navbar_button">Register</span>
+    </button>
+    } @if (authService.currentUserSig()) {
+    <button mat-button [matMenuTriggerFor]="categoryMenu" color="grey-back">
+      <span class="navbar_button">Categories</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
     <button mat-button [matMenuTriggerFor]="profileMenu" class="profile-button">
       <img [src]="avatarUrl" alt="Profile" class="profile-image">
     </button>
