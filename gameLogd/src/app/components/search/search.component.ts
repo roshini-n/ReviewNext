@@ -34,7 +34,7 @@ export class SearchComponent implements OnInit {
     });
   }
 
-  performSearch() {
+performSearch() {
   if (!this.searchQuery.trim()) {
     this.searchResults = [];
     return;
@@ -60,7 +60,7 @@ export class SearchComponent implements OnInit {
       console.error('Error searching games:', err);
       this.error = 'Failed to search games. Please try again.';
       this.isLoading = false;
-    },
-  });
+    },
+  });
 }
 }
