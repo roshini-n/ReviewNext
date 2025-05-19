@@ -3,11 +3,12 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
 import {MatCardModule} from '@angular/material/card';
+import {MatIconModule} from '@angular/material/icon';
 import { AuthService } from '../../../services/auth.service';
 import { Router, RouterLink} from '@angular/router';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { MatFormField } from '@angular/material/form-field';
+import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { GameFirebaseService } from '../../../services/gameFirebase.service';
 import { UserService } from '../../../services/user.service';
 import { MatLabel } from '@angular/material/form-field';
@@ -15,12 +16,24 @@ import { User } from '../../../models/user.model';
 import { Inject } from '@angular/core';
 import { ResetPasswordComponent } from '../../reset-password/reset-password.component';
 import { doc } from '@angular/fire/firestore';
-
+import { MatInputModule } from '@angular/material/input';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-profile',
-  imports: [MatButtonModule, MatDividerModule, MatListModule, MatCardModule, RouterLink],
-  //changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatButtonModule, 
+    MatDividerModule, 
+    MatListModule, 
+    MatCardModule, 
+    RouterLink, 
+    MatIconModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatTabsModule
+  ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
@@ -67,11 +80,7 @@ export class ProfileComponent implements OnInit{
       if (user){
         this.bio = user.bio;
         this.username = user.username;
-        const imgEle = document.getElementById('pp') as HTMLImageElement;
-        // this.image = user.avatarUrl;
-        imgEle.src = user.avatarUrl;
-        console.log(user.avatarUrl);
-        console.log(this.username);
+        this.image = user.avatarUrl || 'assets/default-avatar.png';
         this.cd.markForCheck();
       }
       else{
@@ -84,17 +93,18 @@ export class ProfileComponent implements OnInit{
 
   openUsernameDialog(enterAnimationDuration: string, exitAnimationDuration: string) : void {
     const dialogRef = this.dialog.open(UsernameDialog, {
-      width: '250px',
+      width: '400px',
       enterAnimationDuration,
       exitAnimationDuration,
-      data: {userId: this.userId},
+      data: {userId: this.userId, currentUsername: this.username},
     });
     dialogRef.afterClosed().subscribe((newUsername) => {
-      if (newUsername){
-        this.username = newUsername
+      if (newUsername) {
+        this.username = newUsername;
+        this.loadUser(); // Reload user data to ensure consistency
         this.cd.detectChanges();
       }
-    })
+    });
   }
 
 
@@ -127,13 +137,17 @@ export class ProfileComponent implements OnInit{
 
   openImageDialog(enterAnimationDuration: string, exitAnimationDuration: string) : void {
     const dialogRef = this.dialog.open(ImageDialog, {
-      width: '250px',
+      width: '400px',
       enterAnimationDuration,
       exitAnimationDuration,
-      data: {userId: this.userId},
+      data: {userId: this.userId, currentImage: this.image},
     });
-    dialogRef.afterClosed().subscribe((newBio) => {
-      this.cd.detectChanges();
+    dialogRef.afterClosed().subscribe((newImageUrl) => {
+      if (newImageUrl) {
+        this.image = newImageUrl;
+        this.loadUser(); // Reload user data to ensure consistency
+        this.cd.detectChanges();
+      }
     })
   }
 }
@@ -170,25 +184,44 @@ export class DialogAnimationsExampleDialog {
 @Component({
   selector: 'username-dialog',
   templateUrl: 'username-dialog.html',
-  imports: [MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormField, MatLabel],
+  imports: [
+    MatButtonModule, 
+    MatDialogActions, 
+    MatDialogClose, 
+    MatDialogTitle, 
+    MatDialogContent, 
+    FormsModule, 
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 
 export class UsernameDialog {
   readonly dialogRef = inject(MatDialogRef<UsernameDialog>);
-  gameFirebaseService = inject(GameFirebaseService);
-  userService = inject(UserService)
-  username = ''
+  userService = inject(UserService);
+  username = '';
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {userId: string}) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {userId: string, currentUsername: string}) {
+    this.username = data.currentUsername || '';
+  }
 
-  // Submit button
-  submitUsername(){
-    this.userService.updateUser(this.data.userId, {username: this.username}).subscribe(() => {
-      this.dialogRef.close(this.username)
-      location.reload();
-    })
+  submitUsername() {
+    if (!this.username.trim()) {
+      return;
+    }
+    
+    this.userService.updateUser(this.data.userId, {username: this.username.trim()}).subscribe({
+      next: () => {
+        this.dialogRef.close(this.username.trim());
+      },
+      error: (error) => {
+        console.error('Error updating username:', error);
+        // You might want to show an error message to the user here
+      }
+    });
   }
 }
 
@@ -224,7 +257,7 @@ export class ImageDialog {
   userService = inject(UserService)
   image = ''
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {userId: string}) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {userId: string, currentImage: string}) {}
 
   // Submit button
   submitImage(imageUrl: string){

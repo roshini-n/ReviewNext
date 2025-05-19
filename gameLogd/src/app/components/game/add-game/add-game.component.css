@@ -1,0 +1,67 @@
+.add-game-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.selected-items {
+  margin-top: 0.5rem;
+}
+
+mat-chip-listbox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+mat-chip {
+  background-color: #FEE715;
+  color: #000;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+button[type="submit"] {
+  background-color: #FEE715;
+  color: #000;
+}
+
+button[type="submit"]:hover {
+  background-color: #e6d100;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .add-game-container {
+    padding: 1rem;
+    margin: 1rem;
+  }
+} 

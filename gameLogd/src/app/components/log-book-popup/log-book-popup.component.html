@@ -1,0 +1,58 @@
+<div class="log-book-popup">
+  <h2>Log Book: {{ data.book?.title }}</h2>
+
+  <form [formGroup]="logForm" (ngSubmit)="onSubmitClick()">
+    <mat-form-field>
+      <mat-label>Start Date</mat-label>
+      <input matInput [matDatepicker]="startPicker" formControlName="dateStarted">
+      <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+      <mat-datepicker #startPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>End Date</mat-label>
+      <input matInput [matDatepicker]="endPicker" formControlName="dateCompleted">
+      <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+      <mat-datepicker #endPicker></mat-datepicker>
+    </mat-form-field>
+
+    <div class="rating-container">
+      <h3>Rating</h3>
+      <div class="stars">
+        <mat-icon
+          *ngFor="let star of [1, 2, 3, 4, 5]"
+          (click)="setRating(star)"
+          (mouseenter)="setHoverRating(star)"
+          (mouseleave)="setHoverRating(0)"
+          [class.filled]="star <= (hoverRating || rating)"
+          [class.empty]="star > (hoverRating || rating)"
+        >
+          star
+        </mat-icon>
+      </div>
+      <p class="rating-text">{{ ratingTexts[rating] }}</p>
+    </div>
+
+    <mat-form-field>
+      <mat-label>Review</mat-label>
+      <textarea matInput formControlName="review" rows="4"></textarea>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option value="reading">Currently Reading</mat-option>
+        <mat-option value="completed">Completed</mat-option>
+        <mat-option value="dropped">Dropped</mat-option>
+        <mat-option value="plan_to_read">Plan to Read</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="button-container">
+      <button mat-button type="button" (click)="onCancelClick()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!logForm.valid">
+        Submit
+      </button>
+    </div>
+  </form>
+</div>

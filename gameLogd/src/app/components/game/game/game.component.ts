@@ -1,27 +1,42 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { CarouselModule } from 'primeng/carousel';
 import { GameFirebaseService } from '../../../services/gameFirebase.service';
 import { Game } from '../../../models/game.model';
-import { Carousel, CarouselModule } from 'primeng/carousel';
-
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [CommonModule, Carousel, CarouselModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatButtonModule,
+    MatIconModule,
+    CarouselModule
+  ],
   templateUrl: './game.component.html',
-  styleUrl: './game.component.css',
+  styleUrls: ['./game.component.css']
 })
 export class GameComponent implements OnInit {
-  games: Game[] = [];
+  allGames: Game[] = [];
+  trendingGames: Game[] = [];
+  topRatedGames: Game[] = [];
+  popularGames: Game[] = [];
   gameFirebaseService = inject(GameFirebaseService);
 
-  // on init we are calling service to grab all games for us.
   ngOnInit(): void {
-    this.games = []
-    this.gameFirebaseService.getGames().subscribe(games => {
-      this.games = games;
+    this.loadGames();
+  }
+
+  loadGames(): void {
+    this.gameFirebaseService.getGames().subscribe((games: Game[]) => {
+      this.allGames = games;
+      this.trendingGames = games;
+      this.topRatedGames = games.filter(game => game.rating >= 3.5);
+      this.popularGames = games;
     });
-    
   }
 }
