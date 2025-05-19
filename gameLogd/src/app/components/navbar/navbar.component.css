@@ -76,6 +76,7 @@
   background-color: #fee715;
   color: #000;
   white-space: nowrap;
+  font-weight: bold;
 }
 
 .search-button:hover {
