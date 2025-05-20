@@ -45,6 +45,9 @@
       <img [src]="avatarUrl" alt="Profile" class="profile-image">
     </button>
     }
+    <button mat-button [matMenuTriggerFor]="themeMenu" color="grey-back" class="theme-toggle">
+      <mat-icon>palette</mat-icon>
+    </button>
   </div>
 
 </mat-toolbar>
@@ -95,4 +98,20 @@
     <button mat-button class="menu-btn" routerLink="profile">Profile</button>
     }
   </div>
+</mat-menu>
+
+<!-- Theme Menu -->
+<mat-menu #themeMenu="matMenu">
+  <button mat-menu-item (click)="switchToLightTheme()">
+    <mat-icon>light_mode</mat-icon>
+    <span>Light</span>
+  </button>
+  <button mat-menu-item (click)="switchToDarkTheme()">
+    <mat-icon>dark_mode</mat-icon>
+    <span>Dark</span>
+  </button>
+  <button mat-menu-item (click)="switchToCustomTheme()">
+    <mat-icon>palette</mat-icon>
+    <span>Custom</span>
+  </button>
 </mat-menu>

@@ -1,40 +1,82 @@
 <!DOCTYPE html>
-<html lang = "en">
+<html lang="en">
 <head>
-    <meta charset = "UTF-8">
-    <title>Login</title>
-    <link rel = "stylesheet" href = "login.component.css">
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <link rel="stylesheet" href="login.component.css" />
 </head>
 <body>
-    <div class = "container">
-        <div class = "form-container">
-            <h1>Login</h1>
-            <form [formGroup] = "form" (ngSubmit) = "onSubmit()">
-                <div class = "form-group">
-                    <input type = "text" placeholder = "Email" formControlName = "email" />
-                </div>
-                <div class = "form-group">
-                    <input type = "password" placeholder = "Password" formControlName = "password" />
-                </div>
-                <div class = "form-group">
-                    <button type = "submit">Sign in</button>
-                </div>
-            </form>
-            <div class = "resetPass">
-                <a routerLink = "../reset_password">Reset Password?</a>
-            </div>
-            <div class = "error-messages">
-                @if (errorMessage == "auth/invalid-email") {
-                    Error: Invalid Email
-                }@else if (errorMessage == "auth/missing-password") {
-                    Error: No Password
-                }@else if (errorMessage == "auth/invalid-credential") {
-                    Error: Invalid Password
-                }@else if (errorMessage) {
-                    {{ errorMessage }}
-                }
-            </div>
+  <div class="login-container" [attr.data-theme]="currentTheme">
+    <div class="form-container">
+      <h1>Welcome Back</h1>
+      <p class="subtitle">Sign in to your account</p>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            placeholder="Enter your email"
+            [class.error]="form.get('email')?.invalid && form.get('email')?.touched"
+          />
+          @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <div class="error-text">Please enter a valid email address</div>
+          }
         </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-input-container">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              formControlName="password"
+              placeholder="Enter your password"
+              [class.error]="form.get('password')?.invalid && form.get('password')?.touched"
+            />
+            <!-- Toggle Eye Icon -->
+            <span class="toggle-password" role="button" (click)="togglePasswordVisibility()">
+              <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </span>
+          </div>
+          @if (form.get('password')?.invalid && form.get('password')?.touched) {
+            <div class="error-text">Password must be at least 6 characters</div>
+          }
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" [disabled]="form.invalid">
+          Sign In
+        </button>
+      </form>
+
+      <!-- Footer -->
+      <div class="form-footer">
+        <a routerLink="../reset_password" class="forgot-password">Forgot Password?</a>
+        <p class="register-link">
+          Don't have an account? <a routerLink="../register">Register</a>
+        </p>
+      </div>
+
+      <!-- Error Message Block -->
+      @if (errorMessage) {
+        <div class="error-messages">
+          @if (errorMessage === "auth/invalid-email") {
+            Invalid email address
+          } @else if (errorMessage === "auth/missing-password") {
+            Please enter your password
+          } @else if (errorMessage === "auth/invalid-credential") {
+            Invalid email or password
+          } @else {
+            {{ errorMessage }}
+          }
+        </div>
+      }
     </div>
+  </div>
 </body>
 </html>
