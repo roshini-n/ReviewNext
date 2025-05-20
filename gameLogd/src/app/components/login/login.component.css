@@ -1,74 +1,199 @@
-body {
+.login-container {
+    min-height: 100vh;
     display: flex;
-    height: calc(100vh - 238px);
-    justify-content: center;
     align-items: center;
-    color: #e1e1e1;
+    justify-content: center;
+    padding: 2rem;
+    background-color: var(--primary-bg);
 }
 
-.container {
+.form-container {
+    background-color: var(--secondary-bg);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px var(--shadow-color);
+    padding: 2.5rem;
     width: 100%;
-    max-width: 400px;
-    padding: 20px;
-    background-color: #2d2d2d;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    max-width: 420px;
+    transition: all 0.3s ease;
 }
 
 .form-container h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #e1e1e1;
-}
-
-.resetPass {
+    color: var(--primary-text);
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
     text-align: center;
 }
 
-.resetPass:hover {
-    cursor: pointer;
-    color: #3b82f6;
+.subtitle {
+    color: var(--secondary-text);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1rem;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--primary-text);
+    font-weight: 500;
 }
 
 .form-group input {
     width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border: 1px solid #444;
-    border-radius: 4px;
-    font-size: 14px;
-    background-color: #3a3a3a;
-    color: #e1e1e1;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--input-border);
+    border-radius: 8px;
+    background-color: var(--input-bg);
+    color: var(--primary-text);
+    font-size: 1rem;
+    transition: all 0.3s ease;
 }
 
 .form-group input:focus {
-    border-color: #3b82f6;
-    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(254, 231, 21, 0.2);
+}
+
+.form-group input.error {
+    border-color: var(--error-color);
+}
+
+.error-text {
+    color: var(--error-color);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
 }
 
 button {
     width: 100%;
-    padding: 10px;
-    justify-content: center;
-    background-color: #3b82f6;
-    color: white;
+    padding: 0.875rem;
+    background-color: var(--accent-color);
+    color: #000000;
     border: none;
-    border-radius: 4px;
-    font-size: 16px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-button:hover {
-    background-color: #2563eb;
+button:hover:not(:disabled) {
+    background-color: #FFED4A;
+    transform: translateY(-1px);
+}
+
+button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.form-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.forgot-password {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: #FFED4A;
+}
+
+.register-link {
+    margin-top: 1rem;
+    color: var(--secondary-text);
+}
+
+.register-link a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+    color: #FFED4A;
 }
 
 .error-messages {
-    margin-top: 15px;
-    color: #e74c3c;
-    font-size: 14px;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: rgba(231, 76, 60, 0.1);
+    border-radius: 8px;
+    color: var(--error-color);
     text-align: center;
+    font-size: 0.875rem;
+}
+
+.password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-container input {
+    padding-right: 40px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: var(--secondary-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.toggle-password:hover {
+    background-color: var(--navbar-button-hover);
+}
+
+/* ✅ Fix this: combine translate and scale together */
+.toggle-password:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+
+.toggle-password mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 1rem;
+    }
+
+    .form-container {
+        padding: 1.5rem;
+    }
+
+    .form-container h1 {
+        font-size: 1.75rem;
+    }
 }
