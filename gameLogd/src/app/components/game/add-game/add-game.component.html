@@ -70,7 +70,9 @@
     <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Release Date</mat-label>
-        <input matInput type="date" formControlName="releaseDate" required>
+        <input matInput [matDatepicker]="picker" formControlName="releaseDate" required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
         <mat-error *ngIf="gameForm.get('releaseDate')?.hasError('required')">Release date is required</mat-error>
       </mat-form-field>
 
@@ -91,7 +93,21 @@
       <mat-form-field appearance="outline">
         <mat-label>Image URL</mat-label>
         <input matInput formControlName="imageUrl">
-        <mat-hint>Optional - will use default image if not provided</mat-hint>
+        <mat-hint *ngIf="!isSearchingImage">Will be automatically filled based on game title</mat-hint>
+        <mat-hint *ngIf="isSearchingImage">Searching for game image...</mat-hint>
+        <mat-icon *ngIf="isSearchingImage" matSuffix class="spinner">search</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Language</mat-label>
+        <input matInput formControlName="language">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Country</mat-label>
+        <input matInput formControlName="country">
       </mat-form-field>
     </div>
 

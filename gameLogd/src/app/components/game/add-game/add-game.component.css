@@ -8,7 +8,7 @@
 }
 
 h1 {
-  color: #333;
+  color: #FEE715;
   margin-bottom: 2rem;
   font-size: 2rem;
 }
@@ -55,6 +55,7 @@ button[type="submit"]:hover {
   background-color: #e6d100;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
   .form-row {
     grid-template-columns: 1fr;
@@ -64,4 +65,22 @@ button[type="submit"]:hover {
     padding: 1rem;
     margin: 1rem;
   }
+
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 } 
