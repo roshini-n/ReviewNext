@@ -7,15 +7,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router, RouterModule } from '@angular/router';
 import { MovieFirebaseService } from '../../../services/movieFirebase.service';
+import { TMDBService } from '../../../services/tmdb.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { Observable } from 'rxjs';
+import { Observable, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
@@ -23,6 +24,7 @@ import { map, startWith } from 'rxjs/operators';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -30,6 +32,7 @@ import { map, startWith } from 'rxjs/operators';
     MatSelectModule,
     MatChipsModule,
     MatIconModule,
+    MatSnackBarModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule
@@ -40,6 +43,7 @@ import { map, startWith } from 'rxjs/operators';
 export class AddMovieComponent implements OnInit {
   private fb = inject(FormBuilder);
   private movieService = inject(MovieFirebaseService);
+  private tmdbService = inject(TMDBService);
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
@@ -48,6 +52,7 @@ export class AddMovieComponent implements OnInit {
   platforms: string[] = [];
   selectedGenres: string[] = [];
   isSubmitting = false;
+  isSearchingImage = false;
 
   // Available options for platforms and genres
   options: string[] = [
@@ -92,6 +97,58 @@ export class AddMovieComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value || '', this.genres))
     ) || new Observable<string[]>();
+
+    // Subscribe to title changes to fetch movie image
+    this.movieForm.get('title')?.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap(title => {
+        if (title && title.length >= 2) {
+          this.isSearchingImage = true;
+          const releaseDate = this.movieForm.get('releaseDate')?.value;
+          const year = releaseDate ? new Date(releaseDate).getFullYear() : undefined;
+          return this.tmdbService.searchMovie(title, year);
+        }
+        return [];
+      })
+    ).subscribe({
+      next: (imageUrl) => {
+        if (imageUrl) {
+          this.movieForm.patchValue({ imageUrl });
+        }
+        this.isSearchingImage = false;
+      },
+      error: (error) => {
+        console.error('Error fetching movie image:', error);
+        this.isSearchingImage = false;
+      }
+    });
+
+    // Also update image when release date changes
+    this.movieForm.get('releaseDate')?.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap(releaseDate => {
+        const title = this.movieForm.get('title')?.value;
+        if (title && title.length >= 2) {
+          this.isSearchingImage = true;
+          const year = releaseDate ? new Date(releaseDate).getFullYear() : undefined;
+          return this.tmdbService.searchMovie(title, year);
+        }
+        return [];
+      })
+    ).subscribe({
+      next: (imageUrl) => {
+        if (imageUrl) {
+          this.movieForm.patchValue({ imageUrl });
+        }
+        this.isSearchingImage = false;
+      },
+      error: (error) => {
+        console.error('Error fetching movie image:', error);
+        this.isSearchingImage = false;
+      }
+    });
   }
 
   private _filter(value: string, options: string[]): string[] {

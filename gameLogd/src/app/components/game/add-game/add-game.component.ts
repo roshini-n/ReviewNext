@@ -7,15 +7,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router, RouterModule } from '@angular/router';
 import { GameFirebaseService } from '../../../services/gameFirebase.service';
+import { IGDBService } from '../../../services/igdb.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { Observable } from 'rxjs';
+import { Observable, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
@@ -23,6 +24,7 @@ import { map, startWith } from 'rxjs/operators';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -30,16 +32,18 @@ import { map, startWith } from 'rxjs/operators';
     MatSelectModule,
     MatChipsModule,
     MatIconModule,
+    MatSnackBarModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule
   ],
   templateUrl: './add-game.component.html',
-  styleUrl: './add-game.component.css'
+  styleUrls: ['./add-game.component.css']
 })
 export class AddGameComponent implements OnInit {
   private fb = inject(FormBuilder);
   private gameService = inject(GameFirebaseService);
+  private igdbService = inject(IGDBService);
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
@@ -48,14 +52,20 @@ export class AddGameComponent implements OnInit {
   platforms: string[] = [];
   selectedGenres: string[] = [];
   isSubmitting = false;
+  isSearchingImage = false;
 
   // Available options for platforms and genres
   options: string[] = [
-    "PC", "PlayStation", "Xbox", "Nintendo Switch", "Mobile", "Steam", "Epic Games", "GOG"
+    "PC", "PlayStation 5", "PlayStation 4", "Xbox Series X|S", "Xbox One",
+    "Nintendo Switch", "Nintendo 3DS", "Nintendo Wii U", "Mobile", "VR",
+    "Other"
   ];
 
   genres: string[] = [
-    "Action", "Adventure", "Horror", "Fantasy", "RPG", "Shooter", "Strategy", "Puzzle", "Sports", "Racing", "Simulation", "Indie"
+    "Action", "Adventure", "RPG", "Strategy", "Sports", "Racing",
+    "Puzzle", "Platformer", "Fighting", "Shooter", "Simulation",
+    "Horror", "MMO", "MOBA", "Battle Royale", "Card Game", "Board Game",
+    "Educational", "Music", "Party", "Sandbox"
   ];
 
   filteredOptions!: Observable<string[]>;
@@ -70,7 +80,9 @@ export class AddGameComponent implements OnInit {
       releaseDate: ['', Validators.required],
       developer: ['', [Validators.required, Validators.minLength(1)]],
       publisher: ['', [Validators.required, Validators.minLength(1)]],
-      imageUrl: ['', [Validators.pattern('https?://.*')]]
+      imageUrl: ['', [Validators.pattern('https?://.*')]],
+      language: [''],
+      country: ['']
     });
   }
 
@@ -85,15 +97,67 @@ export class AddGameComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value || '', this.genres))
     ) || new Observable<string[]>();
+
+    // Subscribe to title changes to fetch game image
+    this.gameForm.get('title')?.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap(title => {
+        if (title && title.length >= 2) {
+          this.isSearchingImage = true;
+          const releaseDate = this.gameForm.get('releaseDate')?.value;
+          const year = releaseDate ? new Date(releaseDate).getFullYear() : undefined;
+          return this.igdbService.searchGame(title, year);
+        }
+        return [];
+      })
+    ).subscribe({
+      next: (imageUrl) => {
+        if (imageUrl) {
+          this.gameForm.patchValue({ imageUrl });
+        }
+        this.isSearchingImage = false;
+      },
+      error: (error) => {
+        console.error('Error fetching game image:', error);
+        this.isSearchingImage = false;
+      }
+    });
+
+    // Also update image when release date changes
+    this.gameForm.get('releaseDate')?.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap(releaseDate => {
+        const title = this.gameForm.get('title')?.value;
+        if (title && title.length >= 2) {
+          this.isSearchingImage = true;
+          const year = releaseDate ? new Date(releaseDate).getFullYear() : undefined;
+          return this.igdbService.searchGame(title, year);
+        }
+        return [];
+      })
+    ).subscribe({
+      next: (imageUrl) => {
+        if (imageUrl) {
+          this.gameForm.patchValue({ imageUrl });
+        }
+        this.isSearchingImage = false;
+      },
+      error: (error) => {
+        console.error('Error fetching game image:', error);
+        this.isSearchingImage = false;
+      }
+    });
   }
 
-  // Helper method to filter options
-  private _filter(value: string, list: string[]): string[] {
+  private _filter(value: string, options: string[]): string[] {
     const filterValue = value.toLowerCase();
-    return list.filter(option => option.toLowerCase().includes(filterValue));
+    return options.filter(option => 
+      option.toLowerCase().includes(filterValue)
+    );
   }
 
-  // Add platform to selected platforms list
   addPlatform() {
     const platformValue = this.gameForm.get('platformInput')?.value;
     if (platformValue && !this.platforms.includes(platformValue)) {
@@ -102,12 +166,10 @@ export class AddGameComponent implements OnInit {
     this.gameForm.get('platformInput')?.setValue('');
   }
 
-  // Remove platform from selected platforms list
   removePlatform(platform: string) {
     this.platforms = this.platforms.filter(p => p !== platform);
   }
 
-  // Add genre to selected genres list
   addGenre() {
     const genreValue = this.gameForm.get('genreInput')?.value;
     if (genreValue && !this.selectedGenres.includes(genreValue)) {
@@ -116,18 +178,20 @@ export class AddGameComponent implements OnInit {
     this.gameForm.get('genreInput')?.setValue('');
   }
 
-  // Remove genre from selected genres list
   removeGenre(genre: string) {
     this.selectedGenres = this.selectedGenres.filter(g => g !== genre);
   }
 
-  onCancel(): void {
-    this.router.navigate(['/games']);
-  }
-
   async sendDataToFirebase() {
-    if (!this.gameForm.valid || this.selectedGenres.length === 0) {
-      this.snackBar.open('Please fill in all required fields and add at least one genre', 'Close', {
+    if (!this.gameForm.valid) {
+      this.snackBar.open('Please fill in all required fields', 'Close', {
+        duration: 5000
+      });
+      return;
+    }
+
+    if (this.selectedGenres.length === 0) {
+      this.snackBar.open('Please add at least one genre', 'Close', {
         duration: 5000
       });
       return;
@@ -138,17 +202,19 @@ export class AddGameComponent implements OnInit {
 
     const gameData = {
       title: this.gameForm.value.title || '',
-      developer: this.gameForm.value.developer || '',
       description: this.gameForm.value.description || '',
+      developer: this.gameForm.value.developer || '',
       publisher: this.gameForm.value.publisher || '',
       releaseDate: this.gameForm.value.releaseDate || '',
       genres: this.selectedGenres,
-      platforms: this.platforms,
       rating: 0,
       imageUrl: finalImageUrl,
       totalRatingScore: 0,
       numRatings: 0,
-      dateAdded: new Date().toISOString()
+      dateAdded: new Date().toISOString(),
+      platforms: this.platforms,
+      language: this.gameForm.value.language || '',
+      country: this.gameForm.value.country || ''
     };
 
     try {
@@ -157,11 +223,16 @@ export class AddGameComponent implements OnInit {
         duration: 3000
       });
       this.router.navigate(['/games']);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error adding game:', error);
-      this.snackBar.open('Error adding game: ' + (error as Error).message, 'Close', {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      this.snackBar.open('Error adding game: ' + errorMessage, 'Close', {
         duration: 5000
       });
     }
+  }
+
+  onCancel(): void {
+    this.router.navigate(['/games']);
   }
 }
