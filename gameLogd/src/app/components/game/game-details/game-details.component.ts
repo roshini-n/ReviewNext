@@ -8,10 +8,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatTabsModule } from '@angular/material/tabs';
 import { LogGamePopupComponent } from '../../log-game-popup/log-game-popup.component';
 import { AuthService } from '../../../services/auth.service';
 import { GameLogService } from '../../../services/gamelog.service';
@@ -19,6 +21,9 @@ import { ReviewService } from '../../../services/review.service';
 import { Review } from '../../../models/review.model';
 import { GeneralDeleteButtonComponent } from '../../shared/general-delete-button/general-delete-button.component';
 import { GameReviewEditComponent } from '../game-review-edit/game-review-edit.component';
+import { GameEditDialogComponent } from '../game-edit-dialog/game-edit-dialog.component';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-game-details',
@@ -31,9 +36,12 @@ import { GameReviewEditComponent } from '../game-review-edit/game-review-edit.co
     MatInputModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatChipsModule,
     MatGridListModule,
     MatDialogModule,
+    MatTabsModule,
+    ReactiveFormsModule,
     LogGamePopupComponent,
     GeneralDeleteButtonComponent,
     GameReviewEditComponent,
@@ -43,21 +51,33 @@ import { GameReviewEditComponent } from '../game-review-edit/game-review-edit.co
 })
 export class GameDetailsComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  router = inject(Router);
   private dialog = inject(MatDialog);
   private authService = inject(AuthService);
   private gameLogService = inject(GameLogService);
   private reviewService = inject(ReviewService);
+  private fb = inject(FormBuilder);
   gameFirebaseService = inject(GameFirebaseService);
+  private snackBar = inject(MatSnackBar);
+  
   game?: Game;
   rating?: number;
   currentRating: number = 0;
-  disabled: boolean = false; // use this to disable buttons based on user logged in status
+  disabled: boolean = false;
   reviews: Review[] = [];
-
-  // this is an explicitly defined string, whereas the currentUser is a promise
+  isLoading: boolean = true;
+  error: string | null = null;
   currentUserId: string | null = null;
   currenUser = this.authService.getUid();
   gameId: string | null = null;
+  reviewForm: FormGroup;
+
+  constructor() {
+    this.reviewForm = this.fb.group({
+      reviewText: ['', [Validators.required, Validators.minLength(10)]],
+      rating: [0, [Validators.required, Validators.min(1), Validators.max(5)]]
+    });
+  }
 
   async ngOnInit() {
     console.log('Current user:', this.currenUser);
@@ -67,13 +87,21 @@ export class GameDetailsComponent implements OnInit {
       this.currentUserId = await this.currenUser;
       this.disabled = false;
     }
-    // snag the game id from the route of our url
+    
     this.gameId = this.route.snapshot.paramMap.get('id');
 
-    // grab the game by its id
     if (this.gameId) {
-      this.gameFirebaseService.getGameById(this.gameId).subscribe((game) => {
-        this.game = game;
+      this.isLoading = true;
+      this.gameFirebaseService.getGameById(this.gameId).subscribe({
+        next: (game) => {
+          this.game = game;
+          this.isLoading = false;
+        },
+        error: (err) => {
+          this.error = 'Failed to load game details. Please try again later.';
+          this.isLoading = false;
+          console.error('Error loading game:', err);
+        }
       });
     }
     
@@ -100,7 +128,6 @@ export class GameDetailsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-
       this.getReviews();
       if (result) {
         this.gameLogService.addGameLog(result).subscribe((gameLogId) => {
@@ -108,10 +135,6 @@ export class GameDetailsComponent implements OnInit {
           if (this.gameId) {
             this.gameFirebaseService.getGameById(this.gameId).subscribe((game) => {
               this.game = game;
-              let ratingLabel = document.getElementById("rating")
-              if (ratingLabel) {
-                ratingLabel.innerText = "Rating: " + game?.rating + "/5"
-              }
             });
           }
         });
@@ -120,19 +143,17 @@ export class GameDetailsComponent implements OnInit {
     });
   }
 
-  // grab reviews for this game
   getReviews() {
     if (!this.gameId) return;
-    this.reviewService.getReviewsByGameId(this.gameId).subscribe((reviews) => {
-      this.reviews = reviews;
-      console.log('Reviews:', reviews);
-    });
-  }
-
-  deleteReview(review: Review) {
-    this.reviewService.deleteReview(review.id).subscribe(() => {
-      console.log('Review deleted:', review.id);
-      this.getReviews();
+    this.reviewService.getReviewsByGameId(this.gameId).subscribe({
+      next: (reviews) => {
+        this.reviews = reviews;
+        console.log('Reviews loaded:', reviews);
+      },
+      error: (error) => {
+        console.error('Error loading reviews:', error);
+        this.error = 'Failed to load reviews. Please try again later.';
+      }
     });
   }
 
@@ -156,5 +177,74 @@ export class GameDetailsComponent implements OnInit {
         this.getReviews();
       }
     });
+  }
+
+  deleteReview(review: Review) {
+    if (!review || !review.id) return;
+    this.reviewService.deleteReview(review.id).subscribe({
+      next: () => {
+        console.log('Review deleted:', review.id);
+        this.getReviews();
+      },
+      error: (error) => {
+        console.error('Error deleting review:', error);
+        this.error = 'Failed to delete review. Please try again later.';
+      }
+    });
+  }
+
+  onAddReview() {
+    if (!this.game || !this.gameId || !this.currentUserId) return;
+
+    const dialogRef = this.dialog.open(GameReviewEditComponent, {
+      width: '550px',
+      panelClass: ['game-review-dialog', 'minimal-theme-dialog'],
+      autoFocus: false,
+      backdropClass: 'minimal-backdrop',
+      data: {
+        gameId: this.gameId,
+        gameTitle: this.game.title,
+        userId: this.currentUserId
+      }
+    });
+
+    dialogRef.componentInstance.reviewUpdated.subscribe(() => {
+      this.getReviews();
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.getReviews();
+      }
+    });
+  }
+
+  onEditGame() {
+    if (!this.game) return;
+
+    const dialogRef = this.dialog.open(GameEditDialogComponent, {
+      width: '500px',
+      data: this.game
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.gameFirebaseService.updateGame(result).subscribe({
+          next: () => {
+            this.game = result;
+          },
+          error: (error: Error) => {
+            console.error('Error updating game:', error);
+            this.snackBar.open('Failed to update game', 'Close', {
+              duration: 3000,
+            });
+          }
+        });
+      }
+    });
+  }
+
+  onTabChange(index: number) {
+    // Handle tab change if needed
   }
 }

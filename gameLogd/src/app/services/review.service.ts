@@ -15,15 +15,24 @@ export class ReviewService {
   addReview(review: Omit<Review, 'id'>): Observable<string> {
     const reviewsCollection = collection(this.firestore, 'reviews');
     
-    return from(addDoc(reviewsCollection, {
-      ...review,
-      datePosted: new Date(),
-      likes: 0
-    })).pipe(
-      map(docRef => {
-        // update the document with its ID
-        updateDoc(docRef, { id: docRef.id });
-        return docRef.id;
+    return this.authService.user$.pipe(
+      switchMap(user => {
+        if (!user) {
+          return throwError(() => new Error('User not authenticated'));
+        }
+        
+        return from(addDoc(reviewsCollection, {
+          ...review,
+          datePosted: new Date(),
+          likes: 0,
+          username: user.displayName || 'Anonymous'
+        })).pipe(
+          map(docRef => {
+            // update the document with its ID
+            updateDoc(docRef, { id: docRef.id });
+            return docRef.id;
+          })
+        );
       })
     );
   }
