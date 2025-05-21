@@ -25,20 +25,38 @@ import { ReviewService } from '../../../services/review.service';
   styleUrl: './game-review-edit.component.css'
 })
 export class GameReviewEditComponent {
-  // listener for when the review is updated
   @Output() reviewUpdated = new EventEmitter<Review>();
   
   editedReview: Review;
+  isNewReview: boolean = false;
   
   constructor(
-    // inject the dialog reference and data
     public dialogRef: MatDialogRef<GameReviewEditComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { review: Review },
+    @Inject(MAT_DIALOG_DATA) public data: { 
+      review?: Review;
+      gameId?: string;
+      gameTitle?: string;
+      userId?: string;
+    },
     private reviewService: ReviewService
-  ) 
-  {
-    // pass the data off to the dialog
-    this.editedReview = { ...data.review };
+  ) {
+    if (data.review) {
+      // Editing existing review
+      this.editedReview = { ...data.review };
+      this.isNewReview = false;
+    } else {
+      // Creating new review
+      this.editedReview = {
+        id: '',
+        gameId: data.gameId || '',
+        userId: data.userId || '',
+        reviewText: '',
+        rating: 0,
+        datePosted: new Date(),
+        username: '' // This will be set by the service
+      };
+      this.isNewReview = true;
+    }
   }
   
   updateRating(rating: number): void {
@@ -51,10 +69,31 @@ export class GameReviewEditComponent {
   
   onSubmit(): void {
     if (this.editedReview.reviewText?.trim()) {
-      this.reviewService.updateReview(this.editedReview.id, this.editedReview).subscribe(() => {
-        this.reviewUpdated.emit(this.editedReview);
-        this.dialogRef.close(this.editedReview);
-      });
+      if (this.isNewReview) {
+        // Create new review
+        const { id, ...reviewData } = this.editedReview; // Remove id for new review
+        this.reviewService.addReview(reviewData).subscribe({
+          next: (newReviewId) => {
+            const newReview = { ...this.editedReview, id: newReviewId };
+            this.reviewUpdated.emit(newReview);
+            this.dialogRef.close(newReview);
+          },
+          error: (error) => {
+            console.error('Error creating review:', error);
+          }
+        });
+      } else {
+        // Update existing review
+        this.reviewService.updateReview(this.editedReview.id, this.editedReview).subscribe({
+          next: () => {
+            this.reviewUpdated.emit(this.editedReview);
+            this.dialogRef.close(this.editedReview);
+          },
+          error: (error) => {
+            console.error('Error updating review:', error);
+          }
+        });
+      }
     }
   }
 }

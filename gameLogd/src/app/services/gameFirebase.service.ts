@@ -13,6 +13,7 @@ import {
   limit,
   QueryConstraint,
   documentId,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { Observable, from, of, throwError } from 'rxjs';
 import { Game } from '../models/game.model';
@@ -154,5 +155,25 @@ export class GameFirebaseService {
     return collectionData(gamesQuery, { idField: 'id' }).pipe(
       map((games) => games.map((game) => this.mapToGameModel(game as any)))
     );
+  }
+
+  updateGame(game: Game): Observable<void> {
+    if (!game.id) {
+      return throwError(() => new Error('Game ID is required for update'));
+    }
+    const gameDoc = doc(this.firestore, `games/${game.id}`);
+    return from(updateDoc(gameDoc, {
+      title: game.title,
+      description: game.description,
+      platforms: game.platforms,
+      releaseDate: game.releaseDate,
+      developer: game.developer,
+      publisher: game.publisher,
+      rating: game.rating,
+      imageUrl: game.imageUrl,
+      playersPlayed: game.playersPlayed,
+      numRatings: game.numRatings,
+      totalRatingScore: game.totalRatingScore
+    }));
   }
 }
