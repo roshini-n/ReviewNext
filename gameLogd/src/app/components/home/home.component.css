@@ -15,7 +15,7 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
-    height: calc(100vh - 238px);
+    height: calc(100vh - 135px);
   }
 
 .title {
