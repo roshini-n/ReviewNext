@@ -93,7 +93,9 @@
       <mat-form-field appearance="outline">
         <mat-label>Image URL</mat-label>
         <input matInput formControlName="imageUrl">
-        <mat-hint>Optional - will use default image if not provided</mat-hint>
+        <mat-hint *ngIf="!isSearchingImage">Will be automatically filled based on game title</mat-hint>
+        <mat-hint *ngIf="isSearchingImage">Searching for game image...</mat-hint>
+        <mat-icon *ngIf="isSearchingImage" matSuffix class="spinner">search</mat-icon>
       </mat-form-field>
     </div>
 
