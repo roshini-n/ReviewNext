@@ -9,6 +9,14 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline">
+        <mat-label>Author</mat-label>
+        <input matInput formControlName="author" required>
+        <mat-error *ngIf="bookForm.get('author')?.hasError('required')">Author is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
         <mat-label>Description</mat-label>
         <textarea matInput formControlName="description" required rows="3"></textarea>
         <mat-error *ngIf="bookForm.get('description')?.hasError('required')">Description is required</mat-error>
@@ -77,23 +85,26 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Developer</mat-label>
-        <input matInput formControlName="author" required>
-        <mat-error *ngIf="bookForm.get('author')?.hasError('required')">Developer is required</mat-error>
-      </mat-form-field>
-    </div>
-
-    <div class="form-row">
-      <mat-form-field appearance="outline">
         <mat-label>Publisher</mat-label>
         <input matInput formControlName="publisher" required>
         <mat-error *ngIf="bookForm.get('publisher')?.hasError('required')">Publisher is required</mat-error>
       </mat-form-field>
+    </div>
 
-      <mat-form-field appearance="outline">
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
         <mat-label>Image URL</mat-label>
-        <input matInput formControlName="imageUrl">
-        <mat-hint>Optional - will use default image if not provided</mat-hint>
+        <input matInput formControlName="imageUrl" placeholder="Book cover image URL">
+        <mat-hint *ngIf="isSearchingImage">
+          <mat-icon class="spinner">search</mat-icon>
+          Searching for book cover...
+        </mat-hint>
+        <mat-hint *ngIf="!isSearchingImage && bookForm.get('imageUrl')?.value">
+          Book cover found! You can change this URL if needed.
+        </mat-hint>
+        <mat-error *ngIf="bookForm.get('imageUrl')?.hasError('pattern')">
+          Please enter a valid URL starting with http:// or https://
+        </mat-error>
       </mat-form-field>
     </div>
 
