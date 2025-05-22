@@ -10,12 +10,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { GameFirebaseService } from '../../services/gameFirebase.service';
+import { IGDBService } from '../../services/igdb.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { Observable } from 'rxjs';
+import { Observable, debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
@@ -40,6 +41,7 @@ import { map, startWith } from 'rxjs/operators';
 export class AddGameComponent implements OnInit {
   private fb = inject(FormBuilder);
   private gameService = inject(GameFirebaseService);
+  private igdbService = inject(IGDBService);
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
@@ -48,19 +50,20 @@ export class AddGameComponent implements OnInit {
   platforms: string[] = [];
   selectedGenres: string[] = [];
   isSubmitting = false;
+  isSearchingImage = false;
 
   // Available options for platforms and genres
   options: string[] = [
-    "NES", "SNES", "N64", "PS", "PS2", "PS3", "PS4", "PS5",
-    "Xbox", "Xbox 360", "Xbox One", "Xbox Series X|S", "PC", "Switch", "Wii", 
-    "Wii U", "Gamecube", "Gameboy", "Gameboy Color", "Gameboy Advance", 
-    "DS", "3DS", "PSP", "PS Vita", "Mobile", "Other"
+    "PC", "PlayStation 5", "PlayStation 4", "Xbox Series X|S", "Xbox One",
+    "Nintendo Switch", "Nintendo 3DS", "Nintendo Wii U", "Mobile", "VR",
+    "Other"
   ];
-  
+
   genres: string[] = [
-    "Action", "Adventure", "RPG", "Shooter", "Horror", "Platformer", 
-    "Puzzle", "Fighting", "Racing", "Strategy", "Simulation", "Sports", 
-    "Looter Shooter", "MMO", "Roguelike", "Metroidvania", "Visual Novel"
+    "Action", "Adventure", "RPG", "Strategy", "Sports", "Racing",
+    "Puzzle", "Platformer", "Fighting", "Shooter", "Simulation",
+    "Horror", "MMO", "MOBA", "Battle Royale", "Card Game", "Board Game",
+    "Educational", "Music", "Party", "Sandbox"
   ];
 
   filteredOptions!: Observable<string[]>;
@@ -75,7 +78,9 @@ export class AddGameComponent implements OnInit {
       releaseDate: ['', Validators.required],
       developer: ['', [Validators.required, Validators.minLength(1)]],
       publisher: ['', [Validators.required, Validators.minLength(1)]],
-      imageUrl: ['', [Validators.pattern('https?://.*')]]
+      imageUrl: ['', [Validators.pattern('https?://.*')]],
+      language: [''],
+      country: ['']
     });
   }
 
@@ -90,6 +95,61 @@ export class AddGameComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value || '', this.genres))
     ) || new Observable<string[]>();
+
+    // Subscribe to title changes to fetch game image
+    this.gameForm.get('title')?.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      filter(title => title && title.length > 2)
+    ).subscribe(title => {
+      console.log('Title changed:', title);
+      this.isSearchingImage = true;
+      const releaseDate = this.gameForm.get('releaseDate')?.value;
+      const year = releaseDate ? new Date(releaseDate).getFullYear() : undefined;
+      
+      this.igdbService.searchGame(title, year).subscribe({
+        next: (imageUrl) => {
+          console.log('Received image URL from IGDB:', imageUrl);
+          if (imageUrl) {
+            this.gameForm.patchValue({ imageUrl }, { emitEvent: false });
+            console.log('Updated form with image URL:', imageUrl);
+          }
+          this.isSearchingImage = false;
+        },
+        error: (error) => {
+          console.error('Error fetching game image:', error);
+          this.isSearchingImage = false;
+        }
+      });
+    });
+
+    // Subscribe to release date changes to update image if needed
+    this.gameForm.get('releaseDate')?.valueChanges.pipe(
+      distinctUntilChanged(),
+      filter(date => date && this.gameForm.get('title')?.value)
+    ).subscribe(date => {
+      console.log('Release date changed:', date);
+      const title = this.gameForm.get('title')?.value;
+      if (title) {
+        this.isSearchingImage = true;
+        const year = date ? new Date(date).getFullYear() : undefined;
+        
+        this.igdbService.searchGame(title, year).subscribe({
+          next: (imageUrl) => {
+            console.log('Received image URL from IGDB after date change:', imageUrl);
+            if (imageUrl) {
+              this.gameForm.patchValue({ imageUrl }, { emitEvent: false });
+              console.log('Updated form with image URL after date change:', imageUrl);
+            }
+            this.isSearchingImage = false;
+          },
+          error: (error) => {
+            console.error('Error fetching game image after date change:', error);
+            this.isSearchingImage = false;
+          }
+        });
+      }
+    });
   }
 
   private _filter(value: string, options: string[]): string[] {

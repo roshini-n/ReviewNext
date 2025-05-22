@@ -1,107 +1,107 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map, catchError, throwError } from 'rxjs';
+
+interface RAWGGame {
+  id: number;
+  name: string;
+  background_image: string;
+  rating: number;
+  released: string;
+}
+
+interface RAWGResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: RAWGGame[];
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class IGDBService {
-  private readonly clientId = 'YOUR_TWITCH_CLIENT_ID'; // Replace with your Twitch Client ID
-  private readonly clientSecret = 'YOUR_TWITCH_CLIENT_SECRET'; // Replace with your Twitch Client Secret
-  private readonly baseUrl = 'https://api.igdb.com/v4';
-  private readonly imageBaseUrl = 'https://images.igdb.com/igdb/image/upload/t_cover_big';
-  private accessToken: string | null = null;
-  private tokenExpiry: number = 0;
+  private readonly apiKey = '873b450f6ff648fdbdaf5de426e99436';
+  private readonly baseUrl = 'https://api.rawg.io/api/games';
 
   constructor(private http: HttpClient) {}
 
-  private async getAccessToken(): Promise<string> {
-    if (this.accessToken && Date.now() < this.tokenExpiry) {
-      return this.accessToken;
+  searchGame(title: string, year?: number): Observable<string> {
+    console.log('Searching for game:', title, year ? `(Year: ${year})` : '');
+    
+    if (!title || title.length < 2) {
+      console.log('Title too short, skipping search');
+      return new Observable(observer => {
+        observer.next('');
+        observer.complete();
+      });
     }
 
-    const response = await fetch('https://id.twitch.tv/oauth2/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        client_id: this.clientId,
-        client_secret: this.clientSecret,
-        grant_type: 'client_credentials'
-      })
-    }).then(res => res.json());
+    // Clean the title for better matching
+    const cleanTitle = this.cleanTitle(title);
+    console.log('Cleaned title:', cleanTitle);
 
-    this.accessToken = response.access_token;
-    this.tokenExpiry = Date.now() + (response.expires_in * 1000);
-    return this.accessToken;
-  }
+    // Build the search URL with more parameters
+    let url = `${this.baseUrl}?key=${this.apiKey}&search=${encodeURIComponent(title)}&page_size=10&ordering=-rating`;
+    
+    if (year) {
+      url += `&dates=${year}-01-01,${year}-12-31`;
+    }
 
-  searchGame(title: string, year?: number): Observable<string> {
-    return new Observable(observer => {
-      this.getAccessToken().then(token => {
-        const headers = new HttpHeaders({
-          'Client-ID': this.clientId,
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        });
+    console.log('Making request to RAWG API:', url);
 
-        // Clean the title for better matching
-        const cleanTitle = this.cleanTitle(title);
-
-        // Build the query with more fields for better matching
-        let query = `search "${cleanTitle}"; fields name,cover.image_id,first_release_date,slug,alternative_names; limit 20;`;
-        if (year) {
-          const startDate = new Date(year, 0, 1).getTime() / 1000;
-          const endDate = new Date(year, 11, 31).getTime() / 1000;
-          query = `search "${cleanTitle}"; fields name,cover.image_id,first_release_date,slug,alternative_names; where first_release_date >= ${startDate} & first_release_date <= ${endDate}; limit 20;`;
+    return this.http.get<RAWGResponse>(url).pipe(
+      map(response => {
+        console.log('RAWG response:', response);
+        
+        if (!response.results || response.results.length === 0) {
+          console.log('No results found');
+          return '';
         }
 
-        this.http.post<any[]>(`${this.baseUrl}/games`, query, { headers }).pipe(
-          map(response => {
-            if (response && response.length > 0) {
-              // Try to find exact match first
-              const exactMatch = response.find(game => 
-                this.cleanTitle(game.name) === cleanTitle ||
-                (game.alternative_names && game.alternative_names.some((alt: string) => 
-                  this.cleanTitle(alt) === cleanTitle
-                ))
-              );
+        // Try to find exact match first
+        const exactMatch = response.results.find((game: RAWGGame) => 
+          this.cleanTitle(game.name) === cleanTitle ||
+          this.cleanTitle(game.name).includes(cleanTitle) ||
+          cleanTitle.includes(this.cleanTitle(game.name))
+        );
 
-              if (exactMatch && exactMatch.cover) {
-                return `${this.imageBaseUrl}/${exactMatch.cover.image_id}.jpg`;
-              }
+        if (exactMatch?.background_image) {
+          console.log('Found exact match:', exactMatch.name);
+          return exactMatch.background_image;
+        }
 
-              // If no exact match, try to find closest match
-              const closestMatch = response.find(game => {
-                const gameTitle = this.cleanTitle(game.name);
-                return gameTitle.includes(cleanTitle) || 
-                       cleanTitle.includes(gameTitle) ||
-                       (game.alternative_names && game.alternative_names.some((alt: string) => 
-                         this.cleanTitle(alt).includes(cleanTitle) || 
-                         cleanTitle.includes(this.cleanTitle(alt))
-                       ));
-              });
-
-              if (closestMatch && closestMatch.cover) {
-                return `${this.imageBaseUrl}/${closestMatch.cover.image_id}.jpg`;
-              }
-
-              // If still no match, return the first result with a cover
-              const firstWithCover = response.find(game => game.cover);
-              if (firstWithCover) {
-                return `${this.imageBaseUrl}/${firstWithCover.cover.image_id}.jpg`;
-              }
-            }
-            return '';
-          })
-        ).subscribe({
-          next: (imageUrl) => observer.next(imageUrl),
-          error: (error) => observer.error(error),
-          complete: () => observer.complete()
+        // If no exact match, try to find closest match
+        const closestMatch = response.results.find((game: RAWGGame) => {
+          const gameTitle = this.cleanTitle(game.name);
+          return gameTitle.includes(cleanTitle) || 
+                 cleanTitle.includes(gameTitle) ||
+                 this.calculateSimilarity(gameTitle, cleanTitle) > 0.7;
         });
-      });
-    });
+
+        if (closestMatch?.background_image) {
+          console.log('Found closest match:', closestMatch.name);
+          return closestMatch.background_image;
+        }
+
+        // If still no match, return the highest rated game's image
+        const highestRated = response.results[0];
+        if (highestRated?.background_image) {
+          console.log('Using highest rated game:', highestRated.name);
+          return highestRated.background_image;
+        }
+
+        console.log('No suitable image found');
+        return '';
+      }),
+      catchError(error => {
+        console.error('Error searching game:', error);
+        if (error.status === 401) {
+          console.error('API key might be invalid or not yet approved');
+        }
+        return throwError(() => new Error('Failed to search for game image'));
+      })
+    );
   }
 
   private cleanTitle(title: string): string {
@@ -111,6 +111,49 @@ export class IGDBService {
       .replace(/the/g, '') // Remove common words
       .replace(/game/g, '')
       .replace(/edition/g, '')
+      .replace(/deluxe/g, '')
+      .replace(/special/g, '')
+      .replace(/collectors/g, '')
+      .replace(/remastered/g, '')
+      .replace(/remaster/g, '')
+      .replace(/hd/g, '')
+      .replace(/definitive/g, '')
       .trim();
+  }
+
+  private calculateSimilarity(str1: string, str2: string): number {
+    const longer = str1.length > str2.length ? str1 : str2;
+    const shorter = str1.length > str2.length ? str2 : str1;
+    
+    if (longer.length === 0) {
+      return 1.0;
+    }
+    
+    return (longer.length - this.editDistance(longer, shorter)) / longer.length;
+  }
+
+  private editDistance(str1: string, str2: string): number {
+    const track = Array(str2.length + 1).fill(null).map(() =>
+      Array(str1.length + 1).fill(null));
+    
+    for (let i = 0; i <= str1.length; i += 1) {
+      track[0][i] = i;
+    }
+    for (let j = 0; j <= str2.length; j += 1) {
+      track[j][0] = j;
+    }
+
+    for (let j = 1; j <= str2.length; j += 1) {
+      for (let i = 1; i <= str1.length; i += 1) {
+        const indicator = str1[i - 1] === str2[j - 1] ? 0 : 1;
+        track[j][i] = Math.min(
+          track[j][i - 1] + 1, // deletion
+          track[j - 1][i] + 1, // insertion
+          track[j - 1][i - 1] + indicator // substitution
+        );
+      }
+    }
+
+    return track[str2.length][str1.length];
   }
 } 

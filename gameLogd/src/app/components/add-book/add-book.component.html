@@ -1,0 +1,65 @@
+<div class="add-book-container">
+  <h2>Add Book Review</h2>
+  <form [formGroup]="bookForm" (ngSubmit)="onSubmit()" class="book-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Book Title</mat-label>
+      <input matInput formControlName="title" placeholder="Enter book title">
+      <mat-error *ngIf="bookForm.get('title')?.hasError('required')">
+        Title is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Author</mat-label>
+      <input matInput formControlName="author" placeholder="Enter author name">
+      <mat-error *ngIf="bookForm.get('author')?.hasError('required')">
+        Author is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Publication Year</mat-label>
+      <input matInput type="number" formControlName="year" placeholder="Enter publication year">
+      <mat-error *ngIf="bookForm.get('year')?.hasError('required')">
+        Year is required
+      </mat-error>
+      <mat-error *ngIf="bookForm.get('year')?.hasError('min') || bookForm.get('year')?.hasError('max')">
+        Year must be between 1800 and {{currentYear}}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Rating</mat-label>
+      <mat-select formControlName="rating">
+        <mat-option value="1">1 Star</mat-option>
+        <mat-option value="2">2 Stars</mat-option>
+        <mat-option value="3">3 Stars</mat-option>
+        <mat-option value="4">4 Stars</mat-option>
+        <mat-option value="5">5 Stars</mat-option>
+      </mat-select>
+      <mat-error *ngIf="bookForm.get('rating')?.hasError('required')">
+        Rating is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Review</mat-label>
+      <textarea matInput formControlName="review" rows="4" placeholder="Write your review"></textarea>
+      <mat-error *ngIf="bookForm.get('review')?.hasError('required')">
+        Review is required
+      </mat-error>
+    </mat-form-field>
+
+    <div class="image-preview" *ngIf="imageUrl || isLoading">
+      <div class="spinner" *ngIf="isLoading"></div>
+      <img *ngIf="imageUrl && !isLoading" [src]="imageUrl" alt="Book cover" class="book-cover">
+    </div>
+
+    <div class="form-actions">
+      <button mat-button type="button" (click)="router.navigate(['/books'])">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!bookForm.valid">
+        Submit Review
+      </button>
+    </div>
+  </form>
+</div> 

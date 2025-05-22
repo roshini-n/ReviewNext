@@ -65,3 +65,19 @@ button[type="submit"]:hover {
     margin: 1rem;
   }
 }
+
+.full-width {
+  width: 100%;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -10,12 +10,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { BookFirebaseService } from '../../../services/bookFirebase.service';
+import { BookCoverService } from '../../../services/book-cover.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { Observable } from 'rxjs';
+import { Observable, debounceTime, distinctUntilChanged, filter } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
@@ -40,6 +41,7 @@ import { map, startWith } from 'rxjs/operators';
 export class AddBookComponent implements OnInit {
   private fb = inject(FormBuilder);
   private bookService = inject(BookFirebaseService);
+  private bookCoverService = inject(BookCoverService);
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
@@ -48,6 +50,7 @@ export class AddBookComponent implements OnInit {
   platforms: string[] = [];
   selectedGenres: string[] = [];
   isSubmitting = false;
+  isSearchingImage = false;
 
   // Available options for platforms and genres
   options: string[] = [
@@ -87,15 +90,73 @@ export class AddBookComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value || '', this.genres))
     ) || new Observable<string[]>();
+
+    // Subscribe to title changes to fetch book image
+    this.bookForm.get('title')?.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      filter(title => title && title.length > 2)
+    ).subscribe(title => {
+      console.log('AddBookComponent: Title changed:', title);
+      this.searchForBookImage(title);
+    });
+
+    // Subscribe to author changes to update image if needed
+    this.bookForm.get('author')?.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      filter(author => author && author.length > 2)
+    ).subscribe(author => {
+      console.log('AddBookComponent: Author changed:', author);
+      const title = this.bookForm.get('title')?.value;
+      if (title) {
+        this.searchForBookImage(title, author);
+      }
+    });
+
+    // Subscribe to publication date changes to update image if needed
+    this.bookForm.get('publicationDate')?.valueChanges.pipe(
+      distinctUntilChanged(),
+      filter(date => date && this.bookForm.get('title')?.value)
+    ).subscribe(date => {
+      console.log('AddBookComponent: Publication date changed:', date);
+      const title = this.bookForm.get('title')?.value;
+      const author = this.bookForm.get('author')?.value;
+      if (title) {
+        this.searchForBookImage(title, author, date ? new Date(date).getFullYear() : undefined);
+      }
+    });
   }
 
-  // Helper method to filter options
-  private _filter(value: string, list: string[]): string[] {
+  private searchForBookImage(title: string, author?: string, year?: number) {
+    console.log('AddBookComponent: Searching for book image with params:', { title, author, year });
+    this.isSearchingImage = true;
+
+    this.bookCoverService.searchBook(title, author, year).subscribe({
+      next: (imageUrl) => {
+        console.log('AddBookComponent: Received image URL:', imageUrl);
+        if (imageUrl) {
+          this.bookForm.patchValue({ imageUrl }, { emitEvent: false });
+          console.log('AddBookComponent: Updated form with image URL:', imageUrl);
+        } else {
+          console.log('AddBookComponent: No image URL received');
+        }
+        this.isSearchingImage = false;
+      },
+      error: (error) => {
+        console.error('AddBookComponent: Error fetching book image:', error);
+        this.isSearchingImage = false;
+      }
+    });
+  }
+
+  private _filter(value: string, options: string[]): string[] {
     const filterValue = value.toLowerCase();
-    return list.filter(option => option.toLowerCase().includes(filterValue));
+    return options.filter(option => 
+      option.toLowerCase().includes(filterValue)
+    );
   }
 
-  // Add platform to selected platforms list
   addPlatform() {
     const platformValue = this.bookForm.get('platformInput')?.value;
     if (platformValue && !this.platforms.includes(platformValue)) {
@@ -104,12 +165,10 @@ export class AddBookComponent implements OnInit {
     this.bookForm.get('platformInput')?.setValue('');
   }
 
-  // Remove platform from selected platforms list
   removePlatform(platform: string) {
     this.platforms = this.platforms.filter(p => p !== platform);
   }
 
-  // Add genre to selected genres list
   addGenre() {
     const genreValue = this.bookForm.get('genreInput')?.value;
     if (genreValue && !this.selectedGenres.includes(genreValue)) {
@@ -118,13 +177,8 @@ export class AddBookComponent implements OnInit {
     this.bookForm.get('genreInput')?.setValue('');
   }
 
-  // Remove genre from selected genres list
   removeGenre(genre: string) {
     this.selectedGenres = this.selectedGenres.filter(g => g !== genre);
-  }
-
-  onCancel(): void {
-    this.router.navigate(['/books']);
   }
 
   async sendDataToFirebase() {
@@ -145,34 +199,40 @@ export class AddBookComponent implements OnInit {
     // Default image URL if not provided
     const finalImageUrl = this.bookForm.value.imageUrl || 'https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
 
-    const bookData = {
-      title: this.bookForm.value.title || '',
-      author: this.bookForm.value.author || '',
-      description: this.bookForm.value.description || '',
-      publisher: this.bookForm.value.publisher || '',
-      publicationDate: this.bookForm.value.publicationDate || '',
-      genres: this.selectedGenres,
-      platforms: this.platforms,
-      pages: 0, // Not used in this form
-      readersRead: 0,
-      rating: 0,
-      imageUrl: finalImageUrl,
-      totalRatingScore: 0,
-      numRatings: 0,
-      dateAdded: new Date().toISOString()
-    };
-
     try {
+      const bookData = {
+        title: this.bookForm.value.title || '',
+        platforms: this.platforms,
+        author: this.bookForm.value.author || '',
+        description: this.bookForm.value.description || '',
+        publicationDate: this.bookForm.value.publicationDate || '',
+        publisher: this.bookForm.value.publisher || '',
+        genres: this.selectedGenres,
+        imageUrl: finalImageUrl,
+        rating: 0,
+        numRatings: 0,
+        totalRatingScore: 0,
+        pages: 0,
+        readersRead: 0,
+        dateAdded: new Date().toISOString()
+      };
+
       await this.bookService.addBook(bookData);
+
       this.snackBar.open('Book added successfully!', 'Close', {
         duration: 3000
       });
       this.router.navigate(['/books']);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error adding book:', error);
-      this.snackBar.open('Error adding book: ' + (error as Error).message, 'Close', {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      this.snackBar.open('Error adding book: ' + errorMessage, 'Close', {
         duration: 5000
       });
     }
+  }
+
+  onCancel(): void {
+    this.router.navigate(['/books']);
   }
 }
