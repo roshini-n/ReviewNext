@@ -4,10 +4,12 @@
 <div class="movie-container">
   <div class="header-section">
     <h1>Movies</h1>
+    @if (authService.currentUserSig()) {
     <button mat-raised-button color="primary" routerLink="/add_movie">
       <mat-icon>add</mat-icon>
       Add Movie
     </button>
+    }
   </div>
   
   <h2>Trending</h2>

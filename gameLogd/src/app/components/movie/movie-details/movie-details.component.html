@@ -23,7 +23,8 @@
           <mat-chip *ngFor="let platform of movie?.platforms">{{platform}}</mat-chip>
         </mat-chip-listbox>
       </div>
-      <div class="movie-actions" *ngIf="isLoggedIn">
+      @if (authService.currentUserSig()) {
+      <div class="movie-actions">
         <button mat-raised-button color="primary" (click)="onAddToLog()">
           <mat-icon>add</mat-icon>
           Add to Log
@@ -41,6 +42,7 @@
           Delete
         </button>
       </div>
+      }
     </div>
   </div>
 

@@ -5,7 +5,7 @@
   </h1>
 
   <!--Search in the middle-->
-  @if (authService.currentUserSig()) {
+@if (authService.currentUserSig()) {
   <div class="search-container">
     <form class="d-flex search-form">
       <input
@@ -24,10 +24,16 @@
       </button>
     </form>
   </div>
-  }
+}
 
   <!--Buttons on the right-->
   <div class="right-buttons">
+    @if (authService.currentUserSig()) {
+    <button mat-button [matMenuTriggerFor]="categoryMenu" color="grey-back">
+      <span class="navbar_button">Categories</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+  }
     @if (authService.currentUserSig() == null){
     <button mat-button color="grey-back" routerLink="login">
       <span class="navbar_button">Login</span>
@@ -37,10 +43,6 @@
       <span class="navbar_button">Register</span>
     </button>
     } @if (authService.currentUserSig()) {
-    <button mat-button [matMenuTriggerFor]="categoryMenu" color="grey-back">
-      <span class="navbar_button">Categories</span>
-      <mat-icon>arrow_drop_down</mat-icon>
-    </button>
     <button mat-button [matMenuTriggerFor]="profileMenu" class="profile-button">
       <img [src]="avatarUrl" alt="Profile" class="profile-image">
     </button>

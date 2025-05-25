@@ -61,32 +61,20 @@ import { map, startWith } from 'rxjs/operators';
 })
 export class MovieDetailsComponent implements OnInit {
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  public router = inject(Router);
   private movieService = inject(MovieFirebaseService);
   private movieLogService = inject(MovieLogService);
   private movieReviewService = inject(MovieReviewService);
-  private authService = inject(AuthService);
+  public authService = inject(AuthService);
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
 
   movie: Movie | undefined;
-  isLoggedIn = false;
-  currentUserId: string | null = null;
   selectedTab = 0;
   isLoading = true;
   error: string | null = null;
 
-  constructor() {}
-
   ngOnInit() {
-    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
-      this.isLoggedIn = isLoggedIn;
-    });
-
-    this.authService.currentUser$.subscribe(user => {
-      this.currentUserId = user?.uid || null;
-    });
-
     const movieId = this.route.snapshot.paramMap.get('id');
     if (movieId) {
       this.loadMovieDetails(movieId);
@@ -108,7 +96,7 @@ export class MovieDetailsComponent implements OnInit {
   }
 
   onAddToLog() {
-    if (!this.isLoggedIn) {
+    if (!this.authService.currentUserSig()) {
       this.snackBar.open('Please log in to add movies to your log', 'Close', {
         duration: 3000
       });
@@ -118,7 +106,7 @@ export class MovieDetailsComponent implements OnInit {
   }
 
   onAddReview() {
-    if (!this.isLoggedIn) {
+    if (!this.authService.currentUserSig()) {
       this.snackBar.open('Please log in to add reviews', 'Close', {
         duration: 3000
       });
@@ -128,7 +116,7 @@ export class MovieDetailsComponent implements OnInit {
   }
 
   onEditMovie() {
-    if (!this.isLoggedIn) {
+    if (!this.authService.currentUserSig()) {
       this.snackBar.open('Please log in to edit movies', 'Close', {
         duration: 3000
       });
@@ -138,7 +126,7 @@ export class MovieDetailsComponent implements OnInit {
   }
 
   onDeleteMovie() {
-    if (!this.isLoggedIn) {
+    if (!this.authService.currentUserSig()) {
       this.snackBar.open('Please log in to delete movies', 'Close', {
         duration: 3000
       });

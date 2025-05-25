@@ -7,6 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { CarouselModule } from 'primeng/carousel';
 import { MovieFirebaseService } from '../../../services/movieFirebase.service';
 import { Movie } from '../../../models/movie.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-movie',
@@ -28,6 +29,7 @@ export class MovieComponent implements OnInit {
   topRatedMovies: Movie[] = [];
   popularMovies: Movie[] = [];
   movieFirebaseService = inject(MovieFirebaseService);
+  authService = inject(AuthService);
 
   ngOnInit(): void {
     this.loadMovies();

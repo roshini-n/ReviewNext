@@ -51,9 +51,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class GameDetailsComponent implements OnInit {
   private route = inject(ActivatedRoute);
-  router = inject(Router);
+  public router = inject(Router);
   private dialog = inject(MatDialog);
-  private authService = inject(AuthService);
+  public authService = inject(AuthService);
   private gameLogService = inject(GameLogService);
   private reviewService = inject(ReviewService);
   private fb = inject(FormBuilder);
@@ -109,6 +109,13 @@ export class GameDetailsComponent implements OnInit {
   }
 
   openLogGamePopup() {
+    if (!this.authService.currentUserSig()) {
+      this.snackBar.open('Please log in to add games to your log', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
     if (!this.game || !this.gameId) return;
 
     const dialogRef = this.dialog.open(LogGamePopupComponent, {
@@ -194,6 +201,13 @@ export class GameDetailsComponent implements OnInit {
   }
 
   onAddReview() {
+    if (!this.authService.currentUserSig()) {
+      this.snackBar.open('Please log in to add reviews', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
     if (!this.game || !this.gameId || !this.currentUserId) return;
 
     const dialogRef = this.dialog.open(GameReviewEditComponent, {
@@ -220,6 +234,13 @@ export class GameDetailsComponent implements OnInit {
   }
 
   onEditGame() {
+    if (!this.authService.currentUserSig()) {
+      this.snackBar.open('Please log in to edit games', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
     if (!this.game) return;
 
     const dialogRef = this.dialog.open(GameEditDialogComponent, {

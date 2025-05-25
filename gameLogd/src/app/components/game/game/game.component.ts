@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CarouselModule } from 'primeng/carousel';
 import { GameFirebaseService } from '../../../services/gameFirebase.service';
 import { Game } from '../../../models/game.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-game',
@@ -26,6 +27,7 @@ export class GameComponent implements OnInit {
   topRatedGames: Game[] = [];
   popularGames: Game[] = [];
   gameFirebaseService = inject(GameFirebaseService);
+  authService = inject(AuthService);
 
   ngOnInit(): void {
     this.loadGames();
