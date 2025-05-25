@@ -148,29 +148,39 @@ export class LogGamePopupComponent {
         startDate: this.logForm.value.dateStarted,
         userId: currentUser,
         rating: this.rating,
+      }).subscribe({
+        next: () => {
+          this.reviewService.addReview({
+            gameId: this.gameId,
+            username: this.username,
+            userId: currentUser,
+            reviewText: this.logForm.value.review,
+            datePosted: new Date(),
+            gameTitle: this.data.game?.title || '',
+            rating: this.rating,
+          }).subscribe({
+            next: () => {
+              if (this.logForm.valid) {
+                this.dialogRef.close({
+                  ...this.logForm.value,
+                  gameId: this.gameId,
+                  rating: this.rating,
+                });
+                this.snackBar.open('Game logged successfully', 'Close', {
+                  duration: 2000,
+                });
+                this.logUpdated.emit();
+              }
+            },
+            error: () => {
+              this.snackBar.open('Failed to add review', 'Close', { duration: 2000 });
+            }
+          });
+        },
+        error: () => {
+          this.snackBar.open('Failed to add log', 'Close', { duration: 2000 });
+        }
       });
-
-      this.reviewService.addReview({
-        gameId: this.gameId,
-        username: this.username,
-        userId: currentUser,
-        reviewText: this.logForm.value.review,
-        datePosted: new Date(),
-        gameTitle: this.data.game?.title || '',
-        rating: this.rating,
-      });
-
-      if (this.logForm.valid) {
-        this.dialogRef.close({
-          ...this.logForm.value,
-          gameId: this.gameId,
-          rating: this.rating,
-        });
-
-        this.snackBar.open('Game logged successfully', 'Close', {
-          duration: 2000,
-        });
-      }
     }
   }
 

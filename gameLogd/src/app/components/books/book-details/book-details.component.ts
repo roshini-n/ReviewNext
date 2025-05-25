@@ -7,8 +7,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
 import { BookFirebaseService } from '../../../services/bookFirebase.service';
 import { Book } from '../../../models/book.model';
-import { BookLogService } from '../../../services/bookLog.service';
-import { BookReviewService } from '../../../services/bookReview.service';
+import { BookLogService } from '../../../services/booklog.service';
+import { BookReviewService } from '../../../services/bookreview.service';
 import { AuthService } from '../../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
@@ -16,6 +16,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -30,6 +31,11 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { Review } from '../../../models/review.model';
+import { GeneralDeleteButtonComponent } from '../../shared/general-delete-button/general-delete-button.component';
+import { BookReviewEditComponent } from '../book-review-edit/book-review-edit.component';
+import { BookEditDialogComponent } from '../book-edit-dialog/book-edit-dialog.component';
+import { LogBookPopupComponent } from '../../log-book-popup/log-book-popup.component';
 
 @Component({
   selector: 'app-book-details',
@@ -44,6 +50,7 @@ import { map, startWith } from 'rxjs/operators';
     MatListModule,
     MatCardModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatTooltipModule,
     MatBadgeModule,
     MatTabsModule,
@@ -54,7 +61,8 @@ import { map, startWith } from 'rxjs/operators';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    GeneralDeleteButtonComponent
   ],
   templateUrl: './book-details.component.html',
   styleUrls: ['./book-details.component.css']
@@ -62,57 +70,61 @@ import { map, startWith } from 'rxjs/operators';
 export class BookDetailsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   public router = inject(Router);
-  private bookService = inject(BookFirebaseService);
+  private dialog = inject(MatDialog);
+  private bookFirebaseService = inject(BookFirebaseService);
   private bookLogService = inject(BookLogService);
   private bookReviewService = inject(BookReviewService);
   private authService = inject(AuthService);
   private snackBar = inject(MatSnackBar);
-  private dialog = inject(MatDialog);
 
-  book: Book | undefined;
-  isLoggedIn = false;
-  currentUserId: string | null = null;
-  selectedTab = 0;
-  isLoading = true;
+  book?: Book;
+  reviews: Review[] = [];
+  isLoading: boolean = true;
   error: string | null = null;
+  isLoggedIn: boolean = false;
+  currentUserId: string | null = null;
+  bookId: string | null = null;
 
-  constructor() {}
+  async ngOnInit() {
+    this.bookId = this.route.snapshot.paramMap.get('id');
+    this.currentUserId = await this.authService.getUid();
+    this.isLoggedIn = !!this.currentUserId;
 
-  ngOnInit() {
-    // Subscribe to user state changes
-    this.authService.user$.subscribe(user => {
-      this.isLoggedIn = !!user;
-      this.currentUserId = user?.uid || null;
-    });
-
-    const bookId = this.route.snapshot.paramMap.get('id');
-    if (bookId) {
-      this.loadBookDetails(bookId);
+    if (this.bookId) {
+      this.loadBookDetails();
+      this.getReviews();
     }
   }
 
-  private loadBookDetails(bookId: string) {
-    this.bookService.getBookById(bookId).subscribe({
+  private loadBookDetails() {
+    if (!this.bookId) return;
+    
+    this.isLoading = true;
+    this.bookFirebaseService.getBookById(this.bookId).subscribe({
       next: (book) => {
         this.book = book;
         this.isLoading = false;
       },
-      error: (error) => {
-        console.error('Error loading book details:', error);
-        this.error = 'Failed to load book details';
+      error: (err) => {
+        this.error = 'Failed to load book details. Please try again later.';
         this.isLoading = false;
+        console.error('Error loading book:', err);
       }
     });
   }
 
-  onAddToLog() {
-    if (!this.isLoggedIn) {
-      this.snackBar.open('Please log in to add books to your log', 'Close', {
-        duration: 3000
-      });
-      return;
-    }
-    // Implement add to log functionality
+  getReviews() {
+    if (!this.bookId) return;
+    this.bookReviewService.getReviewsByBookId(this.bookId).subscribe({
+      next: (reviews: Review[]) => {
+        this.reviews = reviews;
+        console.log('Reviews loaded:', reviews);
+      },
+      error: (error: Error) => {
+        console.error('Error loading reviews:', error);
+        this.error = 'Failed to load reviews. Please try again later.';
+      }
+    });
   }
 
   onAddReview() {
@@ -122,7 +134,66 @@ export class BookDetailsComponent implements OnInit {
       });
       return;
     }
-    // Implement add review functionality
+
+    if (!this.book || !this.bookId || !this.currentUserId) return;
+
+    const dialogRef = this.dialog.open(BookReviewEditComponent, {
+      width: '550px',
+      panelClass: ['book-review-dialog', 'minimal-theme-dialog'],
+      autoFocus: false,
+      backdropClass: 'minimal-backdrop',
+      data: {
+        bookId: this.bookId,
+        bookTitle: this.book.title,
+        userId: this.currentUserId
+      }
+    });
+
+    dialogRef.componentInstance.reviewUpdated.subscribe(() => {
+      this.getReviews();
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.getReviews();
+      }
+    });
+  }
+
+  editReview(review: Review) {
+    if (!review || !review.id) return;
+
+    const dialogRef = this.dialog.open(BookReviewEditComponent, {
+      width: '550px',
+      panelClass: ['book-review-dialog', 'minimal-theme-dialog'],
+      autoFocus: false,
+      backdropClass: 'minimal-backdrop',
+      data: { review: review }
+    });
+
+    dialogRef.componentInstance.reviewUpdated.subscribe(() => {
+      this.getReviews();
+    });
+
+    dialogRef.afterClosed().subscribe(updatedReview => {
+      if (updatedReview) {
+        this.getReviews();
+      }
+    });
+  }
+
+  deleteReview(review: Review) {
+    if (!review || !review.id) return;
+    this.bookReviewService.deleteReview(review.id).subscribe({
+      next: () => {
+        console.log('Review deleted:', review.id);
+        this.getReviews();
+      },
+      error: (error) => {
+        console.error('Error deleting review:', error);
+        this.error = 'Failed to delete review. Please try again later.';
+      }
+    });
   }
 
   onEditBook() {
@@ -132,20 +203,90 @@ export class BookDetailsComponent implements OnInit {
       });
       return;
     }
-    // Implement edit book functionality
+
+    if (!this.book || !this.bookId) return;
+
+    const dialogRef = this.dialog.open(BookEditDialogComponent, {
+      width: '500px',
+      data: this.book
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.bookFirebaseService.updateBook(this.bookId!, result).then(() => {
+          this.book = result;
+        }).catch((error: Error) => {
+          console.error('Error updating book:', error);
+          this.snackBar.open('Failed to update book', 'Close', {
+            duration: 3000,
+          });
+        });
+      }
+    });
   }
 
   onDeleteBook() {
+    if (!this.isLoggedIn || !this.book || !this.bookId) return;
+
+    if (confirm('Are you sure you want to delete this book?')) {
+      this.bookFirebaseService.deleteBook(this.bookId).then(() => {
+        this.snackBar.open('Book deleted successfully', 'Close', {
+          duration: 3000
+        });
+        this.router.navigate(['/books']);
+      }).catch((error: Error) => {
+        console.error('Error deleting book:', error);
+        this.snackBar.open('Failed to delete book', 'Close', {
+          duration: 3000
+        });
+      });
+    }
+  }
+
+  openLogBookPopup() {
     if (!this.isLoggedIn) {
-      this.snackBar.open('Please log in to delete books', 'Close', {
+      this.snackBar.open('Please log in to add books to your log', 'Close', {
         duration: 3000
       });
       return;
     }
-    // Implement delete book functionality
+
+    if (!this.book || !this.bookId) return;
+
+    const dialogRef = this.dialog.open(LogBookPopupComponent, {
+      maxWidth: '550px',
+      width: '95vw',
+      panelClass: ['book-log-dialog', 'minimal-theme-dialog'],
+      autoFocus: false,
+      backdropClass: 'minimal-backdrop',
+      data: {
+        book: this.book,
+        bookId: this.bookId,
+      },
+    });
+
+    dialogRef.componentInstance.logUpdated.subscribe(() => {
+      this.getReviews();
+      this.loadBookDetails();
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.bookLogService.addBookLog(result).then(() => {
+          console.log('Book log added');
+          this.getReviews();
+          this.loadBookDetails();
+        }).catch((error) => {
+          console.error('Error adding book log:', error);
+          this.snackBar.open('Failed to add book log', 'Close', {
+            duration: 3000
+          });
+        });
+      }
+    });
   }
 
   onTabChange(index: number) {
-    this.selectedTab = index;
+    // Handle tab change if needed
   }
 }

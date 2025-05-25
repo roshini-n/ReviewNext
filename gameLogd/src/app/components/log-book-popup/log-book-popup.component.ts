@@ -30,7 +30,7 @@ import { BookLog } from '../../models/bookLog.model';
 import { BookLogService } from '../../services/booklog.service';
 import { AuthService } from '../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ReviewService } from '../../services/review.service';
+import { BookReviewService } from '../../services/bookreview.service';
 import { Review } from '../../models/review.model';
 
 @Component({
@@ -59,7 +59,7 @@ import { Review } from '../../models/review.model';
 export class LogBookPopupComponent implements OnInit {
   bookLogService = inject(BookLogService);
   authService = inject(AuthService);
-  reviewService = inject(ReviewService);
+  bookReviewService = inject(BookReviewService);
   private route = inject(ActivatedRoute);
   private fb = inject(FormBuilder);
 
@@ -135,41 +135,51 @@ export class LogBookPopupComponent implements OnInit {
       this.isLoading = true;
       const formData = this.logForm.value;
 
-      const reviewData: Review = {
-        id: this.existingReview?.id || '',
-        userId: currentUser,
-        bookId: this.bookId,
-        rating: formData.rating,
-        reviewText: formData.review,
-        datePosted: new Date(),
-        username: this.username,
-        bookTitle: this.data.book.title
-      };
+      try {
+        // 1. Build the log object
+        const logData: Omit<BookLog, 'id'> = {
+          userId: currentUser,
+          bookId: this.bookId,
+          startDate: formData.dateStarted,
+          endDate: formData.dateCompleted,
+          rating: formData.rating,
+          review: formData.review,
+          status: formData.status,
+        };
 
-      if (this.isEditMode && this.existingReview) {
-        this.reviewService.updateReview(this.existingReview.id, reviewData).subscribe({
-          next: () => {
-            this.reviewUpdated.emit();
-            this.dialogRef.close(true);
-          },
-          error: (error: Error) => {
-            console.error('Error updating review:', error);
-            this.errorMessage = 'Failed to update review. Please try again.';
-            this.isLoading = false;
-          }
+        // 2. Save the log
+        await this.bookLogService.addBookLog(logData);
+
+        // 3. Save the review using BookReviewService
+        const reviewData: Review = {
+          id: this.existingReview?.id || '',
+          userId: currentUser,
+          bookId: this.bookId,
+          rating: formData.rating,
+          reviewText: formData.review,
+          datePosted: new Date(),
+          username: this.username,
+          bookTitle: this.data.book.title
+        };
+
+        if (this.isEditMode && this.existingReview) {
+          await this.bookReviewService.updateReview(this.existingReview.id, reviewData).toPromise();
+        } else {
+          await this.bookReviewService.addReview(reviewData).toPromise();
+        }
+
+        // 4. Emit events and close dialog
+        this.logUpdated.emit();
+        this.reviewUpdated.emit();
+        this.dialogRef.close(true);
+      } catch (error) {
+        console.error('Error saving log/review:', error);
+        this.errorMessage = 'Failed to save. Please try again.';
+        this.snackBar.open('Failed to save log/review', 'Close', {
+          duration: 3000
         });
-      } else {
-        this.reviewService.addReview(reviewData).subscribe({
-          next: () => {
-            this.reviewUpdated.emit();
-            this.dialogRef.close(true);
-          },
-          error: (error: Error) => {
-            console.error('Error creating review:', error);
-            this.errorMessage = 'Failed to create review. Please try again.';
-            this.isLoading = false;
-          }
-        });
+      } finally {
+        this.isLoading = false;
       }
     }
   }
