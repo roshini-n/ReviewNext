@@ -24,9 +24,12 @@ import { BeautyProductComponent } from './components/beauty-products/beauty-prod
 import { HomeApplianceComponent } from './components/home-appliances/home-appliance.component';
 import { ElectronicGadgetComponent } from './components/electronic-gadgets/electronic-gadget.component';
 import { AddElectronicGadgetComponent } from './components/electronic-gadgets/add-electronic-gadget/add-electronic-gadget.component';
+import { UserDashboardComponent } from './components/user-dashboard/user-dashboard.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent }, // default route
+  { path: 'dashboard', component: UserDashboardComponent, canActivate: [authGuard] }, // protected dashboard route
   { path: 'games', component: GameComponent },
   { path: 'books', component: BookComponent },
   { path: 'movies', component: MovieComponent },

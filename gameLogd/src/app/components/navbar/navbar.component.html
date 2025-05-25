@@ -1,6 +1,6 @@
 <mat-toolbar color="primary" id="leftside">
   <!--Logo-->
-  <h1 routerLink="" class="site-title">
+  <h1 [routerLink]="authService.currentUserSig() ? '/dashboard' : '/'" class="site-title" style="cursor: pointer;">
     Review<span class="highlight">Next</span>
   </h1>
 
