@@ -11,6 +11,9 @@ export interface Book {
     rating: number;
     imageUrl: string;
     dateAdded: string;
+    isbn?: string;
+    pageCount?: number;
+    language?: string;
 
     //Used to calculate average score
     totalRatingScore: number;
