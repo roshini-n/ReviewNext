@@ -1,6 +1,7 @@
-<div class="add-movie-container">
-  <h1>Add New Movie</h1>
-  <form [formGroup]="movieForm" (ngSubmit)="sendDataToFirebase()">
+<div class="add-form-container">
+  <h2>Add New Movie</h2>
+  
+  <form [formGroup]="movieForm" (ngSubmit)="onSubmit()" class="movie-form">
     <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Title</mat-label>
@@ -9,6 +10,14 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline">
+        <mat-label>Director</mat-label>
+        <input matInput formControlName="director" required>
+        <mat-error *ngIf="movieForm.get('director')?.hasError('required')">Director is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
         <mat-label>Description</mat-label>
         <textarea matInput formControlName="description" required rows="3"></textarea>
         <mat-error *ngIf="movieForm.get('description')?.hasError('required')">Description is required</mat-error>
@@ -77,25 +86,10 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Director</mat-label>
-        <input matInput formControlName="director" required>
-        <mat-error *ngIf="movieForm.get('director')?.hasError('required')">Director is required</mat-error>
-      </mat-form-field>
-    </div>
-
-    <div class="form-row">
-      <mat-form-field appearance="outline">
         <mat-label>Duration (minutes)</mat-label>
         <input matInput type="number" formControlName="duration" required>
         <mat-error *ngIf="movieForm.get('duration')?.hasError('required')">Duration is required</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Image URL</mat-label>
-        <input matInput formControlName="imageUrl">
-        <mat-hint *ngIf="!isSearchingImage">Will be automatically filled based on movie title</mat-hint>
-        <mat-hint *ngIf="isSearchingImage">Searching for movie image...</mat-hint>
-        <mat-icon *ngIf="isSearchingImage" matSuffix class="spinner">search</mat-icon>
+        <mat-error *ngIf="movieForm.get('duration')?.hasError('min')">Duration must be greater than 0</mat-error>
       </mat-form-field>
     </div>
 
@@ -111,11 +105,28 @@
       </mat-form-field>
     </div>
 
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Image URL</mat-label>
+        <input matInput formControlName="imageUrl" placeholder="Movie poster image URL">
+        <mat-hint *ngIf="isSearchingImage">
+          <mat-icon class="spinner">search</mat-icon>
+          Searching for movie poster...
+        </mat-hint>
+        <mat-hint *ngIf="!isSearchingImage && movieForm.get('imageUrl')?.value">
+          Movie poster found! You can change this URL if needed.
+        </mat-hint>
+        <mat-error *ngIf="movieForm.get('imageUrl')?.hasError('pattern')">
+          Please enter a valid URL starting with http:// or https://
+        </mat-error>
+      </mat-form-field>
+    </div>
+
     <div class="form-actions">
       <button mat-raised-button color="primary" type="submit" [disabled]="!movieForm.valid">
         Add Movie
       </button>
-      <button mat-button type="button" (click)="onCancel()">Cancel</button>
+      <button mat-button type="button" routerLink="/movies">Cancel</button>
     </div>
   </form>
 </div> 

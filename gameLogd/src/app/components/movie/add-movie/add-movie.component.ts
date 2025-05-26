@@ -47,7 +47,20 @@ export class AddMovieComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
-  movieForm: FormGroup;
+  movieForm: FormGroup = this.fb.group({
+    title: ['', [Validators.required]],
+    description: ['', [Validators.required]],
+    imageUrl: ['', [Validators.required]],
+    price: ['', [Validators.required, Validators.min(0)]],
+    director: ['', [Validators.required]],
+    platformInput: [''],
+    genreInput: [''],
+    releaseDate: ['', [Validators.required]],
+    duration: ['', [Validators.required, Validators.min(1)]],
+    language: [''],
+    country: ['']
+  });
+
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   platforms: string[] = [];
   selectedGenres: string[] = [];
@@ -71,32 +84,16 @@ export class AddMovieComponent implements OnInit {
   filteredOptions!: Observable<string[]>;
   filteredGenres!: Observable<string[]>;
 
-  constructor() {
-    this.movieForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(1)]],
-      description: ['', [Validators.required, Validators.minLength(10)]],
-      platformInput: [''],
-      genreInput: [''],
-      releaseDate: ['', Validators.required],
-      director: ['', [Validators.required, Validators.minLength(1)]],
-      duration: ['', [Validators.required, Validators.min(1)]],
-      imageUrl: ['', [Validators.pattern('https?://.*')]],
-      language: [''],
-      country: ['']
-    });
-  }
-
   ngOnInit() {
-    // Filter options for platforms and genres
-    this.filteredOptions = this.movieForm.get('platformInput')?.valueChanges.pipe(
+    this.filteredOptions = this.movieForm.get('platformInput')!.valueChanges.pipe(
       startWith(''),
-      map(value => this._filter(value || '', this.options))
-    ) || new Observable<string[]>();
+      map(value => this._filter(value, this.options))
+    );
 
-    this.filteredGenres = this.movieForm.get('genreInput')?.valueChanges.pipe(
+    this.filteredGenres = this.movieForm.get('genreInput')!.valueChanges.pipe(
       startWith(''),
-      map(value => this._filter(value || '', this.genres))
-    ) || new Observable<string[]>();
+      map(value => this._filter(value, this.genres))
+    );
 
     // Subscribe to title changes to fetch movie image
     this.movieForm.get('title')?.valueChanges.pipe(
@@ -182,53 +179,48 @@ export class AddMovieComponent implements OnInit {
     this.selectedGenres = this.selectedGenres.filter(g => g !== genre);
   }
 
-  async sendDataToFirebase() {
-    if (!this.movieForm.valid) {
-      this.snackBar.open('Please fill in all required fields', 'Close', {
-        duration: 5000
-      });
-      return;
-    }
+  onSubmit() {
+    if (this.movieForm.valid && this.platforms.length > 0 && this.selectedGenres.length > 0) {
+      this.isSubmitting = true;
+      const formValue = this.movieForm.value;
+      const newMovie = {
+        title: formValue.title,
+        description: formValue.description,
+        director: formValue.director,
+        releaseDate: formValue.releaseDate.toISOString(),
+        genres: this.selectedGenres,
+        platforms: this.platforms,
+        duration: parseInt(formValue.duration),
+        imageUrl: formValue.imageUrl,
+        language: formValue.language || '',
+        country: formValue.country || '',
+        rating: 0,
+        totalRatingScore: 0,
+        numRatings: 0,
+        views: 0,
+        dateAdded: new Date().toISOString()
+      };
 
-    if (this.selectedGenres.length === 0) {
-      this.snackBar.open('Please add at least one genre', 'Close', {
-        duration: 5000
+      this.movieService.addMovie(newMovie).subscribe({
+        next: () => {
+          this.snackBar.open('Movie added successfully!', 'Close', { duration: 3000 });
+          this.router.navigate(['/movies']);
+        },
+        error: (error) => {
+          console.error('Error adding movie:', error);
+          this.snackBar.open('Error adding movie. Please try again.', 'Close', { duration: 3000 });
+          this.isSubmitting = false;
+        }
       });
-      return;
-    }
-
-    // Default image URL if not provided
-    const finalImageUrl = this.movieForm.value.imageUrl || 'https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
-
-    const movieData = {
-      title: this.movieForm.value.title || '',
-      description: this.movieForm.value.description || '',
-      director: this.movieForm.value.director || '',
-      releaseDate: this.movieForm.value.releaseDate || '',
-      genres: this.selectedGenres,
-      duration: this.movieForm.value.duration || 0,
-      rating: 0,
-      imageUrl: finalImageUrl,
-      totalRatingScore: 0,
-      numRatings: 0,
-      dateAdded: new Date().toISOString(),
-      platforms: this.platforms,
-      language: this.movieForm.value.language || '',
-      country: this.movieForm.value.country || ''
-    };
-
-    try {
-      await this.movieService.addMovie(movieData);
-      this.snackBar.open('Movie added successfully!', 'Close', {
-        duration: 3000
-      });
-      this.router.navigate(['/movies']);
-    } catch (error: unknown) {
-      console.error('Error adding movie:', error);
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      this.snackBar.open('Error adding movie: ' + errorMessage, 'Close', {
-        duration: 5000
-      });
+    } else {
+      let errorMessage = 'Please fill in all required fields';
+      if (this.platforms.length === 0) {
+        errorMessage += ' and add at least one platform';
+      }
+      if (this.selectedGenres.length === 0) {
+        errorMessage += ' and add at least one genre';
+      }
+      this.snackBar.open(errorMessage, 'Close', { duration: 3000 });
     }
   }
 

@@ -21,16 +21,16 @@ export class MovieFirebaseService {
     return docData(movieDoc, { idField: 'id' }) as Observable<Movie>;
   }
 
-  addMovie(movie: Omit<Movie, 'id'>): Promise<void> {
-    return new Promise((resolve, reject) => {
-      addDoc(this.moviesCollection, movie)
-        .then((docRef) => {
-          updateDoc(docRef, { id: docRef.id })
-            .then(() => resolve())
-            .catch((error) => reject(error));
-        })
-        .catch((error) => reject(error));
-    });
+  addMovie(movie: Omit<Movie, 'id'>): Observable<void> {
+    const movieData = {
+      ...movie,
+      dateAdded: new Date().toISOString(),
+      rating: 0,
+      totalRatingScore: 0,
+      numRatings: 0,
+      views: 0
+    };
+    return from(addDoc(this.moviesCollection, movieData).then(() => {}));
   }
 
   updateMovie(id: string, movie: Partial<Movie>): Promise<void> {

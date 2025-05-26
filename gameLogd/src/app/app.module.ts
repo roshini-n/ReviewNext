@@ -15,13 +15,11 @@ import { MatListModule } from '@angular/material/list';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AddBookComponent } from './components/add-book/add-book.component';
 // ... other component imports ...
 
 @NgModule({
   declarations: [
     AppComponent,
-    AddBookComponent,
     // ... other components ...
   ],
   imports: [

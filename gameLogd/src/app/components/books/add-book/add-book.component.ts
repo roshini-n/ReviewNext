@@ -7,8 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router, RouterModule } from '@angular/router';
 import { BookFirebaseService } from '../../../services/bookFirebase.service';
 import { BookCoverService } from '../../../services/book-cover.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
@@ -16,7 +16,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { Observable, debounceTime, distinctUntilChanged, filter } from 'rxjs';
+import { Observable, debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
@@ -24,6 +24,7 @@ import { map, startWith } from 'rxjs/operators';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -31,12 +32,13 @@ import { map, startWith } from 'rxjs/operators';
     MatSelectModule,
     MatChipsModule,
     MatIconModule,
+    MatSnackBarModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule
   ],
   templateUrl: './add-book.component.html',
-  styleUrl: './add-book.component.css'
+  styleUrls: ['./add-book.component.css']
 })
 export class AddBookComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -45,7 +47,18 @@ export class AddBookComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
-  bookForm: FormGroup;
+  bookForm: FormGroup = this.fb.group({
+    title: ['', [Validators.required]],
+    description: ['', [Validators.required]],
+    imageUrl: ['', [Validators.required]],
+    price: ['', [Validators.required, Validators.min(0)]],
+    author: ['', [Validators.required]],
+    publisher: ['', [Validators.required]],
+    platformInput: [''],
+    genreInput: [''],
+    publicationDate: ['', [Validators.required]]
+  });
+
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   platforms: string[] = [];
   selectedGenres: string[] = [];
@@ -54,42 +67,30 @@ export class AddBookComponent implements OnInit {
 
   // Available options for platforms and genres
   options: string[] = [
-    "Library", "Amazon Kindle", "Google Books", "Apple Books", "Wattpad", 
-    "Scribd", "Project Gutenberg", "Goodreads"
+    "Hardcover", "Paperback", "E-book", "Audiobook", "Kindle",
+    "Nook", "Google Books", "Apple Books", "Kobo", "Other"
   ];
 
   genres: string[] = [
-    "Action", "Adventure", "Horror", "Fantasy", "Romance", "Thriller", 
-    "Mystery", "Historical Fiction", "Biography", "Travel", "Philosophy", "True Crime"
+    "Fiction", "Non-Fiction", "Mystery", "Romance", "Science Fiction",
+    "Fantasy", "Horror", "Thriller", "Biography", "History",
+    "Self-Help", "Business", "Science", "Technology", "Philosophy",
+    "Poetry", "Drama", "Comedy", "Adventure", "Children's"
   ];
 
   filteredOptions!: Observable<string[]>;
   filteredGenres!: Observable<string[]>;
 
-  constructor() {
-    this.bookForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(1)]],
-      description: ['', [Validators.required, Validators.minLength(10)]],
-      platformInput: [''],
-      genreInput: [''],
-      publicationDate: ['', Validators.required],
-      author: ['', [Validators.required, Validators.minLength(1)]],
-      publisher: ['', [Validators.required, Validators.minLength(1)]],
-      imageUrl: ['', [Validators.pattern('https?://.*')]]
-    });
-  }
-
   ngOnInit() {
-    // Filter options for platforms and genres
-    this.filteredOptions = this.bookForm.get('platformInput')?.valueChanges.pipe(
+    this.filteredOptions = this.bookForm.get('platformInput')!.valueChanges.pipe(
       startWith(''),
-      map(value => this._filter(value || '', this.options))
-    ) || new Observable<string[]>();
+      map(value => this._filter(value, this.options))
+    );
 
-    this.filteredGenres = this.bookForm.get('genreInput')?.valueChanges.pipe(
+    this.filteredGenres = this.bookForm.get('genreInput')!.valueChanges.pipe(
       startWith(''),
-      map(value => this._filter(value || '', this.genres))
-    ) || new Observable<string[]>();
+      map(value => this._filter(value, this.genres))
+    );
 
     // Subscribe to title changes to fetch book image
     this.bookForm.get('title')?.valueChanges.pipe(
@@ -181,54 +182,33 @@ export class AddBookComponent implements OnInit {
     this.selectedGenres = this.selectedGenres.filter(g => g !== genre);
   }
 
-  async sendDataToFirebase() {
-    if (!this.bookForm.valid) {
-      this.snackBar.open('Please fill in all required fields', 'Close', {
-        duration: 5000
-      });
-      return;
-    }
-
-    if (this.selectedGenres.length === 0) {
-      this.snackBar.open('Please add at least one genre', 'Close', {
-        duration: 5000
-      });
-      return;
-    }
-
-    // Default image URL if not provided
-    const finalImageUrl = this.bookForm.value.imageUrl || 'https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
-
-    try {
-      const bookData = {
-        title: this.bookForm.value.title || '',
+  onSubmit() {
+    if (this.bookForm.valid && this.platforms.length > 0 && this.selectedGenres.length > 0) {
+      this.isSubmitting = true;
+      const newBook = {
+        ...this.bookForm.value,
         platforms: this.platforms,
-        author: this.bookForm.value.author || '',
-        description: this.bookForm.value.description || '',
-        publicationDate: this.bookForm.value.publicationDate || '',
-        publisher: this.bookForm.value.publisher || '',
         genres: this.selectedGenres,
-        imageUrl: finalImageUrl,
         rating: 0,
-        numRatings: 0,
         totalRatingScore: 0,
-        pages: 0,
-        readersRead: 0,
-        dateAdded: new Date().toISOString()
+        numRatings: 0,
+        views: 0,
+        publicationDate: this.bookForm.get('publicationDate')?.value.toISOString()
       };
 
-      await this.bookService.addBook(bookData);
-
-      this.snackBar.open('Book added successfully!', 'Close', {
-        duration: 3000
+      this.bookService.addBook(newBook).subscribe({
+        next: () => {
+          this.snackBar.open('Book added successfully!', 'Close', { duration: 3000 });
+          this.router.navigate(['/books']);
+        },
+        error: (error: Error) => {
+          console.error('Error adding book:', error);
+          this.snackBar.open('Error adding book. Please try again.', 'Close', { duration: 3000 });
+          this.isSubmitting = false;
+        }
       });
-      this.router.navigate(['/books']);
-    } catch (error: unknown) {
-      console.error('Error adding book:', error);
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      this.snackBar.open('Error adding book: ' + errorMessage, 'Close', {
-        duration: 5000
-      });
+    } else {
+      this.snackBar.open('Please fill in all required fields and add at least one platform and genre.', 'Close', { duration: 3000 });
     }
   }
 

@@ -1,5 +1,5 @@
-<div class="add-electronic-gadget-container">
-  <h1>Add New Electronic Gadget</h1>
+<div class="add-form-container">
+  <h2>Add New Electronic Gadget</h2>
   
   <form [formGroup]="electronicGadgetForm" (ngSubmit)="onSubmit()" class="electronic-gadget-form">
     <div class="form-row">
@@ -21,14 +21,16 @@
     </div>
 
     <div class="form-row">
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="full-width">
         <mat-label>Description</mat-label>
         <textarea matInput formControlName="description" rows="4" placeholder="Enter gadget description"></textarea>
         <mat-error *ngIf="electronicGadgetForm.get('description')?.hasError('required')">
           Description is required
         </mat-error>
       </mat-form-field>
+    </div>
 
+    <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Category</mat-label>
         <mat-select formControlName="category">
@@ -43,9 +45,7 @@
           Category is required
         </mat-error>
       </mat-form-field>
-    </div>
 
-    <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Price</mat-label>
         <input matInput type="number" formControlName="price" placeholder="Enter price">
@@ -56,8 +56,10 @@
           Price must be greater than 0
         </mat-error>
       </mat-form-field>
+    </div>
 
-      <mat-form-field appearance="outline">
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
         <mat-label>Image URL</mat-label>
         <input matInput formControlName="imageUrl" placeholder="Enter image URL">
         <mat-error *ngIf="electronicGadgetForm.get('imageUrl')?.hasError('required')">
@@ -68,7 +70,7 @@
     </div>
 
     <div class="specifications-section">
-      <h2>Specifications</h2>
+      <h3>Specifications</h3>
       <div class="form-row">
         <mat-form-field appearance="outline">
           <mat-label>Processor</mat-label>
