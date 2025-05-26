@@ -5,7 +5,7 @@
   <div class="header-section">
     <h1>Games</h1>
     @if (authService.currentUserSig()) {
-    <button mat-raised-button color="primary" routerLink="/add_game">
+    <button mat-raised-button color="primary" (click)="onAddGame()">
       <mat-icon>add</mat-icon>
       Add Game
     </button>

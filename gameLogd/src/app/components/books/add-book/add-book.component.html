@@ -16,10 +16,25 @@
     </div>
 
     <div class="form-row">
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="full-width">
         <mat-label>Description</mat-label>
         <textarea matInput formControlName="description" required rows="3"></textarea>
         <mat-error *ngIf="bookForm.get('description')?.hasError('required')">Description is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Price</mat-label>
+        <input matInput type="number" formControlName="price" required min="0" step="0.01">
+        <mat-error *ngIf="bookForm.get('price')?.hasError('required')">Price is required</mat-error>
+        <mat-error *ngIf="bookForm.get('price')?.hasError('min')">Price must be greater than 0</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Publisher</mat-label>
+        <input matInput formControlName="publisher" required>
+        <mat-error *ngIf="bookForm.get('publisher')?.hasError('required')">Publisher is required</mat-error>
       </mat-form-field>
     </div>
 
@@ -77,24 +92,18 @@
 
     <div class="form-row">
       <mat-form-field appearance="outline">
-        <mat-label>Release Date</mat-label>
+        <mat-label>Publication Date</mat-label>
         <input matInput [matDatepicker]="picker" formControlName="publicationDate" required>
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
-        <mat-error *ngIf="bookForm.get('publicationDate')?.hasError('required')">Release date is required</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Publisher</mat-label>
-        <input matInput formControlName="publisher" required>
-        <mat-error *ngIf="bookForm.get('publisher')?.hasError('required')">Publisher is required</mat-error>
+        <mat-error *ngIf="bookForm.get('publicationDate')?.hasError('required')">Publication date is required</mat-error>
       </mat-form-field>
     </div>
 
     <div class="form-row">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Image URL</mat-label>
-        <input matInput formControlName="imageUrl" placeholder="Book cover image URL">
+        <input matInput formControlName="imageUrl" placeholder="Book cover image URL" required>
         <mat-hint *ngIf="isSearchingImage">
           <mat-icon class="spinner">search</mat-icon>
           Searching for book cover...
@@ -102,6 +111,7 @@
         <mat-hint *ngIf="!isSearchingImage && bookForm.get('imageUrl')?.value">
           Book cover found! You can change this URL if needed.
         </mat-hint>
+        <mat-error *ngIf="bookForm.get('imageUrl')?.hasError('required')">Image URL is required</mat-error>
         <mat-error *ngIf="bookForm.get('imageUrl')?.hasError('pattern')">
           Please enter a valid URL starting with http:// or https://
         </mat-error>
@@ -109,10 +119,11 @@
     </div>
 
     <div class="form-actions">
-      <button mat-raised-button color="primary" type="submit" [disabled]="!bookForm.valid">
-        Add Book
+      <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting">
+        <mat-icon *ngIf="isSubmitting" class="spinner">hourglass_empty</mat-icon>
+        {{ isSubmitting ? 'Adding Book...' : 'Add Book' }}
       </button>
-      <button mat-button type="button" (click)="onCancel()">Cancel</button>
+      <button mat-button type="button" (click)="onCancel()" [disabled]="isSubmitting">Cancel</button>
     </div>
   </form>
 </div>

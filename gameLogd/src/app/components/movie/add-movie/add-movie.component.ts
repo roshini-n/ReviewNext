@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators  } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -180,48 +180,84 @@ export class AddMovieComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.movieForm.valid && this.platforms.length > 0 && this.selectedGenres.length > 0) {
-      this.isSubmitting = true;
-      const formValue = this.movieForm.value;
-      const newMovie = {
-        title: formValue.title,
-        description: formValue.description,
-        director: formValue.director,
-        releaseDate: formValue.releaseDate.toISOString(),
-        genres: this.selectedGenres,
-        platforms: this.platforms,
-        duration: parseInt(formValue.duration),
-        imageUrl: formValue.imageUrl,
-        language: formValue.language || '',
-        country: formValue.country || '',
-        rating: 0,
-        totalRatingScore: 0,
-        numRatings: 0,
-        views: 0,
-        dateAdded: new Date().toISOString()
-      };
+    console.log('Form valid:', this.movieForm.valid);
+    console.log('Platforms:', this.platforms);
+    console.log('Genres:', this.selectedGenres);
+    console.log('Form values:', this.movieForm.value);
+    console.log('Form errors:', this.movieForm.errors);
 
-      this.movieService.addMovie(newMovie).subscribe({
-        next: () => {
-          this.snackBar.open('Movie added successfully!', 'Close', { duration: 3000 });
-          this.router.navigate(['/movies']);
-        },
-        error: (error) => {
-          console.error('Error adding movie:', error);
-          this.snackBar.open('Error adding movie. Please try again.', 'Close', { duration: 3000 });
-          this.isSubmitting = false;
-        }
-      });
-    } else {
-      let errorMessage = 'Please fill in all required fields';
-      if (this.platforms.length === 0) {
-        errorMessage += ' and add at least one platform';
+    // Check if form is valid and has required fields
+    if (!this.movieForm.valid) {
+      let errorMessage = 'Please fill in all required fields:';
+      if (!this.movieForm.get('title')?.valid) {
+        errorMessage += '\n- Title is required';
       }
-      if (this.selectedGenres.length === 0) {
-        errorMessage += ' and add at least one genre';
+      if (!this.movieForm.get('description')?.valid) {
+        errorMessage += '\n- Description is required';
       }
-      this.snackBar.open(errorMessage, 'Close', { duration: 3000 });
+      if (!this.movieForm.get('director')?.valid) {
+        errorMessage += '\n- Director is required';
+      }
+      if (!this.movieForm.get('releaseDate')?.valid) {
+        errorMessage += '\n- Release date is required';
+      }
+      if (!this.movieForm.get('duration')?.valid) {
+        errorMessage += '\n- Duration is required and must be greater than 0';
+      }
+      if (!this.movieForm.get('imageUrl')?.valid) {
+        errorMessage += '\n- Image URL is required';
+      }
+      if (!this.movieForm.get('price')?.valid) {
+        errorMessage += '\n- Price is required and must be greater than 0';
+      }
+      this.snackBar.open(errorMessage, 'Close', { duration: 5000 });
+      return;
     }
+
+    // Check if platforms and genres are selected
+    if (this.platforms.length === 0) {
+      this.snackBar.open('Please add at least one platform', 'Close', { duration: 3000 });
+      return;
+    }
+
+    if (this.selectedGenres.length === 0) {
+      this.snackBar.open('Please add at least one genre', 'Close', { duration: 3000 });
+      return;
+    }
+
+    // If all validations pass, proceed with submission
+    this.isSubmitting = true;
+    const formValue = this.movieForm.value;
+    const newMovie = {
+      title: formValue.title,
+      description: formValue.description,
+      director: formValue.director,
+      releaseDate: formValue.releaseDate.toISOString(),
+      duration: parseInt(formValue.duration),
+      imageUrl: formValue.imageUrl,
+      price: parseFloat(formValue.price),
+      platforms: this.platforms,
+      genres: this.selectedGenres,
+      language: formValue.language || '',
+      country: formValue.country || '',
+      rating: 0,
+      totalRatingScore: 0,
+      numRatings: 0,
+      views: 0,
+      dateAdded: new Date().toISOString()
+    };
+
+    this.movieService.addMovie(newMovie).subscribe({
+      next: () => {
+        this.snackBar.open('Movie added successfully!', 'Close', { duration: 3000 });
+        this.router.navigate(['/movies']);
+      },
+      error: (error) => {
+        console.error('Error adding movie:', error);
+        this.snackBar.open('Error adding movie. Please try again.', 'Close', { duration: 3000 });
+        this.isSubmitting = false;
+      }
+    });
   }
 
   onCancel(): void {
