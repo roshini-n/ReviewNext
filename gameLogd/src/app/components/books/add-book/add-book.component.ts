@@ -52,7 +52,6 @@ export class AddBookComponent implements OnInit {
     title: ['', [Validators.required]],
     description: ['', [Validators.required]],
     imageUrl: ['', [Validators.required]],
-    price: ['', [Validators.required, Validators.min(0)]],
     author: ['', [Validators.required]],
     publisher: ['', [Validators.required]],
     platformInput: [''],
@@ -211,9 +210,6 @@ export class AddBookComponent implements OnInit {
       if (!this.bookForm.get('imageUrl')?.valid) {
         errorMessage += '\n- Image URL is required';
       }
-      if (!this.bookForm.get('price')?.valid) {
-        errorMessage += '\n- Price is required and must be greater than 0';
-      }
       this.snackBar.open(errorMessage, 'Close', { duration: 5000 });
       return;
     }
@@ -239,7 +235,6 @@ export class AddBookComponent implements OnInit {
       publisher: formValue.publisher,
       publicationDate: formValue.publicationDate.toISOString(),
       imageUrl: formValue.imageUrl,
-      price: parseFloat(formValue.price),
       platforms: this.platforms,
       genres: this.selectedGenres,
       rating: 0,

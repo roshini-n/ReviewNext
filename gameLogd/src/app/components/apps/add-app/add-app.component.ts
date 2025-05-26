@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AppFirebaseService } from '../../../services/appFirebase.service';
 import { App } from '../../../models/app.model';
 
@@ -20,51 +21,49 @@ import { App } from '../../../models/app.model';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './add-app.component.html',
   styleUrls: ['./add-app.component.css']
 })
-export class AddAppComponent {
+export class AddAppComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private appService = inject(AppFirebaseService);
 
-  appForm: FormGroup = this.fb.group({
-    title: ['', [Validators.required]],
-    description: ['', [Validators.required]],
-    imageUrl: ['', [Validators.required]],
-    price: ['', [Validators.required, Validators.min(0)]],
-    developer: ['', [Validators.required]],
-    category: ['', [Validators.required]],
-    version: ['', [Validators.required]],
-    size: ['', [Validators.required]],
-    platform: ['', [Validators.required]],
-    requirements: ['', [Validators.required]],
-    features: ['', [Validators.required]],
-    releaseNotes: ['', [Validators.required]]
-  });
+  appForm: FormGroup;
+  isSubmitting = false;
 
-  onSubmit() {
+  constructor() {
+    this.appForm = this.fb.group({
+      title: ['', Validators.required],
+      developer: ['', Validators.required],
+      description: ['', Validators.required],
+      category: ['', Validators.required],
+      platform: ['', Validators.required],
+      imageUrl: ['', Validators.required]
+    });
+  }
+
+  ngOnInit(): void {
+    // Additional initialization logic if needed
+  }
+
+  onSubmit(): void {
     if (this.appForm.valid) {
-      const newApp: App = {
-        ...this.appForm.value,
-        rating: 0,
-        totalRatingScore: 0,
-        numRatings: 0,
-        downloads: 0,
-        releaseDate: new Date().toISOString(),
-        publisher: '',
-        distributor: ''
-      };
-
-      this.appService.addApp(newApp)
+      const appData = this.appForm.value;
+      this.appService.addApp(appData)
         .then(() => {
           this.router.navigate(['/apps']);
         })
-        .catch(error => {
+        .catch((error: Error) => {
           console.error('Error adding app:', error);
         });
     }
+  }
+
+  onCancel(): void {
+    this.router.navigate(['/apps']);
   }
 } 

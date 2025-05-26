@@ -1,13 +1,16 @@
 .add-web-series-container {
-  padding: 20px;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
+h2 {
   color: #FEE715;
   margin-bottom: 2rem;
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 500;
 }
 
@@ -19,63 +22,96 @@ h1 {
 
 .form-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
 }
 
-mat-form-field {
+.full-width {
   width: 100%;
 }
 
-.form-actions {
+.button-row {
   display: flex;
-  gap: 1rem;
   justify-content: flex-end;
-  margin-top: 1rem;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
 button[type="submit"] {
   background-color: #FEE715;
   color: #000;
-  font-weight: 500;
-  padding: 8px 16px;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-}
-
-button[type="submit"]:hover {
-  background-color: #e6d100;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(254, 231, 21, 0.2);
+  padding: 0.5rem 2rem;
 }
 
 button[type="submit"]:disabled {
   background-color: #ccc;
   color: #666;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
 }
 
-button[type="button"] {
-  color: #FEE715;
-  border: 1px solid #FEE715;
+/* Override Material styles */
+::ng-deep .mat-mdc-form-field {
+  width: 100%;
 }
 
-button[type="button"]:hover {
-  background-color: rgba(254, 231, 21, 0.1);
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  display: none;
 }
 
+::ng-deep .mat-mdc-form-field-infix {
+  padding: 0.5rem 0;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: white !important;
+}
+
+::ng-deep .mat-mdc-form-field-flex {
+  background-color: white !important;
+}
+
+::ng-deep .mat-mdc-input-element {
+  color: #333 !important;
+}
+
+::ng-deep .mat-mdc-form-field-label {
+  color: #666 !important;
+}
+
+::ng-deep .mat-mdc-select-value {
+  color: #333 !important;
+}
+
+::ng-deep .mat-mdc-select-arrow {
+  color: #666 !important;
+}
+
+/* Remove hover effects */
+::ng-deep .mat-mdc-button,
+::ng-deep .mat-mdc-raised-button {
+  transition: none !important;
+}
+
+::ng-deep .mat-mdc-button:hover,
+::ng-deep .mat-mdc-raised-button:hover {
+  background-color: inherit !important;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
+  .add-web-series-container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+
   .form-row {
     grid-template-columns: 1fr;
   }
-  
-  .form-actions {
+
+  .button-row {
     flex-direction: column;
   }
-  
-  .form-actions button {
+
+  .button-row button {
     width: 100%;
   }
 } 

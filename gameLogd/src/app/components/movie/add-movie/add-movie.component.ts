@@ -51,7 +51,6 @@ export class AddMovieComponent implements OnInit {
     title: ['', [Validators.required]],
     description: ['', [Validators.required]],
     imageUrl: ['', [Validators.required]],
-    price: ['', [Validators.required, Validators.min(0)]],
     director: ['', [Validators.required]],
     platformInput: [''],
     genreInput: [''],
@@ -207,9 +206,6 @@ export class AddMovieComponent implements OnInit {
       if (!this.movieForm.get('imageUrl')?.valid) {
         errorMessage += '\n- Image URL is required';
       }
-      if (!this.movieForm.get('price')?.valid) {
-        errorMessage += '\n- Price is required and must be greater than 0';
-      }
       this.snackBar.open(errorMessage, 'Close', { duration: 5000 });
       return;
     }
@@ -235,7 +231,6 @@ export class AddMovieComponent implements OnInit {
       releaseDate: formValue.releaseDate.toISOString(),
       duration: parseInt(formValue.duration),
       imageUrl: formValue.imageUrl,
-      price: parseFloat(formValue.price),
       platforms: this.platforms,
       genres: this.selectedGenres,
       language: formValue.language || '',

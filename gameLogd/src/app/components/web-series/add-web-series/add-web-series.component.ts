@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -8,7 +8,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { WebSeriesFirebaseService } from '../../../services/webSeriesFirebase.service';
-import { WebSeries } from '../../../models/web-series.model';
 
 @Component({
   selector: 'app-add-web-series',
@@ -25,47 +24,45 @@ import { WebSeries } from '../../../models/web-series.model';
   templateUrl: './add-web-series.component.html',
   styleUrls: ['./add-web-series.component.css']
 })
-export class AddWebSeriesComponent {
+export class AddWebSeriesComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private webSeriesService = inject(WebSeriesFirebaseService);
 
-  webSeriesForm: FormGroup = this.fb.group({
-    title: ['', [Validators.required]],
-    description: ['', [Validators.required]],
-    imageUrl: ['', [Validators.required]],
-    price: ['', [Validators.required, Validators.min(0)]],
-    creator: ['', [Validators.required]],
-    category: ['', [Validators.required]],
-    seasons: ['', [Validators.required, Validators.min(1)]],
-    episodes: ['', [Validators.required, Validators.min(1)]],
-    duration: ['', [Validators.required]],
-    platform: ['', [Validators.required]],
-    cast: ['', [Validators.required]],
-    genre: ['', [Validators.required]],
-    releaseYear: ['', [Validators.required, Validators.min(1900), Validators.max(new Date().getFullYear())]]
-  });
+  webSeriesForm: FormGroup;
+  isSubmitting = false;
 
-  onSubmit() {
+  constructor() {
+    this.webSeriesForm = this.fb.group({
+      title: ['', Validators.required],
+      creator: ['', Validators.required],
+      description: ['', Validators.required],
+      platform: ['', Validators.required],
+      imageUrl: ['', Validators.required],
+      episodes: [''],
+      duration: ['', Validators.required],
+      releaseYear: ['', [Validators.required, Validators.min(1900), Validators.max(new Date().getFullYear())]]
+    });
+  }
+
+  ngOnInit(): void {
+    // Additional initialization logic if needed
+  }
+
+  onSubmit(): void {
     if (this.webSeriesForm.valid) {
-      const newWebSeries: WebSeries = {
-        ...this.webSeriesForm.value,
-        rating: 0,
-        totalRatingScore: 0,
-        numRatings: 0,
-        views: 0,
-        releaseDate: new Date().toISOString(),
-        producer: '',
-        distributor: ''
-      };
-
-      this.webSeriesService.addWebSeries(newWebSeries)
+      const webSeriesData = this.webSeriesForm.value;
+      this.webSeriesService.addWebSeries(webSeriesData)
         .then(() => {
           this.router.navigate(['/web-series']);
         })
-        .catch(error => {
+        .catch((error: Error) => {
           console.error('Error adding web series:', error);
         });
     }
+  }
+
+  onCancel(): void {
+    this.router.navigate(['/web-series']);
   }
 } 
