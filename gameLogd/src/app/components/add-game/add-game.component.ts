@@ -183,48 +183,21 @@ export class AddGameComponent implements OnInit {
     this.selectedGenres = this.selectedGenres.filter(g => g !== genre);
   }
 
-  async sendDataToFirebase() {
-    if (!this.gameForm.valid) {
-      this.snackBar.open('Please fill in all required fields', 'Close', {
-        duration: 5000
-      });
-      return;
-    }
-
-    if (this.selectedGenres.length === 0) {
-      this.snackBar.open('Please add at least one genre', 'Close', {
-        duration: 5000
-      });
-      return;
-    }
-
-    // Default image URL if not provided
-    const finalImageUrl = this.gameForm.value.imageUrl || 'https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
-
-    try {
-      await this.gameService.addGame(
-        this.gameForm.value.title || '',
-        this.platforms,
-        this.gameForm.value.developer || '',
-        this.gameForm.value.description || '',
-        this.gameForm.value.releaseDate || '',
-        this.gameForm.value.publisher || '',
-        this.selectedGenres,
-        finalImageUrl,
-        0, // rating
-        0, // numRatings
-        0  // totalRatingScore
-      ).toPromise();
-
-      this.snackBar.open('Game added successfully!', 'Close', {
-        duration: 3000
-      });
-      this.router.navigate(['/games']);
-    } catch (error: unknown) {
-      console.error('Error adding game:', error);
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      this.snackBar.open('Error adding game: ' + errorMessage, 'Close', {
-        duration: 5000
+  onSubmit() {
+    if (this.gameForm.valid) {
+      const newGame = {
+        ...this.gameForm.value,
+        platforms: this.platforms,
+        genres: this.selectedGenres,
+        // add any other necessary fields here
+      };
+      this.gameService.addGame(newGame).subscribe({
+        next: () => {
+          // handle success, e.g., navigate or show a message
+        },
+        error: (err) => {
+          // handle error, e.g., show a snackbar
+        }
       });
     }
   }

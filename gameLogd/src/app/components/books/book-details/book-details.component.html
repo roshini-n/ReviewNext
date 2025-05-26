@@ -19,7 +19,8 @@
           <mat-chip *ngFor="let genre of book?.genres">{{genre}}</mat-chip>
         </mat-chip-listbox>
       </div>
-      <div class="book-actions" *ngIf="isLoggedIn">
+      @if (authService.currentUserSig()) {
+      <div class="book-actions">
         <button mat-raised-button color="primary" (click)="openLogBookPopup()">
           <mat-icon>add</mat-icon>
           Add to Log
@@ -29,6 +30,7 @@
           Edit
         </button>
       </div>
+      }
     </div>
   </div>
 
@@ -59,7 +61,8 @@
                 </mat-icon>
               </div>
             </mat-card-content>
-            <mat-card-actions *ngIf="isLoggedIn && review.userId === currentUserId">
+            @if (authService.currentUserSig() && review.userId === currentUserId) {
+            <mat-card-actions>
               <button mat-button color="primary" (click)="editReview(review)">
                 <mat-icon>edit</mat-icon>
                 Edit
@@ -69,6 +72,7 @@
                 Delete
               </button>
             </mat-card-actions>
+            }
           </mat-card>
         </div>
       </div>

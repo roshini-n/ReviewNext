@@ -1,0 +1,129 @@
+<div class="add-beauty-product-container">
+  <h1>Add New Beauty Product</h1>
+  
+  <form [formGroup]="beautyProductForm" (ngSubmit)="onSubmit()" class="beauty-product-form">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" placeholder="Enter product title">
+        <mat-error *ngIf="beautyProductForm.get('title')?.hasError('required')">
+          Title is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Brand</mat-label>
+        <input matInput formControlName="brand" placeholder="Enter brand name">
+        <mat-error *ngIf="beautyProductForm.get('brand')?.hasError('required')">
+          Brand is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="4" placeholder="Enter product description"></textarea>
+        <mat-error *ngIf="beautyProductForm.get('description')?.hasError('required')">
+          Description is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="category">
+          <mat-option value="skincare">Skincare</mat-option>
+          <mat-option value="makeup">Makeup</mat-option>
+          <mat-option value="haircare">Haircare</mat-option>
+          <mat-option value="fragrance">Fragrance</mat-option>
+          <mat-option value="bath">Bath & Body</mat-option>
+          <mat-option value="other">Other</mat-option>
+        </mat-select>
+        <mat-error *ngIf="beautyProductForm.get('category')?.hasError('required')">
+          Category is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Price</mat-label>
+        <input matInput type="number" formControlName="price" placeholder="Enter price">
+        <mat-error *ngIf="beautyProductForm.get('price')?.hasError('required')">
+          Price is required
+        </mat-error>
+        <mat-error *ngIf="beautyProductForm.get('price')?.hasError('min')">
+          Price must be greater than 0
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Size</mat-label>
+        <input matInput formControlName="size" placeholder="Enter product size">
+        <mat-error *ngIf="beautyProductForm.get('size')?.hasError('required')">
+          Size is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Image URL</mat-label>
+        <input matInput formControlName="imageUrl" placeholder="Enter image URL">
+        <mat-error *ngIf="beautyProductForm.get('imageUrl')?.hasError('required')">
+          Image URL is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Skin Type</mat-label>
+        <mat-select formControlName="skinType">
+          <mat-option value="all">All Skin Types</mat-option>
+          <mat-option value="dry">Dry</mat-option>
+          <mat-option value="oily">Oily</mat-option>
+          <mat-option value="combination">Combination</mat-option>
+          <mat-option value="sensitive">Sensitive</mat-option>
+          <mat-option value="normal">Normal</mat-option>
+        </mat-select>
+        <mat-error *ngIf="beautyProductForm.get('skinType')?.hasError('required')">
+          Skin type is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Ingredients</mat-label>
+        <textarea matInput formControlName="ingredients" rows="3" placeholder="Enter ingredients (comma-separated)"></textarea>
+        <mat-error *ngIf="beautyProductForm.get('ingredients')?.hasError('required')">
+          Ingredients are required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Benefits</mat-label>
+        <textarea matInput formControlName="benefits" rows="3" placeholder="Enter benefits (comma-separated)"></textarea>
+        <mat-error *ngIf="beautyProductForm.get('benefits')?.hasError('required')">
+          Benefits are required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Usage Instructions</mat-label>
+        <textarea matInput formControlName="usage" rows="3" placeholder="Enter usage instructions"></textarea>
+        <mat-error *ngIf="beautyProductForm.get('usage')?.hasError('required')">
+          Usage instructions are required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="!beautyProductForm.valid">
+        Add Beauty Product
+      </button>
+      <button mat-button type="button" routerLink="/beauty-products">Cancel</button>
+    </div>
+  </form>
+</div> 

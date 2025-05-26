@@ -16,6 +16,7 @@
           <mat-chip *ngFor="let platform of game?.platforms">{{platform}}</mat-chip>
         </mat-chip-listbox>
       </div>
+      @if (authService.currentUserSig()) {
       <div class="book-actions" *ngIf="!disabled">
         <button mat-raised-button color="primary" (click)="openLogGamePopup()">
           <mat-icon>add</mat-icon>
@@ -26,6 +27,7 @@
           Edit
         </button>
       </div>
+      }
     </div>
   </div>
 
@@ -62,7 +64,8 @@
             </mat-card-header>
             <mat-card-content>
               <p class="review-text">{{ review.reviewText }}</p>
-              <div class="action-buttons" *ngIf="review.userId === currentUserId">
+              @if (authService.currentUserSig() && review.userId === currentUserId) {
+              <div class="action-buttons">
                 <button mat-raised-button color="blue" (click)="editReview(review)" class="action-button">
                   Edit
                 </button>
@@ -72,6 +75,7 @@
                   class="action-button"
                 ></app-general-delete-button>
               </div>
+              }
             </mat-card-content>
           </mat-card>
         </div>

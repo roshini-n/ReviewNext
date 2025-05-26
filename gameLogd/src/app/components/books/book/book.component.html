@@ -1,10 +1,12 @@
 <div class="book-container">
   <div class="header-section">
     <h1>Books</h1>
+    @if (authService.currentUserSig()) {
     <button mat-raised-button color="primary" routerLink="/add_book">
       <mat-icon>add</mat-icon>
       Add Book
     </button>
+    }
   </div>
   
   <h2>Trending</h2>

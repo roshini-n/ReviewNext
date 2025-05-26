@@ -12,12 +12,13 @@
 }
 
 .footer {
-  margin-top: auto;
+  flex-shrink: 0;
   background-color: var(--footer-bg);
   color: var(--footer-text);
   text-align: center;
   padding: 1rem 0;
   font-size: 0.9rem;
+  width: 100%;
 }
 
 .footer .container {

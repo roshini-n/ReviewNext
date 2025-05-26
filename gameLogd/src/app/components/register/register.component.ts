@@ -43,7 +43,7 @@ export class RegisterComponent implements OnInit {
             const rawForm = this.form.getRawValue();
             this.AuthService.register(rawForm.email, rawForm.username, rawForm.password).subscribe({
                 next: () => {
-                    this.router.navigateByUrl('/');
+                    this.router.navigateByUrl('/dashboard');
                 },
                 error: (err) => {
                     this.errorMessage = err.code;

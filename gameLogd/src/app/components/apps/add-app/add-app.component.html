@@ -1,0 +1,137 @@
+<div class="add-app-container">
+  <h1>Add New App</h1>
+  
+  <form [formGroup]="appForm" (ngSubmit)="onSubmit()" class="app-form">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" placeholder="Enter app title">
+        <mat-error *ngIf="appForm.get('title')?.hasError('required')">
+          Title is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Developer</mat-label>
+        <input matInput formControlName="developer" placeholder="Enter developer name">
+        <mat-error *ngIf="appForm.get('developer')?.hasError('required')">
+          Developer is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="4" placeholder="Enter app description"></textarea>
+        <mat-error *ngIf="appForm.get('description')?.hasError('required')">
+          Description is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="category">
+          <mat-option value="games">Games</mat-option>
+          <mat-option value="productivity">Productivity</mat-option>
+          <mat-option value="social">Social</mat-option>
+          <mat-option value="education">Education</mat-option>
+          <mat-option value="utilities">Utilities</mat-option>
+          <mat-option value="other">Other</mat-option>
+        </mat-select>
+        <mat-error *ngIf="appForm.get('category')?.hasError('required')">
+          Category is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Price</mat-label>
+        <input matInput type="number" formControlName="price" placeholder="Enter price">
+        <mat-error *ngIf="appForm.get('price')?.hasError('required')">
+          Price is required
+        </mat-error>
+        <mat-error *ngIf="appForm.get('price')?.hasError('min')">
+          Price must be greater than 0
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Version</mat-label>
+        <input matInput formControlName="version" placeholder="Enter version number">
+        <mat-error *ngIf="appForm.get('version')?.hasError('required')">
+          Version is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Image URL</mat-label>
+        <input matInput formControlName="imageUrl" placeholder="Enter image URL">
+        <mat-error *ngIf="appForm.get('imageUrl')?.hasError('required')">
+          Image URL is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Size</mat-label>
+        <input matInput formControlName="size" placeholder="Enter app size">
+        <mat-error *ngIf="appForm.get('size')?.hasError('required')">
+          Size is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Platform</mat-label>
+        <mat-select formControlName="platform">
+          <mat-option value="ios">iOS</mat-option>
+          <mat-option value="android">Android</mat-option>
+          <mat-option value="windows">Windows</mat-option>
+          <mat-option value="mac">macOS</mat-option>
+          <mat-option value="linux">Linux</mat-option>
+          <mat-option value="web">Web</mat-option>
+        </mat-select>
+        <mat-error *ngIf="appForm.get('platform')?.hasError('required')">
+          Platform is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Requirements</mat-label>
+        <textarea matInput formControlName="requirements" rows="3" placeholder="Enter system requirements"></textarea>
+        <mat-error *ngIf="appForm.get('requirements')?.hasError('required')">
+          Requirements are required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Features</mat-label>
+        <textarea matInput formControlName="features" rows="3" placeholder="Enter features (comma-separated)"></textarea>
+        <mat-error *ngIf="appForm.get('features')?.hasError('required')">
+          Features are required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Release Notes</mat-label>
+        <textarea matInput formControlName="releaseNotes" rows="3" placeholder="Enter release notes"></textarea>
+        <mat-error *ngIf="appForm.get('releaseNotes')?.hasError('required')">
+          Release notes are required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="!appForm.valid">
+        Add App
+      </button>
+      <button mat-button type="button" routerLink="/apps">Cancel</button>
+    </div>
+  </form>
+</div> 

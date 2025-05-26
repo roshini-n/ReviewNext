@@ -51,16 +51,9 @@ export class BookFirebaseService {
   }
 
   // Add new book
-  async addBook(book: Omit<Book, 'id'>): Promise<void> {
-    try {
-      console.log('Adding book to Firebase:', book);
-      const docRef = await addDoc(this.booksCollection, book);
-      console.log('Book added with ID:', docRef.id);
-      await updateDoc(docRef, { id: docRef.id });
-    } catch (error) {
-      console.error('Error adding book:', error);
-      throw error;
-    }
+  addBook(book: any): Observable<void> {
+    const booksRef = collection(this.firestore, 'books');
+    return from(addDoc(booksRef, book).then(() => {}));
   }
 
   // Update a book

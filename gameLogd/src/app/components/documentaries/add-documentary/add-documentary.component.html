@@ -1,0 +1,149 @@
+<div class="add-documentary-container">
+  <h1>Add New Documentary</h1>
+  
+  <form [formGroup]="documentaryForm" (ngSubmit)="onSubmit()" class="documentary-form">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" placeholder="Enter documentary title">
+        <mat-error *ngIf="documentaryForm.get('title')?.hasError('required')">
+          Title is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Director</mat-label>
+        <input matInput formControlName="director" placeholder="Enter director name">
+        <mat-error *ngIf="documentaryForm.get('director')?.hasError('required')">
+          Director is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="4" placeholder="Enter documentary description"></textarea>
+        <mat-error *ngIf="documentaryForm.get('description')?.hasError('required')">
+          Description is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="category">
+          <mat-option value="nature">Nature</mat-option>
+          <mat-option value="history">History</mat-option>
+          <mat-option value="science">Science</mat-option>
+          <mat-option value="social">Social Issues</mat-option>
+          <mat-option value="biography">Biography</mat-option>
+          <mat-option value="other">Other</mat-option>
+        </mat-select>
+        <mat-error *ngIf="documentaryForm.get('category')?.hasError('required')">
+          Category is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Price</mat-label>
+        <input matInput type="number" formControlName="price" placeholder="Enter price">
+        <mat-error *ngIf="documentaryForm.get('price')?.hasError('required')">
+          Price is required
+        </mat-error>
+        <mat-error *ngIf="documentaryForm.get('price')?.hasError('min')">
+          Price must be greater than 0
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Release Year</mat-label>
+        <input matInput type="number" formControlName="releaseYear" placeholder="Enter release year">
+        <mat-error *ngIf="documentaryForm.get('releaseYear')?.hasError('required')">
+          Release year is required
+        </mat-error>
+        <mat-error *ngIf="documentaryForm.get('releaseYear')?.hasError('min') || documentaryForm.get('releaseYear')?.hasError('max')">
+          Release year must be between 1900 and current year
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Image URL</mat-label>
+        <input matInput formControlName="imageUrl" placeholder="Enter image URL">
+        <mat-error *ngIf="documentaryForm.get('imageUrl')?.hasError('required')">
+          Image URL is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Duration</mat-label>
+        <input matInput formControlName="duration" placeholder="Enter duration">
+        <mat-error *ngIf="documentaryForm.get('duration')?.hasError('required')">
+          Duration is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Language</mat-label>
+        <input matInput formControlName="language" placeholder="Enter language">
+        <mat-error *ngIf="documentaryForm.get('language')?.hasError('required')">
+          Language is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Subtitles</mat-label>
+        <input matInput formControlName="subtitles" placeholder="Enter available subtitles">
+        <mat-error *ngIf="documentaryForm.get('subtitles')?.hasError('required')">
+          Subtitles are required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Topics</mat-label>
+        <textarea matInput formControlName="topics" rows="3" placeholder="Enter topics covered (comma-separated)"></textarea>
+        <mat-error *ngIf="documentaryForm.get('topics')?.hasError('required')">
+          Topics are required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Target Audience</mat-label>
+        <mat-select formControlName="targetAudience">
+          <mat-option value="general">General Audience</mat-option>
+          <mat-option value="children">Children</mat-option>
+          <mat-option value="teen">Teenagers</mat-option>
+          <mat-option value="adult">Adults</mat-option>
+          <mat-option value="academic">Academic</mat-option>
+        </mat-select>
+        <mat-error *ngIf="documentaryForm.get('targetAudience')?.hasError('required')">
+          Target audience is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Production Company</mat-label>
+        <input matInput formControlName="productionCompany" placeholder="Enter production company">
+        <mat-error *ngIf="documentaryForm.get('productionCompany')?.hasError('required')">
+          Production company is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="!documentaryForm.valid">
+        Add Documentary
+      </button>
+      <button mat-button type="button" routerLink="/documentaries">Cancel</button>
+    </div>
+  </form>
+</div> 

@@ -1,6 +1,6 @@
 <div class="add-book-container">
-  <h1>Add New Book</h1>
-  <form [formGroup]="bookForm" (ngSubmit)="sendDataToFirebase()">
+  <h2>Add New Book</h2>
+  <form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
     <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Title</mat-label>

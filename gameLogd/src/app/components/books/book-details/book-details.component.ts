@@ -74,21 +74,19 @@ export class BookDetailsComponent implements OnInit {
   private bookFirebaseService = inject(BookFirebaseService);
   private bookLogService = inject(BookLogService);
   private bookReviewService = inject(BookReviewService);
-  private authService = inject(AuthService);
+  public authService = inject(AuthService);
   private snackBar = inject(MatSnackBar);
 
   book?: Book;
   reviews: Review[] = [];
   isLoading: boolean = true;
   error: string | null = null;
-  isLoggedIn: boolean = false;
   currentUserId: string | null = null;
   bookId: string | null = null;
 
   async ngOnInit() {
     this.bookId = this.route.snapshot.paramMap.get('id');
     this.currentUserId = await this.authService.getUid();
-    this.isLoggedIn = !!this.currentUserId;
 
     if (this.bookId) {
       this.loadBookDetails();
@@ -128,7 +126,7 @@ export class BookDetailsComponent implements OnInit {
   }
 
   onAddReview() {
-    if (!this.isLoggedIn) {
+    if (!this.authService.currentUserSig()) {
       this.snackBar.open('Please log in to add reviews', 'Close', {
         duration: 3000
       });
@@ -197,7 +195,7 @@ export class BookDetailsComponent implements OnInit {
   }
 
   onEditBook() {
-    if (!this.isLoggedIn) {
+    if (!this.authService.currentUserSig()) {
       this.snackBar.open('Please log in to edit books', 'Close', {
         duration: 3000
       });
@@ -226,7 +224,7 @@ export class BookDetailsComponent implements OnInit {
   }
 
   onDeleteBook() {
-    if (!this.isLoggedIn || !this.book || !this.bookId) return;
+    if (!this.authService.currentUserSig() || !this.book || !this.bookId) return;
 
     if (confirm('Are you sure you want to delete this book?')) {
       this.bookFirebaseService.deleteBook(this.bookId).then(() => {
@@ -244,7 +242,7 @@ export class BookDetailsComponent implements OnInit {
   }
 
   openLogBookPopup() {
-    if (!this.isLoggedIn) {
+    if (!this.authService.currentUserSig()) {
       this.snackBar.open('Please log in to add books to your log', 'Close', {
         duration: 3000
       });

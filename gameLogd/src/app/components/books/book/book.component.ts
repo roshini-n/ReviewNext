@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-book',
@@ -29,6 +30,7 @@ export class BookComponent implements OnInit {
   topRatedBooks: Book[] = [];
   popularBooks: Book[] = [];
   bookFirebaseService = inject(BookFirebaseService);
+  authService = inject(AuthService);
 
   ngOnInit(): void {
     this.loadBooks();

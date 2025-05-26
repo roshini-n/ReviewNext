@@ -1,28 +1,85 @@
 <html>
     <body>
         <div class="main-container">
-            <div class = "title-container">
+            <!-- Search Section - Only visible to non-registered users -->
+            @if (!authService.currentUserSig()) {
+            <div class="search-section">
+                <form class="search-form">
+                    <input 
+                        class="search-input" 
+                        type="search" 
+                        placeholder="Search for products, reviews, and more..."
+                        [(ngModel)]="searchQuery"
+                        name="search"
+                    />
+                    <button class="search-button" type="submit" (click)="onSearch()">
+                        Search
+                    </button>
+                </form>
+            </div>
+            }
+
+            <!-- Welcome and Categories Section - Only visible to non-registered users -->
+            @if (!authService.currentUserSig()) {
+            <div class="title-container">
                 <div class="big-text">Welcome to <span class="title">Review</span><span class="title-yellow">Next</span></div>
             </div>
-            <div class = "container">
-                <div class="big-text" >All Your Favorites — with Trusted Reviews and Ratings</div>
-                <div class="small-text">
-                    <br>
-                    Create your free account today to log and share reviews of your favorite content.
-                    <br>
-                    Browse our categories to find more you'll enjoy!
-                    <br>
-                <hr>
-                <!-- <select id="myDropdown">
-                    <option value="" disabled selected>Select your Category</option>
-                    <option value="option2">Games</option>
-                    <option value="option3">Movies</option>
-                    <option value="option4">Books</option>
-                    <option value="option5">Electronic Gadgets</option>
-                  </select> -->
-                  
+            <div class="container">
+                <div class="welcome-text-container">
+                    <div class="big-text">All Your Favorites — with Trusted Reviews and Ratings</div>
+                    <div class="small-text">
+                        <br>
+                        Create your free account today to log and share reviews of your favorite content.
+                        <br>
+                        Browse our categories to find more you'll enjoy!
+                    </div>
+                </div>
+    
+                
+                <!-- Categories Section -->
+                <div class="categories-section">
+                    <h3>Browse Categories</h3>
+                    <div class="categories-grid">
+                        <a routerLink="games" class="category-card">
+                            <mat-icon>sports_esports</mat-icon>
+                            <span>Games</span>
+                        </a>
+                        <a routerLink="books" class="category-card">
+                            <mat-icon>menu_book</mat-icon>
+                            <span>Books</span>
+                        </a>
+                        <a routerLink="movies" class="category-card">
+                            <mat-icon>movie</mat-icon>
+                            <span>Movies</span>
+                        </a>
+                        <a routerLink="electronic-gadgets" class="category-card">
+                            <mat-icon>devices</mat-icon>
+                            <span>Electronic Gadgets</span>
+                        </a>
+                        <a routerLink="apps" class="category-card">
+                            <mat-icon>apps</mat-icon>
+                            <span>Apps</span>
+                        </a>
+                        <a routerLink="web-series" class="category-card">
+                            <mat-icon>live_tv</mat-icon>
+                            <span>Web Series</span>
+                        </a>
+                        <a routerLink="documentaries" class="category-card">
+                            <mat-icon>videocam</mat-icon>
+                            <span>Documentaries</span>
+                        </a>
+                        <a routerLink="beauty-products" class="category-card">
+                            <mat-icon>spa</mat-icon>
+                            <span>Beauty Products</span>
+                        </a>
+                        <a routerLink="home-appliances" class="category-card">
+                            <mat-icon>home</mat-icon>
+                            <span>Home Appliances</span>
+                        </a>
+                    </div>
                 </div>
             </div>
+            }
         </div>
     </body>
 </html>
