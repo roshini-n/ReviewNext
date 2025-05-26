@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -25,45 +25,50 @@ import { ElectronicGadget } from '../../../models/electronic-gadget.model';
   templateUrl: './add-electronic-gadget.component.html',
   styleUrls: ['./add-electronic-gadget.component.css']
 })
-export class AddElectronicGadgetComponent {
+export class AddElectronicGadgetComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private electronicGadgetService = inject(ElectronicGadgetFirebaseService);
 
-  electronicGadgetForm: FormGroup = this.fb.group({
-    title: ['', [Validators.required]],
-    description: ['', [Validators.required]],
-    imageUrl: ['', [Validators.required]],
-    price: ['', [Validators.required, Validators.min(0)]],
-    brand: ['', [Validators.required]],
-    category: ['', [Validators.required]],
-    specifications: this.fb.group({
-      processor: [''],
-      ram: [''],
-      storage: [''],
-      display: [''],
-      battery: ['']
-    }),
-    features: this.fb.array([])
-  });
+  electronicGadgetForm: FormGroup;
+  isSubmitting = false;
 
-  onSubmit() {
+  constructor() {
+    this.electronicGadgetForm = this.fb.group({
+      title: ['', Validators.required],
+      brand: ['', Validators.required],
+      description: ['', Validators.required],
+      category: ['', Validators.required],
+      price: ['', [Validators.required, Validators.min(0)]],
+      imageUrl: ['', Validators.required],
+      specifications: this.fb.group({
+        processor: [''],
+        ram: [''],
+        storage: [''],
+        display: [''],
+        battery: ['']
+      })
+    });
+  }
+
+  ngOnInit(): void {
+    // Additional initialization logic if needed
+  }
+
+  onSubmit(): void {
     if (this.electronicGadgetForm.valid) {
-      const newGadget: ElectronicGadget = {
-        ...this.electronicGadgetForm.value,
-        rating: 0,
-        reviews: [],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
-
-      this.electronicGadgetService.addElectronicGadget(newGadget)
+      const gadgetData = this.electronicGadgetForm.value;
+      this.electronicGadgetService.addElectronicGadget(gadgetData)
         .then(() => {
           this.router.navigate(['/electronic-gadgets']);
         })
-        .catch(error => {
+        .catch((error: Error) => {
           console.error('Error adding electronic gadget:', error);
         });
     }
+  }
+
+  onCancel(): void {
+    this.router.navigate(['/electronic-gadgets']);
   }
 } 

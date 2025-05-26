@@ -122,6 +122,13 @@ input, textarea, select {
   background: #FEE715 !important;
   color: #000 !important;
 }
+.button-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px; /* optional: space between buttons */
+  margin-top: 20px;
+}
+
 
 /* Remove hover/focus/active for all buttons */
 button, button:active, button:focus, button:hover {

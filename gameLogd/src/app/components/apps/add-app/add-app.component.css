@@ -13,6 +13,13 @@ h1 {
   font-size: 2rem;
   font-weight: 500;
 }
+.button-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px; /* optional: space between buttons */
+  margin-top: 20px;
+}
+
 
 .app-form {
   display: flex;

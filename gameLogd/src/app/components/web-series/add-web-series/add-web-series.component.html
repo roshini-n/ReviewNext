@@ -1,11 +1,10 @@
 <div class="add-web-series-container">
-  <h1>Add New Web Series</h1>
-  
+  <h2>Add Web Series</h2>
   <form [formGroup]="webSeriesForm" (ngSubmit)="onSubmit()" class="web-series-form">
     <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Title</mat-label>
-        <input matInput formControlName="title" placeholder="Enter series title">
+        <input matInput formControlName="title" required>
         <mat-error *ngIf="webSeriesForm.get('title')?.hasError('required')">
           Title is required
         </mat-error>
@@ -13,7 +12,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Creator</mat-label>
-        <input matInput formControlName="creator" placeholder="Enter creator name">
+        <input matInput formControlName="creator" required>
         <mat-error *ngIf="webSeriesForm.get('creator')?.hasError('required')">
           Creator is required
         </mat-error>
@@ -22,44 +21,22 @@
 
     <div class="form-row">
       <mat-form-field appearance="outline">
-        <mat-label>Description</mat-label>
-        <textarea matInput formControlName="description" rows="4" placeholder="Enter series description"></textarea>
-        <mat-error *ngIf="webSeriesForm.get('description')?.hasError('required')">
-          Description is required
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Category</mat-label>
-        <mat-select formControlName="category">
-          <mat-option value="drama">Drama</mat-option>
-          <mat-option value="comedy">Comedy</mat-option>
-          <mat-option value="action">Action</mat-option>
-          <mat-option value="thriller">Thriller</mat-option>
-          <mat-option value="sci-fi">Sci-Fi</mat-option>
-          <mat-option value="other">Other</mat-option>
+        <mat-label>Platform</mat-label>
+        <mat-select formControlName="platform" required>
+          <mat-option value="netflix">Netflix</mat-option>
+          <mat-option value="amazon">Amazon Prime</mat-option>
+          <mat-option value="hulu">Hulu</mat-option>
+          <mat-option value="disney">Disney+</mat-option>
+          <mat-option value="hbo">HBO Max</mat-option>
         </mat-select>
-        <mat-error *ngIf="webSeriesForm.get('category')?.hasError('required')">
-          Category is required
-        </mat-error>
-      </mat-form-field>
-    </div>
-
-    <div class="form-row">
-      <mat-form-field appearance="outline">
-        <mat-label>Price</mat-label>
-        <input matInput type="number" formControlName="price" placeholder="Enter price">
-        <mat-error *ngIf="webSeriesForm.get('price')?.hasError('required')">
-          Price is required
-        </mat-error>
-        <mat-error *ngIf="webSeriesForm.get('price')?.hasError('min')">
-          Price must be greater than 0
+        <mat-error *ngIf="webSeriesForm.get('platform')?.hasError('required')">
+          Platform is required
         </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Release Year</mat-label>
-        <input matInput type="number" formControlName="releaseYear" placeholder="Enter release year">
+        <input matInput type="number" formControlName="releaseYear" required>
         <mat-error *ngIf="webSeriesForm.get('releaseYear')?.hasError('required')">
           Release year is required
         </mat-error>
@@ -69,97 +46,43 @@
       </mat-form-field>
     </div>
 
-    <div class="form-row">
-      <mat-form-field appearance="outline">
-        <mat-label>Image URL</mat-label>
-        <input matInput formControlName="imageUrl" placeholder="Enter image URL">
-        <mat-error *ngIf="webSeriesForm.get('imageUrl')?.hasError('required')">
-          Image URL is required
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Platform</mat-label>
-        <mat-select formControlName="platform">
-          <mat-option value="netflix">Netflix</mat-option>
-          <mat-option value="amazon">Amazon Prime</mat-option>
-          <mat-option value="hulu">Hulu</mat-option>
-          <mat-option value="disney">Disney+</mat-option>
-          <mat-option value="hbo">HBO Max</mat-option>
-          <mat-option value="other">Other</mat-option>
-        </mat-select>
-        <mat-error *ngIf="webSeriesForm.get('platform')?.hasError('required')">
-          Platform is required
-        </mat-error>
-      </mat-form-field>
-    </div>
-
-    <div class="form-row">
-      <mat-form-field appearance="outline">
-        <mat-label>Seasons</mat-label>
-        <input matInput type="number" formControlName="seasons" placeholder="Enter number of seasons">
-        <mat-error *ngIf="webSeriesForm.get('seasons')?.hasError('required')">
-          Number of seasons is required
-        </mat-error>
-        <mat-error *ngIf="webSeriesForm.get('seasons')?.hasError('min')">
-          Must have at least 1 season
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Episodes</mat-label>
-        <input matInput type="number" formControlName="episodes" placeholder="Enter total number of episodes">
-        <mat-error *ngIf="webSeriesForm.get('episodes')?.hasError('required')">
-          Number of episodes is required
-        </mat-error>
-        <mat-error *ngIf="webSeriesForm.get('episodes')?.hasError('min')">
-          Must have at least 1 episode
-        </mat-error>
-      </mat-form-field>
-    </div>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="4" required></textarea>
+      <mat-error *ngIf="webSeriesForm.get('description')?.hasError('required')">
+        Description is required
+      </mat-error>
+    </mat-form-field>
 
     <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Duration</mat-label>
-        <input matInput formControlName="duration" placeholder="Enter episode duration">
+        <input matInput formControlName="duration" required>
         <mat-error *ngIf="webSeriesForm.get('duration')?.hasError('required')">
           Duration is required
         </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Genre</mat-label>
-        <mat-select formControlName="genre">
-          <mat-option value="drama">Drama</mat-option>
-          <mat-option value="comedy">Comedy</mat-option>
-          <mat-option value="action">Action</mat-option>
-          <mat-option value="thriller">Thriller</mat-option>
-          <mat-option value="sci-fi">Sci-Fi</mat-option>
-          <mat-option value="romance">Romance</mat-option>
-          <mat-option value="horror">Horror</mat-option>
-          <mat-option value="other">Other</mat-option>
-        </mat-select>
-        <mat-error *ngIf="webSeriesForm.get('genre')?.hasError('required')">
-          Genre is required
-        </mat-error>
+        <mat-label>Episodes</mat-label>
+        <textarea matInput formControlName="episodes" rows="3"></textarea>
       </mat-form-field>
     </div>
 
-    <div class="form-row">
-      <mat-form-field appearance="outline">
-        <mat-label>Cast</mat-label>
-        <textarea matInput formControlName="cast" rows="3" placeholder="Enter cast members (comma-separated)"></textarea>
-        <mat-error *ngIf="webSeriesForm.get('cast')?.hasError('required')">
-          Cast is required
-        </mat-error>
-      </mat-form-field>
-    </div>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Image URL</mat-label>
+      <input matInput formControlName="imageUrl" required>
+      <mat-error *ngIf="webSeriesForm.get('imageUrl')?.hasError('required')">
+        Image URL is required
+      </mat-error>
+    </mat-form-field>
 
-    <div class="form-actions">
-      <button mat-raised-button color="primary" type="submit" [disabled]="!webSeriesForm.valid">
-        Add Web Series
-      </button>
+    <div class="button-row">
       <button mat-button type="button" routerLink="/web-series">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting">
+        <mat-icon *ngIf="isSubmitting" class="spinner">hourglass_empty</mat-icon>
+        {{ isSubmitting ? 'Adding Web Series...' : 'Add Web Series' }}
+      </button>
     </div>
   </form>
 </div> 

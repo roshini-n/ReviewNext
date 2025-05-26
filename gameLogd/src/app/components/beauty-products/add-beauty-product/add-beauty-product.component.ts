@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BeautyProductFirebaseService } from '../../../services/beautyProductFirebase.service';
 import { BeautyProduct } from '../../../models/beauty-product.model';
 
@@ -20,50 +21,51 @@ import { BeautyProduct } from '../../../models/beauty-product.model';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './add-beauty-product.component.html',
   styleUrls: ['./add-beauty-product.component.css']
 })
-export class AddBeautyProductComponent {
+export class AddBeautyProductComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private beautyProductService = inject(BeautyProductFirebaseService);
 
-  beautyProductForm: FormGroup = this.fb.group({
-    title: ['', [Validators.required]],
-    description: ['', [Validators.required]],
-    imageUrl: ['', [Validators.required]],
-    price: ['', [Validators.required, Validators.min(0)]],
-    brand: ['', [Validators.required]],
-    category: ['', [Validators.required]],
-    size: ['', [Validators.required]],
-    ingredients: ['', [Validators.required]],
-    skinType: ['', [Validators.required]],
-    benefits: ['', [Validators.required]],
-    usage: ['', [Validators.required]]
-  });
+  beautyProductForm: FormGroup;
+  isSubmitting = false;
 
-  onSubmit() {
+  constructor() {
+    this.beautyProductForm = this.fb.group({
+      title: ['', Validators.required],
+      brand: ['', Validators.required],
+      description: ['', Validators.required],
+      category: ['', Validators.required],
+      price: ['', [Validators.required, Validators.min(0)]],
+      imageUrl: ['', Validators.required],
+      benefits: [''],
+      usageInstructions: ['']
+    });
+  }
+
+  ngOnInit(): void {
+    // Additional initialization logic if needed
+  }
+
+  onSubmit(): void {
     if (this.beautyProductForm.valid) {
-      const newProduct: BeautyProduct = {
-        ...this.beautyProductForm.value,
-        rating: 0,
-        totalRatingScore: 0,
-        numRatings: 0,
-        sales: 0,
-        releaseDate: new Date().toISOString(),
-        manufacturer: '',
-        distributor: ''
-      };
-
-      this.beautyProductService.addBeautyProduct(newProduct)
+      const beautyProductData = this.beautyProductForm.value;
+      this.beautyProductService.addBeautyProduct(beautyProductData)
         .then(() => {
           this.router.navigate(['/beauty-products']);
         })
-        .catch(error => {
+        .catch((error: Error) => {
           console.error('Error adding beauty product:', error);
         });
     }
+  }
+
+  onCancel(): void {
+    this.router.navigate(['/beauty-products']);
   }
 } 
