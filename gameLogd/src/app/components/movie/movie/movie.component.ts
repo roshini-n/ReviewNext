@@ -8,6 +8,7 @@ import { CarouselModule } from 'primeng/carousel';
 import { MovieFirebaseService } from '../../../services/movieFirebase.service';
 import { Movie } from '../../../models/movie.model';
 import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-movie',
@@ -30,6 +31,7 @@ export class MovieComponent implements OnInit {
   popularMovies: Movie[] = [];
   movieFirebaseService = inject(MovieFirebaseService);
   authService = inject(AuthService);
+  router = inject(Router);
 
   ngOnInit(): void {
     this.loadMovies();
@@ -42,5 +44,9 @@ export class MovieComponent implements OnInit {
       this.topRatedMovies = movies.filter(movie => movie.rating >= 3.5);
       this.popularMovies = movies;
     });
+  }
+
+  onAddMovie(): void {
+    this.router.navigate(['/add_movie']);
   }
 } 

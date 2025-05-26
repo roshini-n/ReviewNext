@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,6 +25,7 @@ import { map, startWith } from 'rxjs/operators';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -78,9 +79,7 @@ export class AddGameComponent implements OnInit {
       releaseDate: ['', Validators.required],
       developer: ['', [Validators.required, Validators.minLength(1)]],
       publisher: ['', [Validators.required, Validators.minLength(1)]],
-      imageUrl: ['', [Validators.pattern('https?://.*')]],
-      language: [''],
-      country: ['']
+      imageUrl: ['', [Validators.pattern('https?://.*')]]
     });
   }
 
@@ -102,17 +101,14 @@ export class AddGameComponent implements OnInit {
       distinctUntilChanged(),
       filter(title => title && title.length > 2)
     ).subscribe(title => {
-      console.log('Title changed:', title);
       this.isSearchingImage = true;
       const releaseDate = this.gameForm.get('releaseDate')?.value;
       const year = releaseDate ? new Date(releaseDate).getFullYear() : undefined;
       
       this.igdbService.searchGame(title, year).subscribe({
         next: (imageUrl) => {
-          console.log('Received image URL from IGDB:', imageUrl);
           if (imageUrl) {
             this.gameForm.patchValue({ imageUrl }, { emitEvent: false });
-            console.log('Updated form with image URL:', imageUrl);
           }
           this.isSearchingImage = false;
         },
@@ -121,34 +117,6 @@ export class AddGameComponent implements OnInit {
           this.isSearchingImage = false;
         }
       });
-    });
-
-    // Subscribe to release date changes to update image if needed
-    this.gameForm.get('releaseDate')?.valueChanges.pipe(
-      distinctUntilChanged(),
-      filter(date => date && this.gameForm.get('title')?.value)
-    ).subscribe(date => {
-      console.log('Release date changed:', date);
-      const title = this.gameForm.get('title')?.value;
-      if (title) {
-        this.isSearchingImage = true;
-        const year = date ? new Date(date).getFullYear() : undefined;
-        
-        this.igdbService.searchGame(title, year).subscribe({
-          next: (imageUrl) => {
-            console.log('Received image URL from IGDB after date change:', imageUrl);
-            if (imageUrl) {
-              this.gameForm.patchValue({ imageUrl }, { emitEvent: false });
-              console.log('Updated form with image URL after date change:', imageUrl);
-            }
-            this.isSearchingImage = false;
-          },
-          error: (error) => {
-            console.error('Error fetching game image after date change:', error);
-            this.isSearchingImage = false;
-          }
-        });
-      }
     });
   }
 
@@ -184,21 +152,40 @@ export class AddGameComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.gameForm.valid) {
+    if (this.gameForm.valid && this.platforms.length > 0 && this.selectedGenres.length > 0) {
+      this.isSubmitting = true;
       const newGame = {
         ...this.gameForm.value,
         platforms: this.platforms,
         genres: this.selectedGenres,
-        // add any other necessary fields here
+        rating: 0,
+        totalRatingScore: 0,
+        numRatings: 0,
+        views: 0,
+        releaseDate: this.gameForm.get('releaseDate')?.value.toISOString(),
+        dateAdded: new Date().toISOString()
       };
+
       this.gameService.addGame(newGame).subscribe({
         next: () => {
-          // handle success, e.g., navigate or show a message
+          this.snackBar.open('Game added successfully!', 'Close', { duration: 3000 });
+          this.router.navigate(['/games']);
         },
-        error: (err) => {
-          // handle error, e.g., show a snackbar
+        error: (error) => {
+          console.error('Error adding game:', error);
+          this.snackBar.open('Error adding game. Please try again.', 'Close', { duration: 3000 });
+          this.isSubmitting = false;
         }
       });
+    } else {
+      let errorMessage = 'Please fill in all required fields';
+      if (this.platforms.length === 0) {
+        errorMessage += ' and add at least one platform';
+      }
+      if (this.selectedGenres.length === 0) {
+        errorMessage += ' and add at least one genre';
+      }
+      this.snackBar.open(errorMessage, 'Close', { duration: 3000 });
     }
   }
 

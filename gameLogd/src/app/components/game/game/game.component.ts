@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CarouselModule } from 'primeng/carousel';
@@ -28,17 +28,27 @@ export class GameComponent implements OnInit {
   popularGames: Game[] = [];
   gameFirebaseService = inject(GameFirebaseService);
   authService = inject(AuthService);
+  router = inject(Router);
 
   ngOnInit(): void {
     this.loadGames();
   }
 
   loadGames(): void {
-    this.gameFirebaseService.getGames().subscribe((games: Game[]) => {
-      this.allGames = games;
-      this.trendingGames = games;
-      this.topRatedGames = games.filter(game => game.rating >= 3.5);
-      this.popularGames = games;
+    this.gameFirebaseService.getGames().subscribe({
+      next: (games: Game[]) => {
+        this.allGames = games;
+        this.trendingGames = games;
+        this.topRatedGames = games.filter(game => game.rating >= 3.5);
+        this.popularGames = games;
+      },
+      error: (error) => {
+        console.error('Error loading games:', error);
+      }
     });
+  }
+
+  onAddGame(): void {
+    this.router.navigate(['/add_game']);
   }
 }

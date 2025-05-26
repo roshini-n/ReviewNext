@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,6 +26,7 @@ import { map, startWith } from 'rxjs/operators';
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
+    FormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -183,33 +184,82 @@ export class AddBookComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.bookForm.valid && this.platforms.length > 0 && this.selectedGenres.length > 0) {
-      this.isSubmitting = true;
-      const newBook = {
-        ...this.bookForm.value,
-        platforms: this.platforms,
-        genres: this.selectedGenres,
-        rating: 0,
-        totalRatingScore: 0,
-        numRatings: 0,
-        views: 0,
-        publicationDate: this.bookForm.get('publicationDate')?.value.toISOString()
-      };
+    console.log('Form valid:', this.bookForm.valid);
+    console.log('Platforms:', this.platforms);
+    console.log('Genres:', this.selectedGenres);
+    console.log('Form values:', this.bookForm.value);
+    console.log('Form errors:', this.bookForm.errors);
 
-      this.bookService.addBook(newBook).subscribe({
-        next: () => {
-          this.snackBar.open('Book added successfully!', 'Close', { duration: 3000 });
-          this.router.navigate(['/books']);
-        },
-        error: (error: Error) => {
-          console.error('Error adding book:', error);
-          this.snackBar.open('Error adding book. Please try again.', 'Close', { duration: 3000 });
-          this.isSubmitting = false;
-        }
-      });
-    } else {
-      this.snackBar.open('Please fill in all required fields and add at least one platform and genre.', 'Close', { duration: 3000 });
+    // Check if form is valid and has required fields
+    if (!this.bookForm.valid) {
+      let errorMessage = 'Please fill in all required fields:';
+      if (!this.bookForm.get('title')?.valid) {
+        errorMessage += '\n- Title is required';
+      }
+      if (!this.bookForm.get('description')?.valid) {
+        errorMessage += '\n- Description is required';
+      }
+      if (!this.bookForm.get('author')?.valid) {
+        errorMessage += '\n- Author is required';
+      }
+      if (!this.bookForm.get('publisher')?.valid) {
+        errorMessage += '\n- Publisher is required';
+      }
+      if (!this.bookForm.get('publicationDate')?.valid) {
+        errorMessage += '\n- Publication date is required';
+      }
+      if (!this.bookForm.get('imageUrl')?.valid) {
+        errorMessage += '\n- Image URL is required';
+      }
+      if (!this.bookForm.get('price')?.valid) {
+        errorMessage += '\n- Price is required and must be greater than 0';
+      }
+      this.snackBar.open(errorMessage, 'Close', { duration: 5000 });
+      return;
     }
+
+    // Check if platforms and genres are selected
+    if (this.platforms.length === 0) {
+      this.snackBar.open('Please add at least one platform', 'Close', { duration: 3000 });
+      return;
+    }
+
+    if (this.selectedGenres.length === 0) {
+      this.snackBar.open('Please add at least one genre', 'Close', { duration: 3000 });
+      return;
+    }
+
+    // If all validations pass, proceed with submission
+    this.isSubmitting = true;
+    const formValue = this.bookForm.value;
+    const newBook = {
+      title: formValue.title,
+      description: formValue.description,
+      author: formValue.author,
+      publisher: formValue.publisher,
+      publicationDate: formValue.publicationDate.toISOString(),
+      imageUrl: formValue.imageUrl,
+      price: parseFloat(formValue.price),
+      platforms: this.platforms,
+      genres: this.selectedGenres,
+      rating: 0,
+      totalRatingScore: 0,
+      numRatings: 0,
+      views: 0,
+      dateAdded: new Date().toISOString()
+    };
+
+    this.bookService.addBook(newBook).subscribe({
+      next: () => {
+        this.snackBar.open('Book added successfully!', 'Close', { duration: 3000 });
+        this.router.navigate(['/books']);
+      },
+      error: (error: Error) => {
+        console.error('Error adding book:', error);
+        this.snackBar.open('Error adding book. Please try again.', 'Close', { duration: 3000 });
+        this.isSubmitting = false;
+      }
+    });
   }
 
   onCancel(): void {
