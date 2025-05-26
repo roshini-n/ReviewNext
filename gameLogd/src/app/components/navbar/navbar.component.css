@@ -24,6 +24,8 @@
   display: flex;
   justify-content: space-between;
   padding: 0 16px;
+  height: 40px;
+  min-height: 40px;
 }
 
 .mat-grey-back {
@@ -38,6 +40,10 @@
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-right: 32px;
+  line-height: 40px;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-family: 'Algerian', cursive;
 }
 
 .site-title .highlight {
@@ -86,7 +92,7 @@
 .right-buttons {
   display: flex;
   align-items: center;
-  margin-left: auto;
+  margin-left: 0;
 }
 
 .divider {
@@ -169,8 +175,8 @@
 
 /* PROFILE BUTTON & IMAGE FIXES */
 .profile-button {
-  width: 50px;
-  height: 50px;
+  width: 28px;
+  height: 28px;
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   overflow: hidden;
