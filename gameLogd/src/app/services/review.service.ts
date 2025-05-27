@@ -142,4 +142,14 @@ export class ReviewService {
       })
     );
   }
+
+  getReviewsByGadgetId(gadgetId: string): Observable<Review[]> {
+    const reviewsQuery = query(
+      collection(this.firestore, 'reviews'),
+      where('gadgetId', '==', gadgetId),
+      orderBy('datePosted', 'desc')
+    );
+    
+    return collectionData(reviewsQuery, { idField: 'id' }) as Observable<Review[]>;
+  }
 }

@@ -1,0 +1,95 @@
+<div class="book-details-container" *ngIf="!isLoading">
+  <div class="book-header">
+    <div class="book-image">
+      <img [src]="gadget?.imageUrl" [alt]="gadget?.title" class="book-cover">
+    </div>
+    <div class="book-info">
+      <h1>{{gadget?.title}}</h1>
+      <div class="book-meta">
+        <p><strong>Brand:</strong> {{gadget?.brand}}</p>
+        <p><strong>Category:</strong> {{gadget?.category}}</p>
+        <p><strong>Price:</strong> ${{gadget?.price}}</p>
+        <p><strong>Rating:</strong> {{gadget?.rating | number:'1.1-1'}}/5</p>
+      </div>
+      <div class="book-genres">
+        <mat-chip-listbox>
+          <mat-chip *ngFor="let feature of gadget?.features">{{feature}}</mat-chip>
+        </mat-chip-listbox>
+      </div>
+      @if (authService.currentUserSig()) {
+      <div class="book-actions" *ngIf="!disabled">
+        <button mat-raised-button color="primary" (click)="openLogGadgetPopup()">
+          <mat-icon>add</mat-icon>
+          Log Gadget
+        </button>
+        <button mat-raised-button color="warn" (click)="onEditGadget()">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+
+  <mat-tab-group (selectedTabChange)="onTabChange($event.index)">
+    <mat-tab label="Description">
+      <div class="tab-content">
+        <p>{{gadget?.description}}</p>
+      </div>
+    </mat-tab>
+    <mat-tab label="Specifications">
+      <div class="tab-content">
+        <div class="specifications">
+          <div *ngFor="let spec of gadget?.specifications | keyvalue">
+            <p *ngIf="spec.value"><strong>{{spec.key | titlecase}}:</strong> {{spec.value}}</p>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Reviews">
+      <div class="tab-content">
+        <div *ngIf="reviews.length === 0" class="no-reviews">
+          No reviews yet. Be the first to review this gadget!
+        </div>
+        <div *ngIf="reviews.length > 0" class="reviews-list">
+          <div *ngFor="let review of reviews" class="review-item">
+            <div class="review-header">
+              <span class="review-author">{{review.username}}</span>
+              <span class="review-date">{{review.datePosted | date}}</span>
+            </div>
+            <div class="review-rating">
+              <mat-icon *ngFor="let star of [1,2,3,4,5]" [class.filled]="star <= review.rating">
+                {{star <= review.rating ? 'star' : 'star_border'}}
+              </mat-icon>
+            </div>
+            <p class="review-text">{{review.reviewText}}</p>
+            @if (authService.currentUserSig() && review.userId === currentUserId) {
+            <div class="review-actions">
+              <button mat-icon-button (click)="editReview(review)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <app-general-delete-button
+                [objectToDelete]="review"
+                (deleteConfirmed)="deleteReview(review)">
+              </app-general-delete-button>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<div class="loading-container" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+  <p>Loading gadget details...</p>
+</div>
+
+<div class="error-container" *ngIf="error">
+  <mat-icon class="error-icon">error</mat-icon>
+  <p>{{error}}</p>
+  <button mat-raised-button color="primary" (click)="router.navigate(['/electronic-gadgets'])">
+    Back to Electronic Gadgets
+  </button>
+</div> 
