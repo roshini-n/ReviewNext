@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CarouselModule } from 'primeng/carousel';
 import { HomeApplianceFirebaseService } from '../../../services/homeApplianceFirebase.service';
 import { HomeAppliance } from '../../../models/home-appliance.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-home-appliance',
@@ -26,6 +27,7 @@ export class HomeApplianceComponent implements OnInit {
   topRatedHomeAppliances: HomeAppliance[] = [];
   popularHomeAppliances: HomeAppliance[] = [];
   homeApplianceFirebaseService = inject(HomeApplianceFirebaseService);
+  authService = inject(AuthService);
 
   ngOnInit(): void {
     this.loadHomeAppliances();

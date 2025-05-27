@@ -1,10 +1,12 @@
 <div class="documentary-container">
   <div class="header-section">
     <h1>Documentaries</h1>
+    @if (authService.currentUserSig()) {
     <button mat-raised-button color="primary" routerLink="/add_documentary">
       <mat-icon>add</mat-icon>
       Add Documentary
     </button>
+    }
   </div>
 
   <h2>Trending</h2>

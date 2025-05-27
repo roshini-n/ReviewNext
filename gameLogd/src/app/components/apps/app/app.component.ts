@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CarouselModule } from 'primeng/carousel';
 import { AppFirebaseService } from '../../../services/appFirebase.service';
 import { App } from '../../../models/app.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-apps',
@@ -26,6 +27,7 @@ export class AppComponent implements OnInit {
   topRatedApps: App[] = [];
   popularApps: App[] = [];
   appFirebaseService = inject(AppFirebaseService);
+  authService = inject(AuthService);
 
   ngOnInit(): void {
     this.loadApps();

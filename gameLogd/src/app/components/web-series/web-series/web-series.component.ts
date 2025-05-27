@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CarouselModule } from 'primeng/carousel';
 import { WebSeriesFirebaseService } from '../../../services/webSeriesFirebase.service';
 import { WebSeries } from '../../../models/web-series.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-web-series',
@@ -26,7 +27,8 @@ export class WebSeriesComponent implements OnInit {
   topRatedWebSeries: WebSeries[] = [];
   popularWebSeries: WebSeries[] = [];
   webSeriesFirebaseService = inject(WebSeriesFirebaseService);
-
+  authService = inject(AuthService);
+  
   ngOnInit(): void {
     this.loadWebSeries();
   }

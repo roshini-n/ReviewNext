@@ -1,10 +1,12 @@
 <div class="electronic-gadget-container">
   <div class="header-section">
     <h1>Electronic Gadgets</h1>
+    @if (authService.currentUserSig()) {
     <button mat-raised-button color="primary" routerLink="/add_electronic_gadget">
       <mat-icon>add</mat-icon>
       Add Electronic Gadget
     </button>
+    }
   </div>
 
   <h2>Trending</h2>

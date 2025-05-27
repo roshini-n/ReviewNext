@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CarouselModule } from 'primeng/carousel';
 import { ElectronicGadgetFirebaseService } from '../../services/electronicGadgetFirebase.service';
 import { ElectronicGadget } from '../../models/electronic-gadget.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-electronic-gadget',
@@ -26,6 +27,7 @@ export class ElectronicGadgetComponent implements OnInit {
   topRatedElectronicGadgets: ElectronicGadget[] = [];
   popularElectronicGadgets: ElectronicGadget[] = [];
   electronicGadgetFirebaseService = inject(ElectronicGadgetFirebaseService);
+  authService = inject(AuthService);
 
   ngOnInit(): void {
     this.loadElectronicGadgets();

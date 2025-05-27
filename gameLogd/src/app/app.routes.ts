@@ -16,10 +16,10 @@ import { BookDetailsComponent } from './components/books/book-details/book-detai
 import { MovieComponent } from './components/movie/movie/movie.component';
 import { MovieDetailsComponent } from './components/movie/movie-details/movie-details.component';
 import { AppComponent } from './components/apps/app/app.component';
-import { WebSeriesComponent } from './components/web-series/web-series.component';
-import { DocumentaryComponent } from './components/documentaries/documentary.component';
-import { BeautyProductComponent } from './components/beauty-products/beauty-product.component';
-import { HomeApplianceComponent } from './components/home-appliances/home-appliance.component';
+import { WebSeriesComponent } from './components/web-series/web-series/web-series.component';
+import { DocumentaryComponent } from './components/documentaries/documentary/documentary.component';
+import { BeautyProductComponent } from './components/beauty-products/beauty-product/beauty-product.component';
+import { HomeApplianceComponent } from './components/home-appliances/home-appliance/home-appliance.component';
 import { ElectronicGadgetComponent } from './components/electronic-gadgets/electronic-gadget.component';
 import { UserDashboardComponent } from './components/user-dashboard/user-dashboard.component';
 import { authGuard } from './guards/auth.guard';

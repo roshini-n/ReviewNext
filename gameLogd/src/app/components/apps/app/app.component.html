@@ -1,10 +1,12 @@
 <div class="app-container">
   <div class="header-section">
     <h1>Apps</h1>
+    @if (authService.currentUserSig()) {
     <button mat-raised-button color="primary" routerLink="/add_app">
       <mat-icon>add</mat-icon>
       Add App
     </button>
+    }
   </div>
 
   <h2>Trending</h2>
