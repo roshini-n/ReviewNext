@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CarouselModule } from 'primeng/carousel';
 import { BeautyProductFirebaseService } from '../../../services/beautyProductFirebase.service';
 import { BeautyProduct } from '../../../models/beauty-product.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-beauty-product',
@@ -26,6 +27,7 @@ export class BeautyProductComponent implements OnInit {
   topRatedBeautyProducts: BeautyProduct[] = [];
   popularBeautyProducts: BeautyProduct[] = [];
   beautyProductFirebaseService = inject(BeautyProductFirebaseService);
+  authService = inject(AuthService);
 
   ngOnInit(): void {
     this.loadBeautyProducts();

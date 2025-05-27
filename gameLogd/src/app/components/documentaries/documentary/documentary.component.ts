@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CarouselModule } from 'primeng/carousel';
 import { DocumentaryFirebaseService } from '../../../services/documentaryFirebase.service';
 import { Documentary } from '../../../models/documentary.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-documentary',
@@ -26,6 +27,7 @@ export class DocumentaryComponent implements OnInit {
   topRatedDocumentaries: Documentary[] = [];
   popularDocumentaries: Documentary[] = [];
   documentaryFirebaseService = inject(DocumentaryFirebaseService);
+  authService = inject(AuthService);
 
   ngOnInit(): void {
     this.loadDocumentaries();
