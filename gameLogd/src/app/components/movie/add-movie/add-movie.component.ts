@@ -18,6 +18,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { Observable, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { OmdbService } from '../../../services/omdb.service';
 
 @Component({
   selector: 'app-add-movie',
@@ -44,6 +45,7 @@ export class AddMovieComponent implements OnInit {
   private fb = inject(FormBuilder);
   private movieService = inject(MovieFirebaseService);
   private tmdbService = inject(TMDBService);
+  private omdbService = inject(OmdbService);
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
@@ -94,33 +96,34 @@ export class AddMovieComponent implements OnInit {
       map(value => this._filter(value, this.genres))
     );
 
-    // Subscribe to title changes to fetch movie image
+    // Subscribe to title changes to fetch movie image and director from OMDb
     this.movieForm.get('title')?.valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
       switchMap(title => {
         if (title && title.length >= 2) {
           this.isSearchingImage = true;
-          const releaseDate = this.movieForm.get('releaseDate')?.value;
-          const year = releaseDate ? new Date(releaseDate).getFullYear() : undefined;
-          return this.tmdbService.searchMovie(title, year);
+          return this.omdbService.searchMovie(title);
         }
         return [];
       })
     ).subscribe({
-      next: (imageUrl) => {
-        if (imageUrl) {
-          this.movieForm.patchValue({ imageUrl });
+      next: (result) => {
+        if (result && (result.Poster || result.Director)) {
+          this.movieForm.patchValue({
+            imageUrl: result.Poster,
+            director: result.Director
+          });
         }
         this.isSearchingImage = false;
       },
       error: (error) => {
-        console.error('Error fetching movie image:', error);
+        console.error('Error fetching movie data:', error);
         this.isSearchingImage = false;
       }
     });
 
-    // Also update image when release date changes
+    // Also update image when release date changes (optional, can keep TMDB fallback if needed)
     this.movieForm.get('releaseDate')?.valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -128,20 +131,19 @@ export class AddMovieComponent implements OnInit {
         const title = this.movieForm.get('title')?.value;
         if (title && title.length >= 2) {
           this.isSearchingImage = true;
-          const year = releaseDate ? new Date(releaseDate).getFullYear() : undefined;
-          return this.tmdbService.searchMovie(title, year);
+          return this.omdbService.searchMovie(title);
         }
         return [];
       })
     ).subscribe({
-      next: (imageUrl) => {
-        if (imageUrl) {
-          this.movieForm.patchValue({ imageUrl });
+      next: (result) => {
+        if (result && result.Poster) {
+          this.movieForm.patchValue({ imageUrl: result.Poster });
         }
         this.isSearchingImage = false;
       },
       error: (error) => {
-        console.error('Error fetching movie image:', error);
+        console.error('Error fetching movie data:', error);
         this.isSearchingImage = false;
       }
     });
