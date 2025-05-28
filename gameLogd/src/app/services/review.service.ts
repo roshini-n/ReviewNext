@@ -12,7 +12,7 @@ export class ReviewService {
   private authService = inject(AuthService);
   
   // add a new review
-  addReview(review: Omit<Review, 'id'>): Observable<string> {
+  addReview(review: Omit<Review, 'id'>): Observable<Review> {
     const reviewsCollection = collection(this.firestore, 'reviews');
     
     return this.authService.user$.pipe(
@@ -27,10 +27,17 @@ export class ReviewService {
           likes: 0,
           username: user.displayName || 'Anonymous'
         })).pipe(
-          map(docRef => {
-            // update the document with its ID
-            updateDoc(docRef, { id: docRef.id });
-            return docRef.id;
+          switchMap(docRef => {
+            const newReview: Review = {
+              ...review,
+              id: docRef.id,
+              username: user.displayName || 'Anonymous',
+              datePosted: new Date(),
+              likes: 0
+            };
+            return from(updateDoc(docRef, { id: docRef.id })).pipe(
+              map(() => newReview)
+            );
           })
         );
       })

@@ -115,7 +115,6 @@ export class LogGamePopupComponent {
       this.username = this.authService.getUsername() || '';
     }
     if (this.data.log?.gameId){
-
       const updatedLog = {
         id: this.data.log.id,
         dateStarted: this.logForm.value.dateStarted,
@@ -140,7 +139,12 @@ export class LogGamePopupComponent {
         });
       }
     }
-    else{
+    else {
+      if (!this.logForm.valid) {
+        this.snackBar.open('Please fill in all required fields', 'Close', { duration: 2000 });
+        return;
+      }
+
       this.gameLogSevice.addGameLog({
         ...this.logForm.value,
         gameId: this.gameId,
@@ -150,32 +154,11 @@ export class LogGamePopupComponent {
         rating: this.rating,
       }).subscribe({
         next: () => {
-          this.reviewService.addReview({
-            gameId: this.gameId,
-            username: this.username,
-            userId: currentUser,
-            reviewText: this.logForm.value.review,
-            datePosted: new Date(),
-            gameTitle: this.data.game?.title || '',
-            rating: this.rating,
-          }).subscribe({
-            next: () => {
-              if (this.logForm.valid) {
-                this.dialogRef.close({
-                  ...this.logForm.value,
-                  gameId: this.gameId,
-                  rating: this.rating,
-                });
-                this.snackBar.open('Game logged successfully', 'Close', {
-                  duration: 2000,
-                });
-                this.logUpdated.emit();
-              }
-            },
-            error: () => {
-              this.snackBar.open('Failed to add review', 'Close', { duration: 2000 });
-            }
+          this.dialogRef.close();
+          this.snackBar.open('Game logged successfully', 'Close', {
+            duration: 2000,
           });
+          this.logUpdated.emit();
         },
         error: () => {
           this.snackBar.open('Failed to add log', 'Close', { duration: 2000 });

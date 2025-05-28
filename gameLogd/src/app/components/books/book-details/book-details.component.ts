@@ -147,13 +147,13 @@ export class BookDetailsComponent implements OnInit {
       }
     });
 
-    dialogRef.componentInstance.reviewUpdated.subscribe(() => {
-      this.getReviews();
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.getReviews();
+    dialogRef.componentInstance.reviewUpdated.subscribe((updatedReview) => {
+      // Update the reviews array with the new/updated review
+      const index = this.reviews.findIndex(r => r.id === updatedReview.id);
+      if (index !== -1) {
+        this.reviews[index] = updatedReview;
+      } else {
+        this.reviews.unshift(updatedReview);
       }
     });
   }
@@ -169,13 +169,11 @@ export class BookDetailsComponent implements OnInit {
       data: { review: review }
     });
 
-    dialogRef.componentInstance.reviewUpdated.subscribe(() => {
-      this.getReviews();
-    });
-
-    dialogRef.afterClosed().subscribe(updatedReview => {
-      if (updatedReview) {
-        this.getReviews();
+    dialogRef.componentInstance.reviewUpdated.subscribe((updatedReview) => {
+      // Update the reviews array with the updated review
+      const index = this.reviews.findIndex(r => r.id === updatedReview.id);
+      if (index !== -1) {
+        this.reviews[index] = updatedReview;
       }
     });
   }
@@ -184,8 +182,8 @@ export class BookDetailsComponent implements OnInit {
     if (!review || !review.id) return;
     this.bookReviewService.deleteReview(review.id).subscribe({
       next: () => {
-        console.log('Review deleted:', review.id);
-        this.getReviews();
+        // Remove the review from the array
+        this.reviews = this.reviews.filter(r => r.id !== review.id);
       },
       error: (error) => {
         console.error('Error deleting review:', error);

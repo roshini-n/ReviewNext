@@ -68,32 +68,41 @@ export class GameReviewEditComponent {
   }
   
   onSubmit(): void {
-    if (this.editedReview.reviewText?.trim()) {
-      if (this.isNewReview) {
-        // Create new review
-        const { id, ...reviewData } = this.editedReview; // Remove id for new review
-        this.reviewService.addReview(reviewData).subscribe({
-          next: (newReviewId) => {
-            const newReview = { ...this.editedReview, id: newReviewId };
-            this.reviewUpdated.emit(newReview);
-            this.dialogRef.close(newReview);
-          },
-          error: (error) => {
-            console.error('Error creating review:', error);
-          }
-        });
-      } else {
-        // Update existing review
-        this.reviewService.updateReview(this.editedReview.id, this.editedReview).subscribe({
-          next: () => {
-            this.reviewUpdated.emit(this.editedReview);
-            this.dialogRef.close(this.editedReview);
-          },
-          error: (error) => {
-            console.error('Error updating review:', error);
-          }
-        });
-      }
+    if (this.isNewReview) {
+      const newReview: Omit<Review, 'id'> = {
+        gameId: this.editedReview.gameId,
+        userId: this.editedReview.userId,
+        reviewText: this.editedReview.reviewText,
+        rating: this.editedReview.rating,
+        datePosted: new Date(),
+        username: '' // This will be set by the service
+      };
+
+      this.reviewService.addReview(newReview).subscribe({
+        next: (review: Review) => {
+          this.reviewUpdated.emit(review);
+          this.dialogRef.close(review);
+        },
+        error: (error: Error) => {
+          console.error('Error adding review:', error);
+        }
+      });
+    } else {
+      const changes: Partial<Review> = {
+        reviewText: this.editedReview.reviewText,
+        rating: this.editedReview.rating,
+        lastUpdated: new Date()
+      };
+
+      this.reviewService.updateReview(this.editedReview.id, changes).subscribe({
+        next: () => {
+          this.reviewUpdated.emit({...this.editedReview, ...changes});
+          this.dialogRef.close({...this.editedReview, ...changes});
+        },
+        error: (error: Error) => {
+          console.error('Error updating review:', error);
+        }
+      });
     }
   }
 }
