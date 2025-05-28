@@ -106,14 +106,25 @@ export class AddGameComponent implements OnInit {
       const year = releaseDate ? new Date(releaseDate).getFullYear() : undefined;
       
       this.igdbService.searchGame(title, year).subscribe({
-        next: (imageUrl) => {
-          if (imageUrl) {
-            this.gameForm.patchValue({ imageUrl }, { emitEvent: false });
+        next: (result) => {
+          console.log('Received search result:', result);
+          if (result.imageUrl) {
+            console.log('Setting form values:', {
+              imageUrl: result.imageUrl,
+              developer: result.developer,
+              publisher: result.publisher
+            });
+            this.gameForm.patchValue({ 
+              imageUrl: result.imageUrl,
+              developer: result.developer,
+              publisher: result.publisher
+            }, { emitEvent: false });
+            console.log('Form values after update:', this.gameForm.value);
           }
           this.isSearchingImage = false;
         },
         error: (error) => {
-          console.error('Error fetching game image:', error);
+          console.error('Error fetching game information:', error);
           this.isSearchingImage = false;
         }
       });
