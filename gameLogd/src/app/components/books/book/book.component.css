@@ -40,7 +40,7 @@ app-root {
   font-size: 2em;
 }
 
-.header-section button {
+/* .header-section button {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -56,7 +56,7 @@ app-root {
   background-color: #e6d100;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(254, 231, 21, 0.2);
-}
+} */
 
 .header-section button mat-icon {
   font-size: 20px;
@@ -64,14 +64,14 @@ app-root {
   height: 20px;
 }
 
-.book-container h1 {
+.boo-container h1 {
   color: #FEE715;
   margin-bottom: 2rem;
   font-size: 2rem;
   font-weight: 500;
 }
 
-.book-container h2 {
+.boo-container h2 {
   color: #FEE715;
   margin: 1.5rem 0;
   font-size: 1.5rem;
