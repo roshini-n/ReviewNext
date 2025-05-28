@@ -17,7 +17,7 @@
         <div class="star-rating">
           <mat-icon
             *ngFor="let star of [1, 2, 3, 4, 5]"
-            (click)="logForm.get('rating')?.setValue(star)"
+            (click)="setRating(star)"
             [class.filled]="star <= (logForm.get('rating')?.value || 0)"
             [class.hovered]="star === hoverRating"
             (mouseenter)="setHoverRating(star)"

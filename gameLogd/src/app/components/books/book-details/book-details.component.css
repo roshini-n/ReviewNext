@@ -473,3 +473,57 @@ mat-icon.filled {
 mat-icon:not(.filled) {
   color: var(--text-secondary);
 }
+
+/* Tab Content Styles */
+mat-tab-group {
+  background-color: var(--bg-primary);
+}
+
+mat-tab-group ::ng-deep .mat-mdc-tab-header {
+  background-color: var(--bg-primary);
+}
+
+mat-tab-group ::ng-deep .mat-mdc-tab {
+  color: var(--text-primary);
+}
+
+mat-tab-group ::ng-deep .mat-mdc-tab-label {
+  color: var(--text-primary);
+}
+
+mat-tab-group ::ng-deep .mat-mdc-tab-label-content {
+  color: var(--text-primary);
+}
+
+mat-tab-group ::ng-deep .mat-mdc-tab-body-content {
+  color: var(--tab-content-text);
+}
+
+mat-tab-group ::ng-deep .mdc-tab__text-label {
+  color: var(--text-primary);
+}
+
+/* Active Tab Styles */
+mat-tab-group ::ng-deep .mat-mdc-tab.mdc-tab--active {
+  color: #FEE715;
+}
+
+mat-tab-group ::ng-deep .mat-mdc-tab.mdc-tab--active .mat-mdc-tab-label-content {
+  color: #FEE715;
+}
+
+mat-tab-group ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #FEE715;
+}
+
+mat-tab-group ::ng-deep .mdc-tab-indicator__content--underline {
+  border-color: #FEE715 !important;
+}
+
+mat-tab-group ::ng-deep .mat-mdc-tab-header-pagination-chevron {
+  border-color: var(--text-primary);
+}
+
+mat-tab-group ::ng-deep .mat-mdc-tab-header-pagination-disabled .mat-mdc-tab-header-pagination-chevron {
+  border-color: var(--text-secondary);
+}

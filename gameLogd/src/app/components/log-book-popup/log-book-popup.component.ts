@@ -32,6 +32,7 @@ import { AuthService } from '../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BookReviewService } from '../../services/bookreview.service';
 import { Review } from '../../models/review.model';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-log-book-popup',
@@ -64,10 +65,9 @@ export class LogBookPopupComponent implements OnInit {
   private fb = inject(FormBuilder);
 
   @Output() logUpdated: EventEmitter<void> = new EventEmitter<void>();
-  @Output() reviewUpdated = new EventEmitter<void>();
+  @Output() reviewUpdated = new EventEmitter<Review>();
 
   logForm: FormGroup;
-  rating: number = 0;
   hoverRating: number = 0;
   bookId: string = '';
   username: string = '';
@@ -87,10 +87,9 @@ export class LogBookPopupComponent implements OnInit {
     this.logForm = this.fb.group({
       dateStarted: ['', Validators.required],
       dateCompleted: ['', Validators.required],
-      rating: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
+      rating: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
       review: ['', Validators.required],
-      isReplay: [false],
-      containsSpoilers: [false]
+      status: ['reading', Validators.required]
     });
 
     if (data.review) {
@@ -101,8 +100,7 @@ export class LogBookPopupComponent implements OnInit {
         dateCompleted: data.review.lastUpdated || data.review.datePosted,
         rating: data.review.rating,
         review: data.review.reviewText,
-        isReplay: false,
-        containsSpoilers: false
+        status: 'completed'
       });
     }
 
@@ -115,7 +113,7 @@ export class LogBookPopupComponent implements OnInit {
   }
 
   setRating(rating: number) {
-    this.rating = rating;
+    this.logForm.patchValue({ rating });
   }
 
   setHoverRating(rating: number) {
@@ -151,31 +149,41 @@ export class LogBookPopupComponent implements OnInit {
         await this.bookLogService.addBookLog(logData);
 
         // 3. Save the review using BookReviewService
-        const reviewData: Review = {
-          id: this.existingReview?.id || '',
+        const reviewData: Omit<Review, 'id'> = {
           userId: currentUser,
           bookId: this.bookId,
           rating: formData.rating,
           reviewText: formData.review,
           datePosted: new Date(),
           username: this.username,
-          bookTitle: this.data.book.title
+          bookTitle: this.data.book.title,
+          likes: 0
         };
 
+        let savedReview: Review;
         if (this.isEditMode && this.existingReview) {
-          await this.bookReviewService.updateReview(this.existingReview.id, reviewData).toPromise();
+          savedReview = await firstValueFrom(
+            this.bookReviewService.updateReview(this.existingReview.id, {
+              rating: formData.rating,
+              reviewText: formData.review,
+              lastUpdated: new Date()
+            })
+          );
         } else {
-          await this.bookReviewService.addReview(reviewData).toPromise();
+          savedReview = await firstValueFrom(this.bookReviewService.addReview(reviewData));
         }
 
         // 4. Emit events and close dialog
         this.logUpdated.emit();
-        this.reviewUpdated.emit();
-        this.dialogRef.close(true);
+        this.reviewUpdated.emit(savedReview);
+        this.dialogRef.close(savedReview);
+
+        this.snackBar.open('Book log and review saved successfully', 'Close', {
+          duration: 3000
+        });
       } catch (error) {
-        console.error('Error saving log/review:', error);
-        this.errorMessage = 'Failed to save. Please try again.';
-        this.snackBar.open('Failed to save log/review', 'Close', {
+        console.error('Error saving book log:', error);
+        this.snackBar.open('Failed to save book log', 'Close', {
           duration: 3000
         });
       } finally {

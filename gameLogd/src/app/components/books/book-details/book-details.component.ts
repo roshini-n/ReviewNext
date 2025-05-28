@@ -113,14 +113,55 @@ export class BookDetailsComponent implements OnInit {
 
   getReviews() {
     if (!this.bookId) return;
+    
+    this.isLoading = true;
+    this.error = null;
+    
     this.bookReviewService.getReviewsByBookId(this.bookId).subscribe({
       next: (reviews: Review[]) => {
-        this.reviews = reviews;
-        console.log('Reviews loaded:', reviews);
+        console.log('Raw reviews data:', reviews);
+        this.reviews = reviews.map(review => ({
+          ...review,
+          datePosted: review.datePosted instanceof Date ? review.datePosted : new Date(review.datePosted)
+        }));
+        console.log('Processed reviews:', this.reviews);
+        this.updateBookRating();
+        this.isLoading = false;
       },
       error: (error: Error) => {
         console.error('Error loading reviews:', error);
         this.error = 'Failed to load reviews. Please try again later.';
+        this.isLoading = false;
+        this.snackBar.open('Failed to load reviews', 'Close', {
+          duration: 3000
+        });
+      }
+    });
+  }
+
+  private updateBookRating() {
+    if (!this.book || !this.reviews.length) return;
+
+    const totalRating = this.reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalRating / this.reviews.length;
+
+    const updatedBook = {
+      ...this.book,
+      rating: averageRating,
+      numRatings: this.reviews.length,
+      totalRatingScore: totalRating
+    };
+
+    this.bookFirebaseService.updateBook(updatedBook).subscribe({
+      next: () => {
+        this.book = updatedBook;
+        console.log('Book rating updated:', updatedBook);
+      },
+      error: (error) => {
+        console.error('Error updating book rating:', error);
+        this.snackBar.open('Failed to update book rating', 'Close', {
+          duration: 3000
+        });
       }
     });
   }
@@ -209,13 +250,19 @@ export class BookDetailsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.bookFirebaseService.updateBook(this.bookId!, result).then(() => {
-          this.book = result;
-        }).catch((error: Error) => {
-          console.error('Error updating book:', error);
-          this.snackBar.open('Failed to update book', 'Close', {
-            duration: 3000,
-          });
+        this.bookFirebaseService.updateBook(result).subscribe({
+          next: () => {
+            this.book = result;
+            this.snackBar.open('Book updated successfully', 'Close', {
+              duration: 3000
+            });
+          },
+          error: (error: Error) => {
+            console.error('Error updating book:', error);
+            this.snackBar.open('Failed to update book', 'Close', {
+              duration: 3000
+            });
+          }
         });
       }
     });
@@ -261,8 +308,17 @@ export class BookDetailsComponent implements OnInit {
       },
     });
 
-    dialogRef.componentInstance.logUpdated.subscribe(() => {
-      this.getReviews();
+    dialogRef.componentInstance.reviewUpdated.subscribe((updatedReview) => {
+      console.log('Review updated:', updatedReview);
+      // Update the reviews array with the new/updated review
+      const index = this.reviews.findIndex(r => r.id === updatedReview.id);
+      if (index !== -1) {
+        this.reviews[index] = updatedReview;
+      } else {
+        this.reviews.unshift(updatedReview);
+      }
+      // Update book rating and reload book details
+      this.updateBookRating();
       this.loadBookDetails();
     });
 
@@ -270,7 +326,6 @@ export class BookDetailsComponent implements OnInit {
       if (result) {
         this.bookLogService.addBookLog(result).then(() => {
           console.log('Book log added');
-          this.getReviews();
           this.loadBookDetails();
         }).catch((error) => {
           console.error('Error adding book log:', error);
