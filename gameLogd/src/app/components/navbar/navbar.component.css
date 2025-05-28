@@ -47,7 +47,7 @@
 }
 
 .site-title .highlight {
-  color: #fee715;
+  color: #ADD8E6;;
 }
 
 .search-container {
@@ -79,14 +79,14 @@
   padding: 0.5rem 1rem;
   border-radius: 4px;
   border: 1px solid #ccc;
-  background-color: #fee715;
+  background-color: #ADD8E6;
   color: #000;
   white-space: nowrap;
   font-weight: bold;
 }
 
 .search-button:hover {
-  background-color: #e6d100;
+  background-color: #A7C7E7;
 }
 
 .right-buttons {
@@ -209,5 +209,5 @@
 } */
 
 .navbar_button {
-  color: #FEE715;
+  color: #ADD8E6;
 }
