@@ -57,9 +57,12 @@ export class BookFirebaseService {
   }
 
   // Update a book
-  updateBook(id: string, book: Partial<Book>): Promise<void> {
-    const bookDocRef = doc(this.firestore, `books/${id}`);
-    return updateDoc(bookDocRef, book);
+  updateBook(book: Book): Observable<void> {
+    const bookDoc = doc(this.firestore, `books/${book.id}`);
+    return from(updateDoc(bookDoc, {
+      ...book,
+      lastUpdated: new Date()
+    }));
   }
 
   // Delete a book

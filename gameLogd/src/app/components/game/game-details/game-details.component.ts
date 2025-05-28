@@ -132,22 +132,14 @@ export class GameDetailsComponent implements OnInit {
 
     dialogRef.componentInstance.logUpdated.subscribe(() => {
       this.getReviews();
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      this.getReviews();
-      if (result) {
-        this.gameLogService.addGameLog(result).subscribe((gameLogId) => {
-          console.log('Game log added:', gameLogId);
-          if (this.gameId) {
-            this.gameFirebaseService.getGameById(this.gameId).subscribe((game) => {
-              this.game = game;
-            });
-          }
+      if (this.gameId) {
+        this.gameFirebaseService.getGameById(this.gameId).subscribe((game) => {
+          this.game = game;
         });
-        console.log('Game logged:', result);
       }
     });
+
+    dialogRef.afterClosed().subscribe();
   }
 
   getReviews() {
@@ -175,13 +167,10 @@ export class GameDetailsComponent implements OnInit {
       data: { review: review }
     });
 
-    dialogRef.componentInstance.reviewUpdated.subscribe(() => {
-      this.getReviews();
-    });
-
-    dialogRef.afterClosed().subscribe(updatedReview => {
-      if (updatedReview) {
-        this.getReviews();
+    dialogRef.componentInstance.reviewUpdated.subscribe((updatedReview) => {
+      const index = this.reviews.findIndex(r => r.id === updatedReview.id);
+      if (index !== -1) {
+        this.reviews[index] = updatedReview;
       }
     });
   }
@@ -190,8 +179,7 @@ export class GameDetailsComponent implements OnInit {
     if (!review || !review.id) return;
     this.reviewService.deleteReview(review.id).subscribe({
       next: () => {
-        console.log('Review deleted:', review.id);
-        this.getReviews();
+        this.reviews = this.reviews.filter(r => r.id !== review.id);
       },
       error: (error) => {
         console.error('Error deleting review:', error);
@@ -222,13 +210,12 @@ export class GameDetailsComponent implements OnInit {
       }
     });
 
-    dialogRef.componentInstance.reviewUpdated.subscribe(() => {
-      this.getReviews();
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.getReviews();
+    dialogRef.componentInstance.reviewUpdated.subscribe((updatedReview) => {
+      const index = this.reviews.findIndex(r => r.id === updatedReview.id);
+      if (index !== -1) {
+        this.reviews[index] = updatedReview;
+      } else {
+        this.reviews.unshift(updatedReview);
       }
     });
   }

@@ -86,13 +86,14 @@ export class BookReviewEditComponent {
     } else {
       const changes: Partial<Review> = {
         reviewText: this.editedReview.reviewText,
-        rating: this.editedReview.rating
+        rating: this.editedReview.rating,
+        lastUpdated: new Date()
       };
 
       this.bookReviewService.updateReview(this.editedReview.id, changes).subscribe({
         next: () => {
-          this.reviewUpdated.emit(this.editedReview);
-          this.dialogRef.close(this.editedReview);
+          this.reviewUpdated.emit({...this.editedReview, ...changes});
+          this.dialogRef.close({...this.editedReview, ...changes});
         },
         error: (error: Error) => {
           console.error('Error updating review:', error);
