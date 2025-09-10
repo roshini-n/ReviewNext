@@ -1,6 +1,27 @@
 <html>
     <body>
         <div class="main-container">
+            <!-- Floating Background Elements -->
+            <div class="floating-elements">
+                <!-- Floating Stars -->
+                <div class="floating-star star-1"></div>
+                <div class="floating-star star-2"></div>
+                <div class="floating-star star-3"></div>
+                <div class="floating-star star-4"></div>
+                <div class="floating-star star-5"></div>
+                <div class="floating-star star-6"></div>
+                <div class="floating-star star-7"></div>
+                <div class="floating-star star-8"></div>
+                <div class="floating-star star-9"></div>
+                <div class="floating-star star-10"></div>
+                <div class="floating-star star-11"></div>
+                <div class="floating-star star-12"></div>
+                <div class="floating-star star-13"></div>
+                <div class="floating-star star-14"></div>
+                <div class="floating-star star-15"></div>
+                
+            </div>
+            
             <!-- Search Section - Only visible to non-registered users -->
             @if (!authService.currentUserSig()) {
             <div class="search-section">
@@ -39,39 +60,39 @@
                 <div class="categories-section">
                     <h3>Browse Categories</h3>
                     <div class="categories-grid">
-                        <a routerLink="games" class="category-card">
+                        <a routerLink="games" class="category-card" style="--index: 0">
                             <mat-icon>sports_esports</mat-icon>
                             <span>Games</span>
                         </a>
-                        <a routerLink="books" class="category-card">
+                        <a routerLink="books" class="category-card" style="--index: 1">
                             <mat-icon>menu_book</mat-icon>
                             <span>Books</span>
                         </a>
-                        <a routerLink="movies" class="category-card">
+                        <a routerLink="movies" class="category-card" style="--index: 2">
                             <mat-icon>movie</mat-icon>
                             <span>Movies</span>
                         </a>
-                        <a routerLink="electronic-gadgets" class="category-card">
+                        <a routerLink="electronic-gadgets" class="category-card" style="--index: 3">
                             <mat-icon>devices</mat-icon>
                             <span>Electronic Gadgets</span>
                         </a>
-                        <a routerLink="apps" class="category-card">
+                        <a routerLink="apps" class="category-card" style="--index: 4">
                             <mat-icon>apps</mat-icon>
                             <span>Apps</span>
                         </a>
-                        <a routerLink="web-series" class="category-card">
+                        <a routerLink="web-series" class="category-card" style="--index: 5">
                             <mat-icon>live_tv</mat-icon>
                             <span>Web Series</span>
                         </a>
-                        <!-- <a routerLink="documentaries" class="category-card">
+                        <!-- <a routerLink="documentaries" class="category-card" style="--index: 6">
                             <mat-icon>videocam</mat-icon>
                             <span>Documentaries</span>
                         </a> -->
-                        <a routerLink="beauty-products" class="category-card">
+                        <a routerLink="beauty-products" class="category-card" style="--index: 6">
                             <mat-icon>spa</mat-icon>
                             <span>Beauty Products</span>
                         </a>
-                        <!-- <a routerLink="home-appliances" class="category-card">
+                        <!-- <a routerLink="home-appliances" class="category-card" style="--index: 8">
                             <mat-icon>home</mat-icon>
                             <span>Home Appliances</span>
                         </a> -->
