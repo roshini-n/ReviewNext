@@ -13,9 +13,12 @@
   </div>
   
   <h2>Trending</h2>
-  <p-carousel [value]="trendingMovies" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
+  <p-carousel [value]="trendingMovies" [numVisible]="3" [numScroll]="1" [circular]="true">
     <ng-template let-movie pTemplate="item">
-      <div class="movie-card">
+      <div class="movie-card" 
+           (mouseenter)="showHoverOverlay(movie, $event)" 
+           (mouseleave)="hideHoverOverlay()"
+           (mousemove)="updateHoverPosition($event)">
         <a [routerLink]="['/movies', movie.id]">
           <img class="thumbnail" [src]="movie.imageUrl" [alt]="movie.title">
           <div class="movie-info">
@@ -28,9 +31,12 @@
   </p-carousel>
 
   <h2>Top Rated</h2>
-  <p-carousel [value]="topRatedMovies" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
+  <p-carousel [value]="topRatedMovies" [numVisible]="3" [numScroll]="1" [circular]="true">
     <ng-template let-movie pTemplate="item">
-      <div class="movie-card">
+      <div class="movie-card" 
+           (mouseenter)="showHoverOverlay(movie, $event)" 
+           (mouseleave)="hideHoverOverlay()"
+           (mousemove)="updateHoverPosition($event)">
         <a [routerLink]="['/movies', movie.id]">
           <img class="thumbnail" [src]="movie.imageUrl" [alt]="movie.title">
           <div class="movie-info">
@@ -43,9 +49,12 @@
   </p-carousel>
 
   <h2>Most Popular</h2>
-  <p-carousel [value]="popularMovies" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
+  <p-carousel [value]="popularMovies" [numVisible]="3" [numScroll]="1" [circular]="true">
     <ng-template let-movie pTemplate="item">
-      <div class="movie-card">
+      <div class="movie-card" 
+           (mouseenter)="showHoverOverlay(movie, $event)" 
+           (mouseleave)="hideHoverOverlay()"
+           (mousemove)="updateHoverPosition($event)">
         <a [routerLink]="['/movies', movie.id]">
           <img class="thumbnail" [src]="movie.imageUrl" [alt]="movie.title">
           <div class="movie-info">
@@ -56,4 +65,38 @@
       </div>
     </ng-template>
   </p-carousel>
+
+  <!-- Netflix-style hover overlay -->
+  <div class="hover-overlay" 
+       [class.show]="showOverlay" 
+       [style.left.px]="overlayPosition.x" 
+       [style.top.px]="overlayPosition.y"
+       *ngIf="selectedMovie">
+    <div class="overlay-content">
+      <div class="overlay-header">
+        <img class="overlay-poster" [src]="selectedMovie.imageUrl" [alt]="selectedMovie.title">
+        <div class="overlay-info">
+          <h3 class="overlay-title">{{ selectedMovie.title }}</h3>
+          <div class="overlay-meta">
+            <span class="rating">⭐ {{ selectedMovie.rating }}/5</span>
+            <span class="year">{{ selectedMovie.releaseDate | date:'yyyy' }}</span>
+            <span class="duration">{{ selectedMovie.duration }} min</span>
+          </div>
+          <div class="overlay-genres">
+            <span *ngFor="let genre of selectedMovie.genres" class="genre-tag">{{ genre }}</span>
+          </div>
+          <p class="overlay-description">{{ selectedMovie.description }}</p>
+          <div class="overlay-details">
+            <p><strong>Director:</strong> {{ selectedMovie.director }}</p>
+            <p *ngIf="selectedMovie.cast && selectedMovie.cast.length > 0">
+              <strong>Cast:</strong> {{ selectedMovie.cast.slice(0, 3).join(', ') }}
+              <span *ngIf="selectedMovie.cast.length > 3">...</span>
+            </p>
+            <p *ngIf="selectedMovie.language"><strong>Language:</strong> {{ selectedMovie.language }}</p>
+            <p *ngIf="selectedMovie.country"><strong>Country:</strong> {{ selectedMovie.country }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

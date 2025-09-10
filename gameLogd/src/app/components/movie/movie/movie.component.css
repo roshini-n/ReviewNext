@@ -211,4 +211,244 @@
   .movie-card {
     height: 320px;
   }
+}
+
+/* Netflix-style hover overlay */
+.hover-overlay {
+  position: fixed;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transform: scale(0.8) translateY(20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  width: 600px;
+  min-height: 400px;
+}
+
+/* Backdrop overlay like Netflix */
+.hover-overlay::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.hover-overlay.show::before {
+  opacity: 1;
+}
+
+.hover-overlay.show {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+
+.overlay-content {
+  padding: 0;
+  color: white;
+}
+
+.overlay-header {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  height: 100%;
+  align-items: flex-start;
+}
+
+.overlay-poster {
+  width: 180px;
+  height: 270px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.overlay-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+.overlay-title {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #FEE715;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.overlay-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-bottom: 8px;
+}
+
+.overlay-meta .rating {
+  color: #FEE715;
+  font-weight: 500;
+}
+
+.overlay-meta .year,
+.overlay-meta .duration {
+  color: #999;
+}
+
+.overlay-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 6px 0 12px 0;
+}
+
+.genre-tag {
+  background: rgba(254, 231, 21, 0.2);
+  color: #FEE715;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid rgba(254, 231, 21, 0.3);
+}
+
+.overlay-description {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #ddd;
+  margin: 8px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.overlay-details {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #bbb;
+}
+
+.overlay-details p {
+  margin: 6px 0;
+  line-height: 1.4;
+}
+
+.overlay-details strong {
+  color: #FEE715;
+  font-weight: 600;
+}
+
+/* Enhanced movie card hover effects */
+.movie-card {
+  position: relative;
+  transition: transform 0.3s ease, z-index 0.3s ease;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+.movie-card:hover .thumbnail {
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Smooth transitions for all interactive elements */
+.thumbnail {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.movie-info {
+  transition: all 0.3s ease;
+}
+
+.movie-card:hover .movie-info {
+  transform: translateY(-5px);
+}
+
+/* Responsive adjustments for overlay */
+@media (max-width: 1024px) {
+  .hover-overlay {
+    width: 90vw;
+    max-width: 500px;
+    min-height: 350px;
+  }
+  
+  .overlay-header {
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  .overlay-poster {
+    width: 120px;
+    height: 180px;
+  }
+  
+  .overlay-title {
+    font-size: 1.4rem;
+  }
+  
+  .overlay-meta {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hover-overlay {
+    width: 95vw;
+    max-width: 400px;
+    min-height: 300px;
+  }
+  
+  .overlay-header {
+    padding: 16px;
+    gap: 12px;
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .overlay-poster {
+    width: 100px;
+    height: 150px;
+    margin: 0 auto;
+  }
+  
+  .overlay-title {
+    font-size: 1.2rem;
+  }
+  
+  .overlay-meta {
+    font-size: 0.8rem;
+    gap: 8px;
+    justify-content: center;
+  }
+  
+  .overlay-description {
+    font-size: 0.8rem;
+    -webkit-line-clamp: 2;
+  }
+  
+  .overlay-details {
+    font-size: 0.75rem;
+  }
 } 
