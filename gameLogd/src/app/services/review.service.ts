@@ -21,19 +21,20 @@ export class ReviewService {
           return throwError(() => new Error('User not authenticated'));
         }
         
-        return from(addDoc(reviewsCollection, {
+        const reviewPayload = {
           ...review,
+          userId: review.userId || user.uid,
           datePosted: new Date(),
           likes: 0,
           username: user.displayName || 'Anonymous'
-        })).pipe(
+        };
+
+        return from(addDoc(reviewsCollection, reviewPayload)).pipe(
           switchMap(docRef => {
             const newReview: Review = {
-              ...review,
+              ...reviewPayload,
               id: docRef.id,
-              username: user.displayName || 'Anonymous',
-              datePosted: new Date(),
-              likes: 0
+              username: user.displayName || 'Anonymous'
             };
             return from(updateDoc(docRef, { id: docRef.id })).pipe(
               map(() => newReview)
