@@ -74,22 +74,22 @@
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    margin-bottom: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
     perspective: 1000px;
 }
 
 .stat-card {
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
+    border-radius: 16px;
     backdrop-filter: blur(12px);
     border: 1px solid rgba(0, 229, 255, 0.2);
     transform-style: preserve-3d;
     animation: cardScaleIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     opacity: 0;
-    box-shadow: 0 8px 32px rgba(0, 229, 255, 0.15);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px rgba(0, 229, 255, 0.12);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .stat-card:nth-child(1) { animation-delay: 0.2s; }
@@ -97,30 +97,30 @@
 .stat-card:nth-child(3) { animation-delay: 0.6s; }
 
 .stat-card:hover {
-    transform: translateY(-15px) rotateX(12deg) scale(1.05);
-    box-shadow: 0 25px 50px rgba(0, 229, 255, 0.3);
+    transform: translateY(-8px) rotateX(8deg);
+    box-shadow: 0 15px 30px rgba(0, 229, 255, 0.2);
     border-color: rgba(0, 229, 255, 0.4);
 }
 
 .stat-card mat-card-content {
     display: flex;
     align-items: center;
-    padding: 2rem;
+    padding: 1.25rem;
     transition: all 0.3s ease;
 }
 
 .stat-icon {
-    font-size: 3rem;
-    width: 3rem;
-    height: 3rem;
+    font-size: 2.25rem;
+    width: 2.25rem;
+    height: 2.25rem;
     color: #00e5ff;
-    margin-right: 1.5rem;
+    margin-right: 1rem;
     transition: transform 0.3s ease;
     filter: drop-shadow(0 2px 4px rgba(0, 229, 255, 0.3));
 }
 
 .stat-card:hover .stat-icon {
-    transform: scale(1.2) translateZ(20px);
+    transform: scale(1.1);
 }
 
 .stat-info {
@@ -128,7 +128,7 @@
 }
 
 .stat-info h2 {
-    font-size: 2.5rem;
+    font-size: 1.75rem;
     margin: 0;
     color: var(--text-color);
     font-weight: 600;
@@ -136,14 +136,14 @@
 }
 
 .stat-card:hover .stat-info h2 {
-    transform: translateZ(15px);
+    transform: translateZ(10px);
 }
 
 .stat-info p {
-    margin: 0.5rem 0 0;
+    margin: 0.35rem 0 0;
     color: var(--text-color);
     opacity: 0.8;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     transition: transform 0.3s ease;
 }
 
