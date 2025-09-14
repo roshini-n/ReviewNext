@@ -28,6 +28,7 @@ export class NavbarComponent implements OnInit {
   userService = inject(UserService);
   searchQuery: string = '';
   avatarUrl: string = 'assets/default-avatar.png';
+  isLoginOrRegister: boolean = false;
 
   constructor(private router: Router, private themeService: ThemeService) {
     // Use effect to watch for auth state changes
@@ -38,6 +39,12 @@ export class NavbarComponent implements OnInit {
       } else {
         this.avatarUrl = 'assets/default-avatar.png';
       }
+    });
+
+    // Subscribe to router events to detect current page
+    this.router.events.subscribe(() => {
+      const currentUrl = this.router.url;
+      this.isLoginOrRegister = currentUrl.includes('/login') || currentUrl.includes('/register');
     });
   }
 
