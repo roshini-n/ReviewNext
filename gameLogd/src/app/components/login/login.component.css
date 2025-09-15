@@ -1,199 +1,470 @@
+/* Main Container */
 .login-container {
-    min-height: 100vh;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #073f4e 0, #cbd9dd 10%, #95cede 20%, #78bdd2 35%, #42acca 50%, #0096bf 75%, #03313d 100%);
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Main Content Layout */
+.login-content {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
     padding: 2rem;
-    background-color: var(--primary-bg);
+    gap: 3rem;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Branding Section */
+.branding-section {
+    color: #2c3e50;
+    text-align: center;
+    padding: 2rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.brand-logo h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(45deg, #000000, #000000, #000000);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-family: 'Roboto', sans-serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.brand-subtitle {
+    font-size: 1.4rem;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+    font-weight: 300;
+    font-family: 'Roboto', sans-serif;
+    color: #555;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.feature-highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    transition: transform 0.3s ease;
+    font-family: 'Roboto', sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feature-item:hover {
+    transform: translateX(10px);
+    background: rgba(255, 215, 0, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.feature-item mat-icon {
+    color: #FFD700;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+.feature-item span {
+    font-weight: 500;
+    font-size: 1.1rem;
+    font-family: 'Roboto', sans-serif;
+    color: #2c3e50;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Section */
+.form-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .form-container {
-    background-color: var(--secondary-bg);
-    border-radius: 12px;
-    box-shadow: 0 8px 24px var(--shadow-color);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
     padding: 2.5rem;
     width: 100%;
-    max-width: 420px;
+    max-width: 400px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 215, 0, 0.3);
     transition: all 0.3s ease;
+    font-family: 'Roboto', sans-serif;
 }
 
-.form-container h1 {
-    color: var(--primary-text);
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    text-align: center;
+.form-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
 }
 
-.subtitle {
-    color: var(--secondary-text);
+.form-header {
     text-align: center;
     margin-bottom: 2rem;
-    font-size: 1rem;
+}
+
+.form-header h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 0.5rem 0;
+    font-family: 'Roboto', sans-serif;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.form-header p {
+    color: #666;
+    font-size: 1.1rem;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Form Styles */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
 }
 
 .form-group {
-    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--primary-text);
-    font-weight: 500;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 2px solid var(--input-border);
-    border-radius: 8px;
-    background-color: var(--input-bg);
-    color: var(--primary-text);
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-.form-group input:focus {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(254, 231, 21, 0.2);
-}
-
-.form-group input.error {
-    border-color: var(--error-color);
-}
-
-.error-text {
-    color: var(--error-color);
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-}
-
-button {
-    width: 100%;
-    padding: 0.875rem;
-    background-color: var(--accent-color);
-    color: #000000;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-button:hover:not(:disabled) {
-    background-color: #FFED4A;
-    transform: translateY(-1px);
-}
-
-button:active:not(:disabled) {
-    transform: translateY(0);
-}
-
-button:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
-.form-footer {
-    margin-top: 1.5rem;
-    text-align: center;
-}
-
-.forgot-password {
-    color: var(--accent-color);
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.forgot-password:hover {
-    color: #FFED4A;
-}
-
-.register-link {
-    margin-top: 1rem;
-    color: var(--secondary-text);
-}
-
-.register-link a {
-    color: var(--accent-color);
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.register-link a:hover {
-    color: #FFED4A;
-}
-
-.error-messages {
-    margin-top: 1.5rem;
-    padding: 1rem;
-    background-color: rgba(231, 76, 60, 0.1);
-    border-radius: 8px;
-    color: var(--error-color);
-    text-align: center;
-    font-size: 0.875rem;
-}
-
-.password-input-container {
+.input-wrapper {
     position: relative;
     display: flex;
     align-items: center;
 }
 
-.password-input-container input {
-    padding-right: 40px;
+.input-icon {
+    position: absolute;
+    left: 16px;
+    color: #999;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    z-index: 2;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 14px 16px 14px 50px;
+    border: 2px solid #e1e5e9;
+    border-radius: 12px;
+    font-size: 1rem;
+    background: #fff;
+    color: #333;
+    transition: all 0.3s ease;
+    outline: none;
+    font-family: 'Roboto', sans-serif;
+}
+
+.input-wrapper input:focus {
+    border-color: #FFD700;
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+}
+
+.input-wrapper input.error {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.error-text {
+    color: #e74c3c;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    font-family: 'Roboto', sans-serif;
 }
 
 .toggle-password {
     position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
+    right: 16px;
     background: none;
     border: none;
-    padding: 4px;
+    color: #999;
     cursor: pointer;
-    color: var(--secondary-text);
+    padding: 4px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 32px;
     height: 32px;
-    border-radius: 50%;
-    transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 .toggle-password:hover {
-    background-color: var(--navbar-button-hover);
+    background: rgba(255, 215, 0, 0.1);
+    color: #FFD700;
 }
-
-/* ✅ Fix this: combine translate and scale together */
-.toggle-password:active {
-    transform: translateY(-50%) scale(0.95);
-}
-
 
 .toggle-password mat-icon {
     font-size: 20px;
     width: 20px;
     height: 20px;
-    line-height: 20px;
+}
+
+/* Form Options */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.5rem 0;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #666;
+    font-family: 'Roboto', sans-serif;
+}
+
+.remember-me input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #e1e5e9;
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.remember-me input[type="checkbox"]:checked + .checkmark {
+    background: #FFD700;
+    border-color: #FFD700;
+}
+
+.remember-me input[type="checkbox"]:checked + .checkmark::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.forgot-password {
+    color: #FFD700;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    font-family: 'Roboto', sans-serif;
+}
+
+.forgot-password:hover {
+    color: #FFA500;
+}
+
+/* Login Button */
+.login-button {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #2c3e50;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    font-family: 'Roboto', sans-serif;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.login-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+    background: linear-gradient(135deg, #FFA500 0%, #FFD700 100%);
+}
+
+.login-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.login-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.login-button mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+/* Form Footer */
+.form-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.register-link {
+    color: #666;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+.register-link a {
+    color: #FFD700;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+    font-family: 'Roboto', sans-serif;
+}
+
+.register-link a:hover {
+    color: #FFA500;
+}
+
+/* Error Messages */
+.error-messages {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(231, 76, 60, 0.1);
+    border: 1px solid rgba(231, 76, 60, 0.2);
+    border-radius: 12px;
+    color: #e74c3c;
+    font-size: 0.9rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+.error-messages mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .login-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 1rem;
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .branding-section {
+        order: 2;
+        padding: 1rem;
+    }
+    
+    .form-section {
+        order: 1;
+    }
+    
+    .feature-highlights {
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .feature-item {
+        flex: 1;
+        min-width: 150px;
+    }
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        height: 100vh;
+        overflow-y: auto;
+    }
+    
+    .login-content {
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .form-container {
+        padding: 2rem;
+        border-radius: 20px;
+        max-width: 350px;
+    }
+    
+    .brand-logo h1 {
+        font-size: 2.5rem;
+    }
+    
+    .brand-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .feature-highlights {
+        flex-direction: column;
+    }
+    
+    .feature-item {
+        min-width: auto;
+    }
 }
 
 @media (max-width: 480px) {
-    .login-container {
-        padding: 1rem;
-    }
-
     .form-container {
         padding: 1.5rem;
+        border-radius: 16px;
+        max-width: 320px;
     }
-
-    .form-container h1 {
-        font-size: 1.75rem;
+    
+    .form-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .brand-logo h1 {
+        font-size: 2rem;
+    }
+    
+    .brand-subtitle {
+        font-size: 1rem;
     }
 }
