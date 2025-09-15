@@ -89,10 +89,10 @@ export class ReviewService {
   
   // get all reviews by a specific user
   getReviewsByUserId(userId: string): Observable<Review[]> {
+    // Avoid requiring a composite index by not combining where + orderBy
     const reviewsQuery = query(
       collection(this.firestore, 'reviews'),
-      where('userId', '==', userId),
-      orderBy('datePosted', 'desc')
+      where('userId', '==', userId)
     );
     
     return collectionData(reviewsQuery, { idField: 'id' }) as Observable<Review[]>;

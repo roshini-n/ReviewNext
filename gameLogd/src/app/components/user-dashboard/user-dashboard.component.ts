@@ -12,6 +12,7 @@ import { GameLogService } from '../../services/gamelog.service';
 import { BookReviewService } from '../../services/bookreview.service';
 import { MovieReviewService } from '../../services/movieReview.service';
 import { User } from '../../models/user.model';
+import { combineLatest } from 'rxjs';
 import { Review } from '../../models/review.model';
 import { GameLog } from '../../models/gameLog.model';
 
@@ -36,7 +37,8 @@ export class UserDashboardComponent implements OnInit {
   private totalGameReviews: number = 0;
   private totalBookReviews: number = 0;
   private totalMovieReviews: number = 0;
-  totalRatings: number = 0;
+  private totalGameLogDerivedReviews: number = 0;
+  totalRatings: number = 1;
   totalGameLogs: number = 0;
   isLoading: boolean = true;
 
@@ -69,51 +71,35 @@ export class UserDashboardComponent implements OnInit {
 
   private loadUserStats(userId: string): void {
     console.log('Loading stats for userId:', userId);
-    
-    // Load game reviews
-    this.reviewService.getReviewsByUserId(userId).subscribe({
-      next: (reviews) => {
-        console.log('Game reviews received:', reviews.length, reviews);
-        this.totalGameReviews = reviews.length;
-        this.updateTotalReviews();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading game reviews:', error);
-        this.isLoading = false;
-      }
-    });
 
-    // Load book reviews
-    this.bookReviewService.getReviewsByUserId(userId).subscribe({
-      next: (bookReviews) => {
-        console.log('Book reviews received:', bookReviews.length, bookReviews);
+    // Combine all review sources into a single live total
+    combineLatest([
+      this.reviewService.getReviewsByUserId(userId),
+      this.bookReviewService.getReviewsByUserId(userId),
+      this.movieReviewService.getUserReviews(userId)
+    ]).subscribe({
+      next: ([gameReviews, bookReviews, movieReviews]) => {
+        this.totalGameReviews = gameReviews.length;
         this.totalBookReviews = bookReviews.length;
-        this.updateTotalReviews();
-      },
-      error: (error) => {
-        console.error('Error loading book reviews:', error);
-      }
-    });
-
-    // Load movie reviews
-    this.movieReviewService.getUserReviews(userId).subscribe({
-      next: (movieReviews) => {
-        console.log('Movie reviews received:', movieReviews.length, movieReviews);
         this.totalMovieReviews = movieReviews.length;
         this.updateTotalReviews();
+        this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading movie reviews:', error);
+        console.error('Error loading reviews:', error);
+        this.isLoading = false;
       }
     });
 
-    // Load game logs
+    // Load game logs (separate from reviews)
     this.gameLogService.getReviewsByUserId(userId).subscribe({
       next: (gameLogs) => {
-        console.log('Game logs received:', gameLogs.length, gameLogs);
         this.totalGameLogs = gameLogs.length;
-        this.totalRatings = gameLogs.filter(log => log.rating).length;
+        const logsWithRating = gameLogs.filter(log => !!log.rating).length;
+        const logsWithText = gameLogs.filter((log: any) => typeof log.review === 'string' && log.review.trim().length > 0).length;
+        this.totalRatings = logsWithRating;
+        this.totalGameLogDerivedReviews = Math.max(logsWithRating, logsWithText);
+        this.updateTotalReviews();
       },
       error: (error) => {
         console.error('Error loading game logs:', error);
@@ -122,9 +108,11 @@ export class UserDashboardComponent implements OnInit {
   }
 
   private updateTotalReviews(): void {
-    this.totalReviews = this.totalGameReviews + this.totalBookReviews + this.totalMovieReviews;
+    const gameReviewCount = this.totalGameReviews > 0 ? this.totalGameReviews : this.totalGameLogDerivedReviews;
+    this.totalReviews = gameReviewCount + this.totalBookReviews + this.totalMovieReviews;
     console.log('Total reviews updated:', this.totalReviews, {
-      game: this.totalGameReviews,
+      gameReviews: this.totalGameReviews,
+      gameRatingsFallback: this.totalRatings,
       book: this.totalBookReviews,
       movie: this.totalMovieReviews
     });
