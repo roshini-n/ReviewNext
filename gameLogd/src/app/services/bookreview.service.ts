@@ -92,8 +92,7 @@ export class BookReviewService {
   getReviewsByUserId(userId: string): Observable<Review[]> {
     const reviewsQuery = query(
       this.reviewsCollection,
-      where('userId', '==', userId),
-      orderBy('datePosted', 'desc')
+      where('userId', '==', userId)
     );
     return collectionData(reviewsQuery, { idField: 'id' }) as Observable<Review[]>;
   }
