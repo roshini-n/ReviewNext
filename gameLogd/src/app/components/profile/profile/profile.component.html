@@ -1,10 +1,11 @@
 <body>
 <div class="profile-container">
   <div class="profile-header">
-    <div class="profile-image-container">
-      <img [src]="image" alt="Profile Picture" class="profile-image" (click)="openImageDialog('0ms', '0ms')">
+    <div class="profile-image-container" (click)="openAvatarDialog()">
+      <img [src]="image" alt="Profile Picture" class="profile-image">
       <div class="image-overlay">
-        <mat-icon>edit</mat-icon>
+        <mat-icon>photo_camera</mat-icon>
+        <span>Change Avatar</span>
       </div>
     </div>
     <div class="profile-info">

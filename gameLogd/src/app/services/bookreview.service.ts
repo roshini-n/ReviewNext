@@ -22,6 +22,7 @@ export class BookReviewService {
 
         const reviewData = {
           ...review,
+          userId: review.userId || user.uid,
           datePosted: new Date(),
           username: user.displayName || 'Anonymous',
           likes: 0

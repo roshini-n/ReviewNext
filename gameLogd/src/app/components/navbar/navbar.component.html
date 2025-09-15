@@ -5,7 +5,7 @@
   </h1>
 
   <!--Search in the middle-->
-@if (authService.currentUserSig()) {
+<!-- @if (authService.currentUserSig()) {
   <div class="search-container">
     <form class="d-flex search-form">
       <input
@@ -24,7 +24,24 @@
       </button>
     </form>
   </div>
-}
+} -->
+
+@if (!isLoginOrRegister) {
+    <div class="search-container">
+      <form class="search-form">
+        <input 
+          class="search-input" 
+          type="search" 
+          placeholder="Search for products, reviews, and more..."
+          [(ngModel)]="searchQuery"
+          name="search"
+        />
+        <button class="search-button" type="submit" (click)="onSearch()">
+          Search
+        </button>
+      </form>
+    </div>
+  }
 
   <!--Buttons on the right-->
   <div class="right-buttons">
@@ -47,9 +64,6 @@
       <img [src]="avatarUrl" alt="Profile" class="profile-image">
     </button>
     }
-    <button mat-button [matMenuTriggerFor]="themeMenu" color="grey-back" class="theme-toggle">
-      <mat-icon>palette</mat-icon>
-    </button>
   </div>
 
 </mat-toolbar>

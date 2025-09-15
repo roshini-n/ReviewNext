@@ -154,6 +154,25 @@ export class LogGamePopupComponent {
         rating: this.rating,
       }).subscribe({
         next: () => {
+          // Also create a Review document so dashboards can count it
+          const hasReviewContent = (this.logForm.value.review && this.logForm.value.review.trim().length > 0) || this.rating > 0;
+          if (hasReviewContent) {
+            this.reviewService.addReview({
+              userId: currentUser,
+              gameId: this.gameId,
+              reviewText: this.logForm.value.review || '',
+              rating: this.rating,
+              datePosted: new Date(),
+              username: this.username,
+              likes: 0,
+            }).subscribe({
+              next: () => {},
+              error: () => {
+                console.error('Failed to create review alongside game log');
+              }
+            });
+          }
+
           this.dialogRef.close();
           this.snackBar.open('Game logged successfully', 'Close', {
             duration: 2000,
