@@ -58,8 +58,14 @@ export class UserService {
 
   updateUser(id: string, userData: Partial<User>): Observable<void> {
     const userDocRef = doc(this.firestore, `users/${id}`);
+    console.log('Updating user document:', id, 'with data:', userData);
 
-    return from(updateDoc(userDocRef, {...userData}))
+    return from(updateDoc(userDocRef, {...userData})).pipe(
+      catchError((error) => {
+        console.error('Error updating user:', error);
+        return throwError(() => new Error('Failed to update user data'));
+      })
+    );
   }
 
 

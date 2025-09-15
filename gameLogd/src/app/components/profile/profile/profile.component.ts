@@ -18,6 +18,8 @@ import { ResetPasswordComponent } from '../../reset-password/reset-password.comp
 import { doc } from '@angular/fire/firestore';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AvatarDialogComponent } from '../avatar-dialog/avatar-dialog.component';
 
 @Component({
   selector: 'app-profile',
@@ -32,8 +34,10 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    MatTabsModule
+    MatTabsModule,
+    AvatarDialogComponent
   ],
+  standalone: true,
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
@@ -51,7 +55,8 @@ export class ProfileComponent implements OnInit{
   userId: string | null = null;
   username: string | undefined;
   bio: string | undefined;
-  image: string = "";
+  image: string = "assets/default-avatar.png"; // Set default avatar
+  isUpdatingAvatar = false;
   
 
   // Logout
@@ -74,17 +79,34 @@ export class ProfileComponent implements OnInit{
   }
 
 
-  loadUser(): void{
+  loadUser(): void {
     if (!this.userId) return;
-    this.userService.getUserById(this.userId).subscribe((user: User | undefined) => {
-      if (user){
-        this.bio = user.bio;
-        this.username = user.username;
-        this.image = user.avatarUrl || 'assets/default-avatar.png';
-        this.cd.markForCheck();
-      }
-      else{
-        console.log("User not found")
+    
+    this.userService.getUserById(this.userId).subscribe({
+      next: (user: User | undefined) => {
+        if (user) {
+          console.log('Loaded user data:', user);
+          this.bio = user.bio;
+          this.username = user.username;
+          
+          // Only update the image if we're not in the middle of an avatar update
+          if (!this.isUpdatingAvatar) {
+            const newAvatarUrl = user.avatarUrl?.trim() || 'assets/default-avatar.png';
+            if (this.image !== newAvatarUrl) {
+              console.log('Updating avatar from:', this.image, 'to:', newAvatarUrl);
+              this.image = newAvatarUrl;
+            }
+          }
+          
+          this.cd.markForCheck();
+          this.cd.detectChanges();
+        } else {
+          console.log("User not found");
+        }
+      },
+      error: (error) => {
+        console.error('Error loading user:', error);
+        // Could show an error message to the user here
       }
     });
   }
@@ -135,20 +157,43 @@ export class ProfileComponent implements OnInit{
     })
   }
 
-  openImageDialog(enterAnimationDuration: string, exitAnimationDuration: string) : void {
-    const dialogRef = this.dialog.open(ImageDialog, {
-      width: '400px',
-      enterAnimationDuration,
-      exitAnimationDuration,
-      data: {userId: this.userId, currentImage: this.image},
+  openAvatarDialog(): void {
+    if (this.isUpdatingAvatar) {
+      return; // Prevent multiple dialogs
+    }
+
+    console.log('Opening avatar dialog with current image:', this.image);
+    const dialogRef = this.dialog.open(AvatarDialogComponent, {
+      width: '500px',
+      panelClass: 'avatar-dialog',
+      data: { currentAvatar: this.image },
+      disableClose: true // Prevent clicking outside to close while updating
     });
-    dialogRef.afterClosed().subscribe((newImageUrl) => {
-      if (newImageUrl) {
-        this.image = newImageUrl;
-        this.loadUser(); // Reload user data to ensure consistency
-        this.cd.detectChanges();
+    
+    dialogRef.afterClosed().subscribe((newAvatarPath: string) => {
+      console.log('Dialog closed with result:', newAvatarPath);
+      if (newAvatarPath && this.userId) {
+        this.isUpdatingAvatar = true;
+        console.log('Updating avatar for user:', this.userId);
+        
+        this.userService.updateUser(this.userId, { avatarUrl: newAvatarPath })
+          .subscribe({
+            next: () => {
+              console.log('Avatar updated successfully');
+              this.image = newAvatarPath;
+              this.isUpdatingAvatar = false;
+              this.cd.markForCheck();
+              this.cd.detectChanges();
+            },
+            error: (error) => {
+              console.error('Error updating avatar:', error);
+              this.isUpdatingAvatar = false;
+              this.cd.markForCheck();
+              // Could show an error message to the user here
+            }
+          });
       }
-    })
+    });
   }
 }
 
@@ -246,24 +291,55 @@ export class PasswordDialog {
 @Component({
   selector: 'image-dialog',
   templateUrl: 'image-dialog.html',
-  imports: [MatButtonModule, MatDialogClose, MatDialogContent, FormsModule, MatFormField],
+  imports: [
+    MatButtonModule, 
+    MatDialogClose, 
+    MatDialogContent, 
+    MatDialogTitle, 
+    MatDialogActions,
+    MatProgressSpinnerModule,
+    FormsModule
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 
 export class ImageDialog {
   readonly dialogRef = inject(MatDialogRef<ImageDialog>);
-  gameFirebaseService = inject(GameFirebaseService);
-  userService = inject(UserService)
-  image = ''
+  userService = inject(UserService);
+  
+  selectedAvatar: string | null = null;
+  isUpdating = false;
+  errorMessage: string | null = null;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {userId: string, currentImage: string}) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {userId: string, currentImage: string}) {
+    this.selectedAvatar = this.data.currentImage;
+  }
+
+  selectAvatar(imageUrl: string) {
+    this.selectedAvatar = imageUrl;
+    this.errorMessage = null; // Clear any previous errors
+  }
 
   // Submit button
-  submitImage(imageUrl: string){
-    this.userService.updateUser(this.data.userId, {avatarUrl: imageUrl}).subscribe(() => {
-      this.dialogRef.close(imageUrl)
-      location.reload();
-    })
+  submitImage(imageUrl: string) {
+    if (!imageUrl) {
+      this.errorMessage = 'Please select an avatar first';
+      return;
+    }
+    
+    this.isUpdating = true;
+    this.errorMessage = null;
+
+    this.userService.updateUser(this.data.userId, {avatarUrl: imageUrl}).subscribe({
+      next: () => {
+        this.dialogRef.close(imageUrl);
+      },
+      error: (error) => {
+        console.error('Error updating profile picture:', error);
+        this.isUpdating = false;
+        this.errorMessage = 'Failed to update profile picture. Please try again.';
+      }
+    });
   }
 }
