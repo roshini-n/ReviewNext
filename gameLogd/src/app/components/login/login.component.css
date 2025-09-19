@@ -59,7 +59,7 @@
     opacity: 0.9;
     font-weight: 300;
     font-family: 'Roboto', sans-serif;
-    color: #555;
+    color: #000000;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
@@ -112,14 +112,15 @@
 }
 
 .form-container {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.18);           /* More transparent */
+    backdrop-filter: blur(18px);                     /* Stronger blur */
+    -webkit-backdrop-filter: blur(18px);             /* Safari support */
     border-radius: 24px;
     padding: 2.5rem;
     width: 100%;
     max-width: 400px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 215, 0, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+    border: 1.5px solid rgba(255, 255, 255, 0.35);   /* Lighter border */
     transition: all 0.3s ease;
     font-family: 'Roboto', sans-serif;
 }

@@ -6,94 +6,111 @@
   <link rel="stylesheet" href="register.component.css" />
 </head>
 <body>
-  <div class="register-container" [attr.data-theme]="currentTheme">
-    <div class="form-container">
-      <h1>Create Account</h1>
-      <p class="subtitle">Join our community today</p>
+  <div class="login-container" [attr.data-theme]="currentTheme">
+    <!-- Background Elements -->
+    <div class="background-gradient"></div>
 
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <!-- Username -->
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            formControlName="username"
-            placeholder="Choose a username"
-            [class.error]="form.get('username')?.invalid && form.get('username')?.touched"
-          />
-          @if (form.get('username')?.invalid && form.get('username')?.touched) {
-            <div class="error-text">Username must be at least 3 characters</div>
-          }
-        </div>
-
-        <!-- Email -->
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            formControlName="email"
-            placeholder="Enter your email"
-            [class.error]="form.get('email')?.invalid && form.get('email')?.touched"
-          />
-          @if (form.get('email')?.invalid && form.get('email')?.touched) {
-            <div class="error-text">Please enter a valid email address</div>
-          }
-        </div>
-
-        <!-- Password -->
-        <div class="form-group">
-          <label for="password">Password</label>
-          <div class="password-input-container">
-            <input
-              [type]="showPassword ? 'text' : 'password'"
-              id="password"
-              formControlName="password"
-              placeholder="Create a password"
-              [class.error]="form.get('password')?.invalid && form.get('password')?.touched"
-            />
-            <!-- FIX: Use span instead of button to avoid hover jump -->
-            <span class="toggle-password" role="button" (click)="togglePasswordVisibility()">
-              <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-            </span>
+    <!-- Main Content -->
+    <div class="login-content">
+      <!-- Left Side - Register Form (now first) -->
+      <div class="form-section">
+        <div class="form-container">
+          <div class="form-header">
+            <h2>Create Account</h2>
+            <p>Sign up to start your journey</p>
           </div>
-          @if (form.get('password')?.invalid && form.get('password')?.touched) {
-            <div class="error-text">Password must be at least 6 characters</div>
+
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+            <!-- Username Field -->
+            <div class="form-group">
+              <div class="input-wrapper">
+                <mat-icon class="input-icon">person</mat-icon>
+                <input
+                  type="text"
+                  id="username"
+                  formControlName="username"
+                  placeholder="Username"
+                  [class.error]="form.get('username')?.invalid && form.get('username')?.touched"
+                />
+              </div>
+              @if (form.get('username')?.invalid && form.get('username')?.touched) {
+                <div class="error-text">Please enter a username</div>
+              }
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group">
+              <div class="input-wrapper">
+                <mat-icon class="input-icon">email</mat-icon>
+                <input
+                  type="email"
+                  id="email"
+                  formControlName="email"
+                  placeholder="Email address"
+                  [class.error]="form.get('email')?.invalid && form.get('email')?.touched"
+                />
+              </div>
+              @if (form.get('email')?.invalid && form.get('email')?.touched) {
+                <div class="error-text">Please enter a valid email address</div>
+              }
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+              <div class="input-wrapper">
+                <mat-icon class="input-icon">lock</mat-icon>
+                <input
+                  [type]="showPassword ? 'text' : 'password'"
+                  id="password"
+                  formControlName="password"
+                  placeholder="Password"
+                  [class.error]="form.get('password')?.invalid && form.get('password')?.touched"
+                />
+                <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+                  <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              </div>
+              @if (form.get('password')?.invalid && form.get('password')?.touched) {
+                <div class="error-text">Password must be at least 6 characters</div>
+              }
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="login-button" [disabled]="form.invalid">
+              <span>Sign Up</span>
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </form>
+
+          <!-- Footer -->
+          <div class="form-footer">
+            <p class="register-link">
+              Already have an account? <a routerLink="../login">Sign In</a>
+            </p>
+          </div>
+
+          <!-- Error Message Block -->
+          @if (errorMessage) {
+            <div class="error-messages">
+              <mat-icon>error</mat-icon>
+              <span>
+                {{ errorMessage }}
+              </span>
+            </div>
           }
         </div>
-
-        <!-- Submit -->
-        <button type="submit" [disabled]="form.invalid">
-          Create Account
-        </button>
-      </form>
-
-      <!-- Footer -->
-      <div class="form-footer">
-        <p class="login-link">
-          Already have an account? <a routerLink="../login">Sign In</a>
-        </p>
       </div>
 
-      <!-- Error Handling -->
-      @if (errorMessage) {
-        <div class="error-messages">
-          @if (errorMessage === "auth/invalid-email") {
-            Invalid email address
-          } @else if (errorMessage === "auth/missing-email") {
-            Please enter your email
-          } @else if (errorMessage === "auth/email-already-in-use") {
-            Email is already registered
-          } @else if (errorMessage === "auth/weak-password") {
-            Password must be at least 6 characters
-          } @else if (errorMessage === "auth/missing-password") {
-            Please enter a password
-          } @else {
-            {{ errorMessage }}
-          }
+      <!-- Right Side - Branding (now second) -->
+      <div class="branding-section">
+        <div class="brand-logo">
+          <h1>ReviewNext</h1>
         </div>
-      }
+        <p class="brand-subtitle">
+          Turn Your Passions into Stories Everyone Can Discover<br />
+          Your opinions matter — let them shine.
+        </p>
+      </div>
     </div>
   </div>
 </body>
