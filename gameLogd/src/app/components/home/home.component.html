@@ -124,37 +124,6 @@
                         </a>
                 </div>
                 </div>
-
-                <!-- Search by Category (Beauty, Web Series, Gadgets) -->
-                <div class="search-section" style="margin-top: 2rem;">
-                    <h3 style="text-align:center; margin-bottom: 1rem;">Search by Category</h3>
-                    <div style="display:flex; flex-wrap: wrap; gap: 1rem; justify-content:center;">
-                        <form class="search-form" style="display:flex; gap:0.5rem; align-items:center;">
-                            <input #gameQ class="search-input" type="search" placeholder="Search Games..." />
-                            <a class="search-button" [routerLink]="['/search']" [queryParams]="{ q: gameQ.value }">Search</a>
-                        </form>
-                        <form class="search-form" style="display:flex; gap:0.5rem; align-items:center;">
-                            <input #bookQ class="search-input" type="search" placeholder="Search Books..." />
-                            <a class="search-button" [routerLink]="['/book-search']" [queryParams]="{ q: bookQ.value }">Search</a>
-                        </form>
-                        <form class="search-form" style="display:flex; gap:0.5rem; align-items:center;">
-                            <input #movieQ class="search-input" type="search" placeholder="Search Movies..." />
-                            <a class="search-button" [routerLink]="['/movie-search']" [queryParams]="{ q: movieQ.value }">Search</a>
-                        </form>
-                        <form class="search-form" style="display:flex; gap:0.5rem; align-items:center;">
-                            <input #beautyQ class="search-input" type="search" placeholder="Search Beauty Products..." />
-                            <a class="search-button" [routerLink]="['/beauty-product-search']" [queryParams]="{ q: beautyQ.value }">Search</a>
-                        </form>
-                        <form class="search-form" style="display:flex; gap:0.5rem; align-items:center;">
-                            <input #webQ class="search-input" type="search" placeholder="Search Web Series..." />
-                            <a class="search-button" [routerLink]="['/web-series-search']" [queryParams]="{ q: webQ.value }">Search</a>
-                        </form>
-                        <form class="search-form" style="display:flex; gap:0.5rem; align-items:center;">
-                            <input #gadgetQ class="search-input" type="search" placeholder="Search Electronic Gadgets..." />
-                            <a class="search-button" [routerLink]="['/electronic-gadget-search']" [queryParams]="{ q: gadgetQ.value }">Search</a>
-                        </form>
-                    </div>
-                </div>
             </div>
             }
         </div>

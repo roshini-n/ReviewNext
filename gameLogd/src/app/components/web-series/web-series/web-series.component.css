@@ -74,30 +74,32 @@ web-series-root {
 }
 
 .web-series-card {
-  
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-  height: 400px;
-  width: 240px;
-}
-
-.web-series-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 420px;
+  margin: 0 8px;
+  padding: 10px;
 }
 
 .web-series-card a {
   text-decoration: none;
   color: inherit;
-  display: block;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .thumbnail {
-  width: 100%;
+  width: 200px;
   height: 300px;
+  object-fit: cover;
+  border-radius: 4px;
+  transition: transform 0.2s;
+}
+
+.thumbnail:hover {
+  transform: scale(1.05);
   object-fit: cover;
 }
 
