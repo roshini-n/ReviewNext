@@ -29,6 +29,8 @@ export class NavbarComponent implements OnInit {
   searchQuery: string = '';
   avatarUrl: string = 'assets/default-avatar.png';
   isLoginOrRegister: boolean = false;
+  isUserDashboard: boolean = false;
+  isHomePage: boolean = false;
 
   constructor(private router: Router, private themeService: ThemeService) {
     // Use effect to watch for auth state changes
@@ -43,13 +45,21 @@ export class NavbarComponent implements OnInit {
 
     // Subscribe to router events to detect current page
     this.router.events.subscribe(() => {
-      const currentUrl = this.router.url;
-      this.isLoginOrRegister = currentUrl.includes('/login') || currentUrl.includes('/register');
+      this.checkCurrentRoute();
     });
   }
 
   ngOnInit() {
     this.loadUserAvatar();
+    // Check current route on initialization
+    this.checkCurrentRoute();
+  }
+
+  private checkCurrentRoute() {
+    const currentUrl = this.router.url;
+    this.isLoginOrRegister = currentUrl.includes('/login') || currentUrl.includes('/register');
+    this.isUserDashboard = currentUrl.includes('/dashboard');
+    this.isHomePage = currentUrl === '/' || currentUrl === '/home';
   }
 
   loadUserAvatar() {
@@ -66,9 +76,25 @@ export class NavbarComponent implements OnInit {
 
   onSearch() {
     if (this.searchQuery.trim()) {
-      this.router.navigate(['/search'], { 
-        queryParams: { q: this.searchQuery }
-      });
+      const url = this.router.url.split('?')[0];
+      if (url === '/' || url.startsWith('/dashboard')) {
+        this.router.navigate(['/search-all'], { queryParams: { q: this.searchQuery } });
+      } else if (url.startsWith('/books') || url.startsWith('/book-search')) {
+        this.router.navigate(['/book-search'], { queryParams: { q: this.searchQuery } });
+      } else if (url.startsWith('/movies') || url.startsWith('/movie-search')) {
+        this.router.navigate(['/movie-search'], { queryParams: { q: this.searchQuery } });
+      } else if (url.startsWith('/beauty-products') || url.startsWith('/beauty-product-search')) {
+        this.router.navigate(['/beauty-product-search'], { queryParams: { q: this.searchQuery } });
+      } else if (url.startsWith('/web-series') || url.startsWith('/web-series-search')) {
+        this.router.navigate(['/web-series-search'], { queryParams: { q: this.searchQuery } });
+      } else if (url.startsWith('/electronic-gadgets') || url.startsWith('/electronic-gadget-search')) {
+        this.router.navigate(['/electronic-gadget-search'], { queryParams: { q: this.searchQuery } });
+      } else if (url.startsWith('/games') || url.startsWith('/search')) {
+        this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
+      } else {
+        this.router.navigate(['/search-all'], { queryParams: { q: this.searchQuery } });
+      }
+      this.searchQuery = '';
     }
   }
 

@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" id="leftside">
+<mat-toolbar color="primary" id="leftside" [class.home-navbar]="isHomePage">
   <!--Logo-->
   <h1 [routerLink]="authService.currentUserSig() ? '/dashboard' : '/'" class="site-title" style="cursor: pointer;">
     Review<span class="highlight">Next</span>
@@ -45,13 +45,13 @@
 
   <!--Buttons on the right-->
   <div class="right-buttons">
-    @if (authService.currentUserSig()) {
+    @if (authService.currentUserSig() && !isUserDashboard) {
     <button mat-button [matMenuTriggerFor]="categoryMenu" color="grey-back">
       <span class="navbar_button">Categories</span>
       <mat-icon>arrow_drop_down</mat-icon>
     </button>
   }
-    @if (authService.currentUserSig() == null){
+    @if (authService.currentUserSig() == null && !isLoginOrRegister) {
     <button mat-button color="grey-back" routerLink="login">
       <span class="navbar_button">Login</span>
     </button>
@@ -60,7 +60,7 @@
       <span class="navbar_button">Register</span>
     </button> -->
     } @if (authService.currentUserSig()) {
-    <button mat-button [matMenuTriggerFor]="profileMenu" class="profile-button">
+    <button mat-button routerLink="profile" class="profile-button">
       <img [src]="avatarUrl" alt="Profile" class="profile-image">
     </button>
     }
@@ -86,10 +86,10 @@
     <mat-icon>devices</mat-icon>
     <span>Electronic Gadgets</span>
   </button>
-  <button mat-menu-item routerLink="apps">
+  <!-- <button mat-menu-item routerLink="apps">
     <mat-icon>apps</mat-icon>
     <span>Apps</span>
-  </button>
+  </button> -->
   <button mat-menu-item routerLink="web-series">
     <mat-icon>live_tv</mat-icon>
     <span>Web Series</span>
@@ -106,14 +106,6 @@
     <mat-icon>home</mat-icon>
     <span>Home Appliances</span>
   </button> -->
-</mat-menu>
-
-<mat-menu #profileMenu="matMenu" class="custom-menu">
-  <div class="menu-container">
-    @if (authService.currentUserSig()) {
-    <button mat-button class="menu-btn" routerLink="profile">Profile</button>
-    }
-  </div>
 </mat-menu>
 
 <!-- Theme Menu -->

@@ -28,10 +28,7 @@ app-root {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px 0;
 }
 
 .header-section h1 {
@@ -100,6 +97,12 @@ app-root {
 
 .book-card mat-card-content {
   flex-grow: 1;
+}
+
+.book-info h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.1em;
+  color: #000000;
 }
 
 .book-card h2 {

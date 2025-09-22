@@ -1,8 +1,10 @@
 <!--Eventually separate these into their own components and add individual filters for each carousel-->
 <!--Currently displays all games in database-->
 
-<div class="game-container">
-  <div class="header-section">
+<div class="page-container">
+  <div class="content-wrapper">
+    <div class="game-container">
+      <div class="header-section">
     <h1>Games</h1>
     @if (authService.currentUserSig()) {
     <button mat-raised-button color="primary" (click)="onAddGame()">

@@ -1,23 +1,25 @@
-<div class="documentary-container">
-  <div class="header-section">
-    <h1>Documentaries</h1>
-    <button mat-raised-button color="primary" routerLink="/add_documentary">
-      <mat-icon>add</mat-icon>
-      Add Documentary
-    </button>
-  </div>
+<div class="page-container">
+  <div class="content-wrapper">
+    <div class="documentary-container">
+      <div class="header-section">
+        <h1>Documentaries</h1>
+        <button mat-raised-button color="primary" routerLink="/add_documentary">
+          <mat-icon>add</mat-icon>
+          Add Documentary
+        </button>
+      </div>
 
-  <h2>Trending</h2>
-  <p-carousel [value]="trendingDocumentaries" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
-    <ng-template let-documentary pTemplate="item">
-      <div class="documentary-card">
-        <a [routerLink]="['/documentaries', documentary.id]">
-          <img class="thumbnail" [src]="documentary.imageUrl" [alt]="documentary.title">
-          <div class="documentary-info">
-            <h3>{{ documentary.title }}</h3>
-            <p>Rating: {{ documentary.rating }}/5</p>
-          </div>
-        </a>
+      <h2>Trending</h2>
+      <p-carousel [value]="trendingDocumentaries" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
+        <ng-template let-documentary pTemplate="item">
+          <div class="documentary-card">
+            <a [routerLink]="['/documentaries', documentary.id]">
+              <img class="thumbnail" [src]="documentary.imageUrl" [alt]="documentary.title">
+              <div class="documentary-info">
+                <h3>{{ documentary.title }}</h3>
+                <p>Rating: {{ documentary.rating }}/5</p>
+              </div>
+            </a>
       </div>
     </ng-template>
   </p-carousel>

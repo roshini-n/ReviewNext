@@ -9,10 +9,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px 0;
 }
 
 .header-section h1 {
@@ -46,7 +43,7 @@
 }
 
 .movie-container h2 {
-  color: #FEE715;
+  color: #000000;
   margin: 1.5rem 0;
   font-size: 1.5rem;
   font-weight: 500;
@@ -72,9 +69,10 @@
   flex-grow: 1;
 }
 
-.movie-card h3 {
-  margin: 10px 0;
-  font-size: 1.2em;
+.movie-info h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.1em;
+  color: #000000;
 }
 
 .movie-card p {

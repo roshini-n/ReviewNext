@@ -1,0 +1,19 @@
+/* Shared background style for all pages except home */
+.page-container {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #073f4e 0, #cbd9dd 10%, #95cede 20%, #78bdd2 35%, #42acca 50%, #0096bf 75%, #03313d 100%);
+    display: flex;
+    flex-direction: column;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Content wrapper to ensure proper layout with fixed navbar and footer */
+.content-wrapper {
+    flex: 1;
+    width: 100%;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}

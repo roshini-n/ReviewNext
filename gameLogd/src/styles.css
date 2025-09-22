@@ -1,3 +1,6 @@
+/* Import shared background styles */
+@import './app/styles/shared-background.css';
+
 .center {
   text-align: center;
 }
