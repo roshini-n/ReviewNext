@@ -8,6 +8,9 @@ import { RegisterComponent } from './components/register/register.component';
 import { SearchComponent } from './components/search/search.component';
 import { CreateListComponent } from './components/create-list/create-list.component';
 import { AllSearchComponent } from './components/search/all-search.component';
+import { BeautyProductSearchComponent } from './components/beauty-products/beauty-product-search/beauty-product-search.component';
+import { WebSeriesSearchComponent } from './components/web-series/web-series-search/web-series-search.component';
+import { ElectronicGadgetSearchComponent } from './components/electronic-gadgets/electronic-gadget-search/electronic-gadget-search.component';
 import { BookSearchComponent } from './components/books/book-search/book-search.component';
 import { MovieSearchComponent } from './components/movie/movie-search/movie-search.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
@@ -51,14 +54,17 @@ export const routes: Routes = [
   
   // Electronic Gadget routes
   { path: 'electronic-gadgets', component: ElectronicGadgetComponent },
+  { path: 'electronic-gadget-search', component: ElectronicGadgetSearchComponent },
   { path: 'electronic-gadgets/:id', component: ElectronicGadgetDetailsComponent },
   { path: 'add_electronic_gadget', loadComponent: () => import('./components/electronic-gadgets/add-electronic-gadget/add-electronic-gadget.component').then(m => m.AddElectronicGadgetComponent), canActivate: [authGuard] },
   
   // Other routes
   { path: 'apps', component: AppComponent },
   { path: 'web-series', component: WebSeriesComponent },
+  { path: 'web-series-search', component: WebSeriesSearchComponent },
   { path: 'documentaries', component: DocumentaryComponent },
   { path: 'beauty-products', component: BeautyProductComponent },
+  { path: 'beauty-product-search', component: BeautyProductSearchComponent },
   { path: 'home-appliances', component: HomeApplianceComponent },
   { path: 'add_app', loadComponent: () => import('./components/apps/add-app/add-app.component').then(m => m.AddAppComponent), canActivate: [authGuard] },
   { path: 'add_web_series', loadComponent: () => import('./components/web-series/add-web-series/add-web-series.component').then(m => m.AddWebSeriesComponent), canActivate: [authGuard] },

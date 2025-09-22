@@ -83,6 +83,12 @@ export class NavbarComponent implements OnInit {
         this.router.navigate(['/book-search'], { queryParams: { q: this.searchQuery } });
       } else if (url.startsWith('/movies') || url.startsWith('/movie-search')) {
         this.router.navigate(['/movie-search'], { queryParams: { q: this.searchQuery } });
+      } else if (url.startsWith('/beauty-products') || url.startsWith('/beauty-product-search')) {
+        this.router.navigate(['/beauty-product-search'], { queryParams: { q: this.searchQuery } });
+      } else if (url.startsWith('/web-series') || url.startsWith('/web-series-search')) {
+        this.router.navigate(['/web-series-search'], { queryParams: { q: this.searchQuery } });
+      } else if (url.startsWith('/electronic-gadgets') || url.startsWith('/electronic-gadget-search')) {
+        this.router.navigate(['/electronic-gadget-search'], { queryParams: { q: this.searchQuery } });
       } else if (url.startsWith('/games') || url.startsWith('/search')) {
         this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
       } else {
