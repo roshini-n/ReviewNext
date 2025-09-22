@@ -1,23 +1,24 @@
-<div class="body">
-<div class="dashboard-container">
-  <div class="welcome-section">
-    <h1 class="welcome-text">Welcome, {{ username }}!</h1>
-    <p class="subtitle">Here's your activity overview</p>
-  </div>
+<div class="page-container">
+  <div class="content-wrapper">
+    <div class="dashboard-container">
+      <div class="welcome-section">
+        <h1 class="welcome-text">Welcome, {{ username }}!</h1>
+        <p class="subtitle">Here's your activity overview</p>
+      </div>
 
-  <div class="stats-grid" *ngIf="!isLoading">
-    <mat-card class="stat-card">
-      <mat-card-content>
-        <mat-icon class="stat-icon">rate_review</mat-icon>
-        <div class="stat-info">
-          <h2>{{ totalReviews }}</h2>
-          <p>Total Reviews</p>
-        </div>
-      </mat-card-content>
-    </mat-card>
+      <div class="stats-grid" *ngIf="!isLoading">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <mat-icon class="stat-icon">rate_review</mat-icon>
+            <div class="stat-info">
+              <h2>{{ totalReviews }}</h2>
+              <p>Total Reviews</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
 
-    <mat-card class="stat-card">
-      <mat-card-content>
+        <mat-card class="stat-card">
+          <mat-card-content>
         <mat-icon class="stat-icon">star</mat-icon>
         <div class="stat-info">
           <h2>{{ totalRatings }}</h2>

@@ -76,16 +76,19 @@ export class NavbarComponent implements OnInit {
 
   onSearch() {
     if (this.searchQuery.trim()) {
-      const url = this.router.url;
-      if (url.startsWith('/books')) {
+      const url = this.router.url.split('?')[0];
+      if (url === '/' || url.startsWith('/dashboard')) {
+        this.router.navigate(['/search-all'], { queryParams: { q: this.searchQuery } });
+      } else if (url.startsWith('/books') || url.startsWith('/book-search')) {
         this.router.navigate(['/book-search'], { queryParams: { q: this.searchQuery } });
-      } else if (url.startsWith('/movies')) {
+      } else if (url.startsWith('/movies') || url.startsWith('/movie-search')) {
         this.router.navigate(['/movie-search'], { queryParams: { q: this.searchQuery } });
-      } else if (url.startsWith('/games')) {
+      } else if (url.startsWith('/games') || url.startsWith('/search')) {
         this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
       } else {
-        this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
+        this.router.navigate(['/search-all'], { queryParams: { q: this.searchQuery } });
       }
+      this.searchQuery = '';
     }
   }
 

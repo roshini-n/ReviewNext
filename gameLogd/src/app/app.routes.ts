@@ -7,6 +7,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { SearchComponent } from './components/search/search.component';
 import { CreateListComponent } from './components/create-list/create-list.component';
+import { AllSearchComponent } from './components/search/all-search.component';
 import { BookSearchComponent } from './components/books/book-search/book-search.component';
 import { MovieSearchComponent } from './components/movie/movie-search/movie-search.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
@@ -72,5 +73,6 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'search', component: SearchComponent },
   { path: 'reset_password', component: ResetPasswordComponent },
+  { path: 'search-all', component: AllSearchComponent },
   { path: 'mylog', component: MylogComponent, canActivate: [authGuard] }
 ];
