@@ -13,14 +13,13 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC-rE5cWnoZKkzHdZUQpv31zidgrOAVp0k",
-  authDomain: "reviewnext-69cb0.firebaseapp.com",
-  databaseURL: "https://reviewnext-69cb0-default-rtdb.firebaseio.com",
-  projectId: "reviewnext-69cb0",
-  storageBucket: "reviewnext-69cb0.firebasestorage.app",
-  messagingSenderId: "586900651706",
-  appId: "1:586900651706:web:b8c229bbac401e0f884c83",
-  measurementId: "G-D461RQ7FTG"
+  apiKey: "AIzaSyBgnAfd9fgw6KIfvYSitl0sqr5_TkJRF3M",
+  authDomain: "gamelogd.firebaseapp.com",
+  projectId: "gamelogd",
+  storageBucket: "gamelogd.firebasestorage.app",
+  messagingSenderId: "510500857955",
+  appId: "1:510500857955:web:49f548fc34e51d77d07056",
+  measurementId: "G-84SCQEN0M4"
 };
 
 

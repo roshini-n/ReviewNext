@@ -56,9 +56,9 @@
       <span class="navbar_button">Login</span>
     </button>
     <div class="divider"></div>
-    <button mat-button color="grey-back" routerLink="register">
+    <!-- <button mat-button color="grey-back" routerLink="register">
       <span class="navbar_button">Register</span>
-    </button>
+    </button> -->
     } @if (authService.currentUserSig()) {
     <button mat-button [matMenuTriggerFor]="profileMenu" class="profile-button">
       <img [src]="avatarUrl" alt="Profile" class="profile-image">
