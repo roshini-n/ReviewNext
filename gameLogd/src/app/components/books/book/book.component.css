@@ -99,6 +99,12 @@ app-root {
   flex-grow: 1;
 }
 
+.book-info h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.1em;
+  color: #000000;
+}
+
 .book-card h2 {
   margin: 10px 0;
   font-size: 1.2em;

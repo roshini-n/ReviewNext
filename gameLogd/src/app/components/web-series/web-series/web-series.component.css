@@ -107,10 +107,10 @@ web-series-root {
   padding: 15px;
 }
 
-.series-info h3 {
+.web-series-info h3 {
   margin: 0 0 10px 0;
   font-size: 1.1em;
-  color: #333;
+  color: #000000;
 }
 
 .series-info p {

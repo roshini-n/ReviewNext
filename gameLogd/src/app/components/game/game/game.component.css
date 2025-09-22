@@ -104,6 +104,12 @@ app-root {
   font-size: 1.2em;
 }
 
+.game-info h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.1em;
+  color: #000000;
+}
+
 .game-card p {
   margin: 5px 0;
   color: #666;
@@ -188,7 +194,7 @@ app-root {
 .card-title {
   text-align: center;
   font-weight: bold;
-  color: #FEE715;
+  color: #000000;
   font-size: 1.15rem;
   margin-top: auto;
   margin-bottom: 0;
