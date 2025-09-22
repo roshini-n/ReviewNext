@@ -37,6 +37,40 @@
     </mat-card>
   </div>
 
+  <div class="categories-section" *ngIf="!isLoading">
+    <h3 class="categories-title">Browse by Category</h3>
+    <div class="categories-grid">
+      <button mat-button class="category-button" (click)="navigateToCategory('games')">
+        <mat-icon>sports_esports</mat-icon>
+        <span>Games</span>
+      </button>
+      <button mat-button class="category-button" (click)="navigateToCategory('books')">
+        <mat-icon>menu_book</mat-icon>
+        <span>Books</span>
+      </button>
+      <button mat-button class="category-button" (click)="navigateToCategory('movies')">
+        <mat-icon>movie</mat-icon>
+        <span>Movies</span>
+      </button>
+      <!-- <button mat-button class="category-button" (click)="navigateToCategory('apps')">
+        <mat-icon>apps</mat-icon>
+        <span>Apps</span>
+      </button> -->
+      <button mat-button class="category-button" (click)="navigateToCategory('electronic-gadgets')">
+        <mat-icon>devices</mat-icon>
+        <span>Electronic Gadgets</span>
+      </button>
+      <button mat-button class="category-button" (click)="navigateToCategory('beauty-products')">
+        <mat-icon>spa</mat-icon>
+        <span>Beauty Products</span>
+      </button>
+      <button mat-button class="category-button" (click)="navigateToCategory('web-series')">
+        <mat-icon>live_tv</mat-icon>
+        <span>Web Series</span>
+      </button>
+    </div>
+  </div>
+
   <div class="loading-spinner" *ngIf="isLoading">
     <mat-spinner diameter="40"></mat-spinner>
   </div>

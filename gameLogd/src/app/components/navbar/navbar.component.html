@@ -45,7 +45,7 @@
 
   <!--Buttons on the right-->
   <div class="right-buttons">
-    @if (authService.currentUserSig()) {
+    @if (authService.currentUserSig() && !isUserDashboard) {
     <button mat-button [matMenuTriggerFor]="categoryMenu" color="grey-back">
       <span class="navbar_button">Categories</span>
       <mat-icon>arrow_drop_down</mat-icon>
@@ -86,10 +86,10 @@
     <mat-icon>devices</mat-icon>
     <span>Electronic Gadgets</span>
   </button>
-  <button mat-menu-item routerLink="apps">
+  <!-- <button mat-menu-item routerLink="apps">
     <mat-icon>apps</mat-icon>
     <span>Apps</span>
-  </button>
+  </button> -->
   <button mat-menu-item routerLink="web-series">
     <mat-icon>live_tv</mat-icon>
     <span>Web Series</span>

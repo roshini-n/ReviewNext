@@ -29,6 +29,7 @@ export class NavbarComponent implements OnInit {
   searchQuery: string = '';
   avatarUrl: string = 'assets/default-avatar.png';
   isLoginOrRegister: boolean = false;
+  isUserDashboard: boolean = false;
 
   constructor(private router: Router, private themeService: ThemeService) {
     // Use effect to watch for auth state changes
@@ -43,13 +44,20 @@ export class NavbarComponent implements OnInit {
 
     // Subscribe to router events to detect current page
     this.router.events.subscribe(() => {
-      const currentUrl = this.router.url;
-      this.isLoginOrRegister = currentUrl.includes('/login') || currentUrl.includes('/register');
+      this.checkCurrentRoute();
     });
   }
 
   ngOnInit() {
     this.loadUserAvatar();
+    // Check current route on initialization
+    this.checkCurrentRoute();
+  }
+
+  private checkCurrentRoute() {
+    const currentUrl = this.router.url;
+    this.isLoginOrRegister = currentUrl.includes('/login') || currentUrl.includes('/register');
+    this.isUserDashboard = currentUrl.includes('/dashboard');
   }
 
   loadUserAvatar() {
