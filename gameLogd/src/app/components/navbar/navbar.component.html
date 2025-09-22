@@ -51,7 +51,7 @@
       <mat-icon>arrow_drop_down</mat-icon>
     </button>
   }
-    @if (authService.currentUserSig() == null){
+    @if (authService.currentUserSig() == null && !isLoginOrRegister) {
     <button mat-button color="grey-back" routerLink="login">
       <span class="navbar_button">Login</span>
     </button>
@@ -60,7 +60,7 @@
       <span class="navbar_button">Register</span>
     </button> -->
     } @if (authService.currentUserSig()) {
-    <button mat-button [matMenuTriggerFor]="profileMenu" class="profile-button">
+    <button mat-button routerLink="profile" class="profile-button">
       <img [src]="avatarUrl" alt="Profile" class="profile-image">
     </button>
     }
@@ -106,14 +106,6 @@
     <mat-icon>home</mat-icon>
     <span>Home Appliances</span>
   </button> -->
-</mat-menu>
-
-<mat-menu #profileMenu="matMenu" class="custom-menu">
-  <div class="menu-container">
-    @if (authService.currentUserSig()) {
-    <button mat-button class="menu-btn" routerLink="profile">Profile</button>
-    }
-  </div>
 </mat-menu>
 
 <!-- Theme Menu -->

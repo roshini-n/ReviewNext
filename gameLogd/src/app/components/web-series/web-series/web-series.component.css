@@ -23,17 +23,13 @@ web-series-root {
   padding: 20px;
 }
 
-.header-section {
+  .header-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 20px;
-  border-radius: 8px;
-}
-
-.header-section h1 {
+  padding: 20px 0;
+}.header-section h1 {
   margin: 0;
   color: #333;
   font-size: 2em;

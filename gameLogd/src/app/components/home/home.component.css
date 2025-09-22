@@ -166,9 +166,14 @@ body::before {
     text-align: center;
     font-size: 1rem;
     margin: 1rem 0;
-    color: rgba(255, 255, 255, 0.9);
+    color: #1a1a1a;
     font-weight: 400;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: none;
+    transition: color 0.25s ease;
+}
+
+.small-text:hover {
+    color: #111827;
 }
 
 .main-container {
@@ -237,11 +242,16 @@ body::before {
 
 .title, .title-yellow {
     display: inline-block;
-    color: #00e5ff;
+    color: #1a1a1a;
     font-weight: bold;
     position: relative;
-    text-shadow: 0 2px 8px rgba(0, 229, 255, 0.6);
+    text-shadow: none;
     font-size: 2rem;
+    transition: color 0.25s ease;
+}
+
+.title:hover, .title-yellow:hover {
+    color: #1b2a4a;
 }
 
 .title::after, .title-yellow::after {
@@ -250,9 +260,9 @@ body::before {
     left: 0;
     top: 0;
     z-index: -1;
-    filter: blur(8px);
-    opacity: 0.7;
-    color: #00e5ff;
+    filter: none;
+    opacity: 0;
+    color: inherit;
 }
 
 @keyframes titleFadeIn {
@@ -436,9 +446,14 @@ hr {
     text-align: center;
     font-size: 1.6rem;
     margin-bottom: 2rem;
-    color: #ffffff;
+    color: #1a1a1a;
     font-weight: 600;
-    text-shadow: 0 2px 8px rgba(0, 229, 255, 0.4);
+    text-shadow: none;
+    transition: color 0.25s ease;
+}
+
+.categories-section h3:hover {
+    color: #0b1220;
 }
 
 .categories-grid {
@@ -501,9 +516,9 @@ hr {
     height: 1.75rem;
     width: 1.75rem;
     margin-bottom: 0.5rem;
-    color: var(--accent-color);
+    color: #1a1a1a;
     transition: transform 0.4s ease;
-    filter: drop-shadow(0 2px 4px rgba(0, 229, 255, 0.3));
+    filter: drop-shadow(0 2px 4px rgba(17, 24, 39, 0.15));
 }
 
 .category-card:hover mat-icon {
@@ -515,9 +530,13 @@ hr {
     font-weight: 500;
     text-align: center;
     transition: transform 0.4s ease;
-    color: #ffffff;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    color: #1a1a1a;
+    text-shadow: none;
     margin-top: 0.25rem;
+}
+
+.category-card span:hover {
+    color: #0b1220;
 }
 
 .category-card:hover span {
