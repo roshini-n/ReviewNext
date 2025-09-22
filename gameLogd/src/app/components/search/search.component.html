@@ -3,11 +3,30 @@
     Search results for "{{ searchQuery }}"
   </h2>
 
-  <app-game-search-list
-    [games]="searchResults"
-    [loading]="isLoading"
-    [error]="error"
-    [emptyMessage]="'No games found matching \'' + searchQuery + '\''"
-  >
-  </app-game-search-list>
+  <section>
+    <h3>Games</h3>
+    <app-game-search-list
+      [games]="searchResults"
+      [loading]="isLoading"
+      [error]="error"
+      emptyMessage="No games found matching '{{ searchQuery }}'"
+    >
+    </app-game-search-list>
+  </section>
+
+  <section>
+    <h3>Books</h3>
+    <app-book-search-list
+      [books]="bookResults"
+    >
+    </app-book-search-list>
+  </section>
+
+  <section>
+    <h3>Movies</h3>
+    <app-movie-search-list
+      [movies]="movieResults"
+    >
+    </app-movie-search-list>
+  </section>
 </div>

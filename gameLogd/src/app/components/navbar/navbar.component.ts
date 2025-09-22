@@ -30,6 +30,7 @@ export class NavbarComponent implements OnInit {
   avatarUrl: string = 'assets/default-avatar.png';
   isLoginOrRegister: boolean = false;
   isUserDashboard: boolean = false;
+  isHomePage: boolean = false;
 
   constructor(private router: Router, private themeService: ThemeService) {
     // Use effect to watch for auth state changes
@@ -58,6 +59,7 @@ export class NavbarComponent implements OnInit {
     const currentUrl = this.router.url;
     this.isLoginOrRegister = currentUrl.includes('/login') || currentUrl.includes('/register');
     this.isUserDashboard = currentUrl.includes('/dashboard');
+    this.isHomePage = currentUrl === '/' || currentUrl === '/home';
   }
 
   loadUserAvatar() {
@@ -74,9 +76,16 @@ export class NavbarComponent implements OnInit {
 
   onSearch() {
     if (this.searchQuery.trim()) {
-      this.router.navigate(['/search'], { 
-        queryParams: { q: this.searchQuery }
-      });
+      const url = this.router.url;
+      if (url.startsWith('/books')) {
+        this.router.navigate(['/book-search'], { queryParams: { q: this.searchQuery } });
+      } else if (url.startsWith('/movies')) {
+        this.router.navigate(['/movie-search'], { queryParams: { q: this.searchQuery } });
+      } else if (url.startsWith('/games')) {
+        this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
+      } else {
+        this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
+      }
     }
   }
 

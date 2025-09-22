@@ -30,6 +30,12 @@
   align-items: center;
   padding: 0 24px;
   height: 64px;
+}
+
+.mat-toolbar.mat-primary.home-navbar {
+  background: #ffffff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   min-height: 64px;
   position: relative;
   z-index: 1000;

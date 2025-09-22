@@ -283,28 +283,6 @@ body::before {
     border-radius: 8px;
     margin: 0 auto;
     display: block;
-    /* position: relative;
-    overflow: hidden;
-    background: linear-gradient(45deg, 
-        #6b46c1 0%,
-        #805ad5 25%,
-        #667eea 50%,
-        #4299e1 75%,
-        #2b6cb0 100%
-    );
-    animation: gradientFlow 15s ease infinite;
-}
-
-@keyframes gradientFlow {
-    0% {
-        background-position: 0% 0%;
-    }
-    50% {
-        background-position: 100% 100%;
-    }
-    100% {
-        background-position: 0% 0%;
-    } */
 }
 
 .sign-up {

@@ -1,14 +1,41 @@
-<mat-list>
-  <mat-list-item *ngFor="let book of books" (click)="onBookClick(book)" class="book-list-item">
-    <img matListItemAvatar [src]="book.imageUrl" [alt]="book.title" class="book-thumbnail">
-    <div matListItemTitle>{{ book.title }}</div>
-    <div matListItemLine>{{ book.author }}</div>
-    <div matListItemMeta>
-      <span class="rating">{{ book.rating }}/5</span>
-    </div>
-  </mat-list-item>
-</mat-list>
+<div class="game-search-container">
+  <div *ngIf="loading" class="loading">
+    <div class="loader"></div>
+  </div>
 
-<div *ngIf="books.length === 0" class="no-results">
-  No books found
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error && books.length === 0" class="no-results">
+    <p>{{ emptyMessage }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error && books.length > 0" class="game-grid">
+    <div *ngFor="let book of books" class="game-card">
+      <a [routerLink]="['/books', book.id]" class="game-link">
+        <div class="game-image-container">
+          <img
+            *ngIf="book.imageUrl"
+            [src]="book.imageUrl"
+            [alt]="book.title"
+            class="game-image"
+          />
+          <img
+            *ngIf="!book.imageUrl"
+            src="assets/images/placeholder.png"
+            alt="No image available"
+            class="game-image"
+          />
+        </div>
+        <div class="game-details">
+          <h3 class="game-title">{{ book.title }}</h3>
+          <p *ngIf="book.author" class="game-developer">
+            {{ book.author }}
+          </p>
+          <p *ngIf="book.rating" class="game-rating">{{ book.rating }}/5</p>
+        </div>
+      </a>
+    </div>
+  </div>
 </div>

@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" id="leftside">
+<mat-toolbar color="primary" id="leftside" [class.home-navbar]="isHomePage">
   <!--Logo-->
   <h1 [routerLink]="authService.currentUserSig() ? '/dashboard' : '/'" class="site-title" style="cursor: pointer;">
     Review<span class="highlight">Next</span>
