@@ -115,6 +115,7 @@ export class LogGamePopupComponent {
       this.username = this.authService.getUsername() || '';
     }
     if (this.data.log?.gameId){
+
       const updatedLog = {
         id: this.data.log.id,
         dateStarted: this.logForm.value.dateStarted,
@@ -139,12 +140,7 @@ export class LogGamePopupComponent {
         });
       }
     }
-    else {
-      if (!this.logForm.valid) {
-        this.snackBar.open('Please fill in all required fields', 'Close', { duration: 2000 });
-        return;
-      }
-
+    else{
       this.gameLogSevice.addGameLog({
         ...this.logForm.value,
         gameId: this.gameId,
@@ -152,37 +148,29 @@ export class LogGamePopupComponent {
         startDate: this.logForm.value.dateStarted,
         userId: currentUser,
         rating: this.rating,
-      }).subscribe({
-        next: () => {
-          // Also create a Review document so dashboards can count it
-          const hasReviewContent = (this.logForm.value.review && this.logForm.value.review.trim().length > 0) || this.rating > 0;
-          if (hasReviewContent) {
-            this.reviewService.addReview({
-              userId: currentUser,
-              gameId: this.gameId,
-              reviewText: this.logForm.value.review || '',
-              rating: this.rating,
-              datePosted: new Date(),
-              username: this.username,
-              likes: 0,
-            }).subscribe({
-              next: () => {},
-              error: () => {
-                console.error('Failed to create review alongside game log');
-              }
-            });
-          }
-
-          this.dialogRef.close();
-          this.snackBar.open('Game logged successfully', 'Close', {
-            duration: 2000,
-          });
-          this.logUpdated.emit();
-        },
-        error: () => {
-          this.snackBar.open('Failed to add log', 'Close', { duration: 2000 });
-        }
       });
+
+      this.reviewService.addReview({
+        gameId: this.gameId,
+        username: this.username,
+        userId: currentUser,
+        reviewText: this.logForm.value.review,
+        datePosted: new Date(),
+        gameTitle: this.data.game?.title || '',
+        rating: this.rating,
+      });
+
+      if (this.logForm.valid) {
+        this.dialogRef.close({
+          ...this.logForm.value,
+          gameId: this.gameId,
+          rating: this.rating,
+        });
+
+        this.snackBar.open('Game logged successfully', 'Close', {
+          duration: 2000,
+        });
+      }
     }
   }
 

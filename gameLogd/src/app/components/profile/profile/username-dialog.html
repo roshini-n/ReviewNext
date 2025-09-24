@@ -1,21 +1,14 @@
-<div class="dialog-container">
-  <h2 mat-dialog-title>Change Username</h2>
+<h2>Change username</h2>
 
-  <mat-dialog-content>
-    <div class="dialog-content">
-      <p>Enter your new username</p>
-      <form (ngSubmit)="submitUsername()">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Username</mat-label>
-          <input matInput [(ngModel)]="username" name="username" placeholder="Enter new username" required>
-          <mat-icon matSuffix>person</mat-icon>
-        </mat-form-field>
-      </form>
-    </div>
-  </mat-dialog-content>
+<mat-dialog-content>
+  <p>Enter your new username</p>
+  <mat-form-field>
+    <mat-label>Username</mat-label>
+    <input matInput [(ngModel)]="username">
+  </mat-form-field>
+</mat-dialog-content>
 
-  <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button mat-raised-button color="primary" (click)="submitUsername()" [disabled]="!username.trim()">Save Changes</button>
-  </mat-dialog-actions>
+<div class="bio-buttons">
+  <button mat-raised-button mat-dialog-close (click)="submitUsername()">Submit</button>
+  <button mat-raised-button mat-dialog-close>Cancel</button>
 </div>

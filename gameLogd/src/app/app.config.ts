@@ -3,8 +3,6 @@ import { provideRouter } from '@angular/router';
 import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideAuth, getAuth } from '@angular/fire/auth';
-import { provideHttpClient } from '@angular/common/http';
-import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -22,23 +20,18 @@ const firebaseConfig = {
   measurementId: "G-84SCQEN0M4"
 };
 
-
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+  providers: [provideZoneChangeDetection({ eventCoalescing: true }),
+
     provideRouter(routes),
-    provideHttpClient(),
-    provideAnimations(),
-    [
+    ([
       provideFirebaseApp(() => initializeApp(firebaseConfig)),
       provideFirestore(() => getFirestore()),
       provideAuth(() => getAuth())
-    ],
-    provideAnimationsAsync(),
-    providePrimeNG({
+    ]), provideAnimationsAsync(), providePrimeNG({
       theme: {
-        preset: Aura
+          preset: Aura
       }
-    })
+    }),
   ],
 };
