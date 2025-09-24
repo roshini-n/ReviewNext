@@ -37,34 +37,50 @@ export class GameLogService {
         
         //If our log has a rating, update totalReviewScore, numReviews, and rating for logged game
         if (gameLog.rating) {
-          const gameDoc = doc(this.firestore, `games/${gameLog.gameId}`)
-        this.gameFirebaseService.getGameById(gameLog.gameId).subscribe(game => {
-          updateDoc(gameDoc, {
-            rating: ((game!.totalRatingScore + gameLog.rating!) / (game!.numRatings + 1)).toFixed(2) || gameLog.rating,
-            numRatings: game!.numRatings + 1 || 1, 
-            totalRatingScore: game!.totalRatingScore + gameLog.rating! || gameLog.rating})
-        })
-        }
-        
-        
-        return from(
-          addDoc(this.gameLogCollection, {
+          const gameDoc = doc(this.firestore, `games/${gameLog.gameId}`);
+          return this.gameFirebaseService.getGameById(gameLog.gameId).pipe(
+            switchMap(game => {
+              if (!game) {
+                throw new Error('Game not found');
+              }
+              return from(updateDoc(gameDoc, {
+                rating: ((game.totalRatingScore + gameLog.rating!) / (game.numRatings + 1)).toFixed(2),
+                numRatings: game.numRatings + 1,
+                totalRatingScore: game.totalRatingScore + gameLog.rating!
+              })).pipe(
+                switchMap(() => {
+                  return from(addDoc(this.gameLogCollection, {
+                    ...gameLog,
+                    datePosted: new Date(),
+                    userId: userId,
+                    likes: 0,
+                    gameId: gameLog.gameId,
+                  })).pipe(
+                    switchMap((docRef) => {
+                      return from(updateDoc(doc(this.gameLogCollection, docRef.id), {
+                        id: docRef.id,
+                      })).pipe(map(() => docRef.id));
+                    })
+                  );
+                })
+              );
+            })
+          );
+        } else {
+          return from(addDoc(this.gameLogCollection, {
             ...gameLog,
             datePosted: new Date(),
-            userId: userId, // get the current user's ID
+            userId: userId,
             likes: 0,
-            gameId: gameLog.gameId, // include gameId
-          })
-        ).pipe(
-          switchMap((docRef) => {
-            // update the document with its ID
-            return from(
-              updateDoc(doc(this.gameLogCollection, docRef.id), {
+            gameId: gameLog.gameId,
+          })).pipe(
+            switchMap((docRef) => {
+              return from(updateDoc(doc(this.gameLogCollection, docRef.id), {
                 id: docRef.id,
-              })
-            ).pipe(map(() => docRef.id));
-          })
-        );
+              })).pipe(map(() => docRef.id));
+            })
+          );
+        }
       })
     );
   }

@@ -1,0 +1,56 @@
+<div class="page-container">
+  <div class="content-wrapper">
+    <div class="web-series-container">
+      <div class="header-section">
+        <h1>Web Series</h1>
+        <button mat-raised-button color="primary" routerLink="/add_web_series">
+          <mat-icon>add</mat-icon>
+          Add Web Series
+        </button>
+      </div>
+
+      <h2>Trending</h2>
+      <p-carousel [value]="trendingWebSeries" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
+        <ng-template let-series pTemplate="item">
+          <div class="web-series-card">
+            <a [routerLink]="['/web-series', series.id]">
+              <img class="thumbnail" [src]="series.imageUrl" [alt]="series.title">
+              <div class="web-series-info">
+                <h3>{{ series.title }}</h3>
+                <p>Rating: {{ series.rating }}/5</p>
+              </div>
+            </a>
+      </div>
+    </ng-template>
+  </p-carousel>
+
+  <h2>Top Rated</h2>
+  <p-carousel [value]="topRatedWebSeries" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
+    <ng-template let-series pTemplate="item">
+      <div class="web-series-card">
+        <a [routerLink]="['/web-series', series.id]">
+          <img class="thumbnail" [src]="series.imageUrl" [alt]="series.title">
+          <div class="web-series-info">
+            <h3>{{ series.title }}</h3>
+            <p>Rating: {{ series.rating }}/5</p>
+          </div>
+        </a>
+      </div>
+    </ng-template>
+  </p-carousel>
+
+  <!-- <h2>Most Popular</h2>
+  <p-carousel [value]="popularWebSeries" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
+    <ng-template let-series pTemplate="item">
+      <div class="web-series-card">
+        <a [routerLink]="['/web-series', series.id]">
+          <img class="thumbnail" [src]="series.imageUrl" [alt]="series.title">
+          <div class="web-series-info">
+            <h3>{{ series.title }}</h3>
+            <p>Rating: {{ series.rating }}/5</p>
+          </div>
+        </a>
+      </div>
+    </ng-template>
+  </p-carousel> -->
+</div> 

@@ -1,53 +1,12 @@
-<mat-toolbar color="primary" id="leftside">
+<mat-toolbar color="primary" id="leftside" [class.home-navbar]="isHomePage">
   <!--Logo-->
-  <h1 routerLink="" class="site-title">
-    Next<span class="highlight">Up</span>
+  <h1 [routerLink]="authService.currentUserSig() ? '/dashboard' : '/'" class="site-title" style="cursor: pointer;">
+    Review<span class="highlight">Next</span>
   </h1>
 
-  <span class="example-spacer"></span>
-  <div class = "big-divider"></div>
-
-
-  <!--Buttons in the middle-->
-  <div fxLayout fxLayoutAlign="end" fxHide.xs class="showHide">
-    @if (authService.currentUserSig() == null){
-    <button mat-button color="grey-back" routerLink="login">
-      <span class="navbar_button">Login</span>
-    </button>
-    <div class = "divider"></div>
-    <button mat-button color="grey-back" routerLink="register">
-      <span class="navbar_button">Register</span>
-    </button>
-    } @if (authService.currentUserSig()) {
-    <button mat-button color="grey-back" routerLink="profile">
-      <span class="navbar_button">Profile</span>
-    </button>
-    }
-    <div class = "divider"></div>
-    <button mat-button color="grey-back" routerLink="games">
-      <span class="navbar_button">Games</span>
-    </button>
-    @if (authService.currentUserSig()) {
-    <button mat-button color="grey-back" routerLink="my_lists">
-      <span class="navbar_button">Lists</span>
-    </button>
-    }
-    @if (authService.currentUserSig()) {
-    <button mat-button color="grey-back" routerLink="mylog">
-      <span class="navbar_button">My Log</span>
-    </button>
-    <div class = "divider"></div>
-    }
-    <button mat-button color="grey-back" routerLink="add_game">
-      <span class="navbar_button">Add Game</span>
-    </button>
-  </div>
-
-  <span class="example-spacer"></span>
-
-  <!--Buttons at the end of the navbar-->
-
-  <div class="ms-auto showHide">
+  <!--Search in the middle-->
+<!-- @if (authService.currentUserSig()) {
+  <div class="search-container">
     <form class="d-flex search-form">
       <input
         class="form-control me-2 search-input"
@@ -56,7 +15,6 @@
         [(ngModel)]="searchQuery"
         name="search"
       />
-
       <button
         class="btn btn-outline-light search-button"
         type="submit"
@@ -66,49 +24,102 @@
       </button>
     </form>
   </div>
+} -->
 
-  <button mat-button [matMenuTriggerFor]="menu" class="dropdown">
-    <mat-icon>menu</mat-icon>
-  </button>
-  <mat-menu #menu="matMenu" class="custom-menu">
-    <div class="menu-container">
-      @if (authService.currentUserSig() == null){
-      <button mat-button class="menu-btn" color="grey-back" routerLink="login">Login</button>
-
-      <button mat-button class="menu-btn" routerLink="register">Register</button>
-
-      } @if (authService.currentUserSig()) {
-      <button mat-button class="menu-btn" routerLink="profile">Profile</button>
-      }
-      <button mat-button class="menu-btn" routerLink="games">Games</button>
-      <button mat-button class="menu-btn" routerLink="myLog">Lists</button>
-      @if (authService.currentUserSig()) {
-      <button mat-button class="menu-btn" routerLink="mylog">My Log</button>
-      }
-      <button mat-button class="menu-btn" routerLink="add_game">Add Game</button>
+@if (!isLoginOrRegister) {
+    <div class="search-container">
+      <form class="search-form">
+        <input 
+          class="search-input" 
+          type="search" 
+          placeholder="Search for products, reviews, and more..."
+          [(ngModel)]="searchQuery"
+          name="search"
+        />
+        <button class="search-button" type="submit" (click)="onSearch()">
+          Search
+        </button>
+      </form>
     </div>
-      <div class="ms-auto">
-        <form class="d-flex search-form responsive">
-          <input
-            class="form-control me-2 search-input"
-            type="search"
-            aria-label="Search"
-            [(ngModel)]="searchQuery"
-            name="search"
-            (click)="$event.stopPropagation()"
+  }
 
-          />
-    
-          <button
-            class="btn btn-outline-light search-button"
-            type="submit"
-            (click)="onSearch()"
-          >
-            Search
-          </button>
-        </form>
-      </div>
-
-  </mat-menu>
+  <!--Buttons on the right-->
+  <div class="right-buttons">
+    @if (authService.currentUserSig() && !isUserDashboard) {
+    <button mat-button [matMenuTriggerFor]="categoryMenu" color="grey-back">
+      <span class="navbar_button">Categories</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+  }
+    @if (authService.currentUserSig() == null && !isLoginOrRegister) {
+    <button mat-button color="grey-back" routerLink="login">
+      <span class="navbar_button">Login</span>
+    </button>
+    <div class="divider"></div>
+    <!-- <button mat-button color="grey-back" routerLink="register">
+      <span class="navbar_button">Register</span>
+    </button> -->
+    } @if (authService.currentUserSig()) {
+    <button mat-button routerLink="profile" class="profile-button">
+      <img [src]="avatarUrl" alt="Profile" class="profile-image">
+    </button>
+    }
+  </div>
 
 </mat-toolbar>
+
+<!-- Always present in DOM -->
+<mat-menu #categoryMenu="matMenu">
+  <button mat-menu-item routerLink="games">
+    <mat-icon>sports_esports</mat-icon>
+    <span>Games</span>
+  </button>
+  <button mat-menu-item routerLink="books">
+    <mat-icon>menu_book</mat-icon>
+    <span>Books</span>
+  </button>
+  <button mat-menu-item routerLink="movies">
+    <mat-icon>movie</mat-icon>
+    <span>Movies</span>
+  </button>
+  <button mat-menu-item routerLink="electronic-gadgets">
+    <mat-icon>devices</mat-icon>
+    <span>Electronic Gadgets</span>
+  </button>
+  <!-- <button mat-menu-item routerLink="apps">
+    <mat-icon>apps</mat-icon>
+    <span>Apps</span>
+  </button> -->
+  <button mat-menu-item routerLink="web-series">
+    <mat-icon>live_tv</mat-icon>
+    <span>Web Series</span>
+  </button>
+  <!-- <button mat-menu-item routerLink="documentaries">
+    <mat-icon>videocam</mat-icon>
+    <span>Documentaries</span>
+  </button> -->
+  <button mat-menu-item routerLink="beauty-products">
+    <mat-icon>spa</mat-icon>
+    <span>Beauty Products</span>
+  </button>
+  <!-- <button mat-menu-item routerLink="home-appliances">
+    <mat-icon>home</mat-icon>
+    <span>Home Appliances</span>
+  </button> -->
+</mat-menu>
+
+<!-- Theme Menu -->
+<mat-menu #themeMenu="matMenu">
+  <button mat-menu-item (click)="switchToLightTheme()">
+    <mat-icon>light_mode</mat-icon>
+    <span>Light</span>
+  </button>
+  <button mat-menu-item (click)="switchToDarkTheme()">
+    <mat-icon>dark_mode</mat-icon>
+    <span>Dark</span>
+  </button>
+  <button mat-menu-item (click)="switchToCustomTheme()">
+    <mat-icon>palette</mat-icon>
+    <span>Custom</span>
+  </button>
+</mat-menu>

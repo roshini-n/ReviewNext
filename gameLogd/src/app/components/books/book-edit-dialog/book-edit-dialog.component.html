@@ -1,0 +1,73 @@
+<h2 mat-dialog-title>Edit Book</h2>
+<form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Author</mat-label>
+      <input matInput formControlName="author" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Publisher</mat-label>
+      <input matInput formControlName="publisher">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Publication Date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="publicationDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="4"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Image URL</mat-label>
+      <input matInput formControlName="imageUrl">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Genres</mat-label>
+      <mat-chip-grid #chipGrid>
+        <mat-chip-row *ngFor="let genre of bookForm.get('genres')?.value"
+                     (removed)="removeGenre(genre)">
+          {{genre}}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+      </mat-chip-grid>
+      <input placeholder="New genre..."
+             [matChipInputFor]="chipGrid"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             (matChipInputTokenEnd)="addGenre($event)">
+    </mat-form-field>
+
+    <!-- <mat-form-field appearance="fill" class="full-width">
+      <mat-label>ISBN</mat-label>
+      <input matInput formControlName="isbn">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Page Count</mat-label>
+      <input matInput type="number" formControlName="pageCount">
+    </mat-form-field> -->
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Language</mat-label>
+      <input matInput formControlName="language">
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!bookForm.valid">Save</button>
+  </mat-dialog-actions>
+</form> 

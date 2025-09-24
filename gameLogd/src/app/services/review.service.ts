@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, doc, addDoc, updateDoc, deleteDoc, query, where, getDoc, orderBy, collectionData } from '@angular/fire/firestore';
-import { Observable, from, map, switchMap } from 'rxjs';
+import { Observable, from, map, switchMap, catchError, throwError } from 'rxjs';
 import { Review } from '../models/review.model';
 import { AuthService } from './auth.service';
 
@@ -12,18 +12,35 @@ export class ReviewService {
   private authService = inject(AuthService);
   
   // add a new review
-  addReview(review: Omit<Review, 'id'>): Observable<string> {
+  addReview(review: Omit<Review, 'id'>): Observable<Review> {
     const reviewsCollection = collection(this.firestore, 'reviews');
     
-    return from(addDoc(reviewsCollection, {
-      ...review,
-      datePosted: new Date(),
-      likes: 0
-    })).pipe(
-      map(docRef => {
-        // update the document with its ID
-        updateDoc(docRef, { id: docRef.id });
-        return docRef.id;
+    return this.authService.user$.pipe(
+      switchMap(user => {
+        if (!user) {
+          return throwError(() => new Error('User not authenticated'));
+        }
+        
+        const reviewPayload = {
+          ...review,
+          userId: review.userId || user.uid,
+          datePosted: new Date(),
+          likes: 0,
+          username: user.displayName || 'Anonymous'
+        };
+
+        return from(addDoc(reviewsCollection, reviewPayload)).pipe(
+          switchMap(docRef => {
+            const newReview: Review = {
+              ...reviewPayload,
+              id: docRef.id,
+              username: user.displayName || 'Anonymous'
+            };
+            return from(updateDoc(docRef, { id: docRef.id })).pipe(
+              map(() => newReview)
+            );
+          })
+        );
       })
     );
   }
@@ -58,13 +75,24 @@ export class ReviewService {
     
     return collectionData(reviewsQuery, { idField: 'id' }) as Observable<Review[]>;
   }
+
+  // get all reviews for a specific book
+  getReviewsByBookId(bookId: string): Observable<Review[]> {
+    const reviewsQuery = query(
+      collection(this.firestore, 'reviews'),
+      where('bookId', '==', bookId),
+      orderBy('datePosted', 'desc')
+    );
+    
+    return collectionData(reviewsQuery, { idField: 'id' }) as Observable<Review[]>;
+  }
   
   // get all reviews by a specific user
   getReviewsByUserId(userId: string): Observable<Review[]> {
+    // Avoid requiring a composite index by not combining where + orderBy
     const reviewsQuery = query(
       collection(this.firestore, 'reviews'),
-      where('userId', '==', userId),
-      orderBy('datePosted', 'desc')
+      where('userId', '==', userId)
     );
     
     return collectionData(reviewsQuery, { idField: 'id' }) as Observable<Review[]>;
@@ -102,5 +130,34 @@ export class ReviewService {
         );
       })
     );
+  }
+
+  // check if the current user has already reviewed a book
+  hasUserReviewedBook(bookId: string): Observable<boolean> {
+    return this.authService.user$.pipe(
+      switchMap(user => {
+        if (!user) return from([false]);
+        
+        const reviewsQuery = query(
+          collection(this.firestore, 'reviews'),
+          where('bookId', '==', bookId),
+          where('userId', '==', user.uid)
+        );
+        
+        return collectionData(reviewsQuery).pipe(
+          map(reviews => reviews.length > 0)
+        );
+      })
+    );
+  }
+
+  getReviewsByGadgetId(gadgetId: string): Observable<Review[]> {
+    const reviewsQuery = query(
+      collection(this.firestore, 'reviews'),
+      where('gadgetId', '==', gadgetId),
+      orderBy('datePosted', 'desc')
+    );
+    
+    return collectionData(reviewsQuery, { idField: 'id' }) as Observable<Review[]>;
   }
 }

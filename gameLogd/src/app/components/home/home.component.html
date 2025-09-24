@@ -1,23 +1,131 @@
 <html>
     <body>
+        <!-- Animated Background -->
+        <div class="wave-background">
+            <div class="wave wave-1"></div>
+            <div class="wave wave-2"></div>
+            <div class="wave wave-3"></div>
+            <div class="flowing-lines"></div>
+        </div>
+
+        <!-- Floating Particles -->
+        <div class="floating-elements">
+            <div class="floating-particle" style="--size: 30px; --delay: 0s; left: 10%; top: 20%;"></div>
+            <div class="floating-particle" style="--size: 45px; --delay: 2s; left: 25%; top: 40%;"></div>
+            <div class="floating-particle" style="--size: 35px; --delay: 4s; left: 60%; top: 25%;"></div>
+            <div class="floating-particle" style="--size: 40px; --delay: 1s; left: 80%; top: 45%;"></div>
+            <div class="floating-particle" style="--size: 25px; --delay: 3s; left: 45%; top: 65%;"></div>
+            <div class="floating-particle" style="--size: 50px; --delay: 5s; left: 15%; top: 75%;"></div>
+            <div class="floating-particle" style="--size: 35px; --delay: 2.5s; left: 70%; top: 85%;"></div>
+        </div>
+
+        <!-- Main Content -->
         <div class="main-container">
-            <div class = "title-container">
-                <div class="big-text">Welcome to <span class="title">NEXT</span><span class="title-yellow">UP</span></div>
+            
+            <!-- Search Section - Only visible to non-registered users -->
+            <!-- @if (!authService.currentUserSig()) {
+            <div class="search-section">
+                <form class="search-form">
+                    <input 
+                        class="search-input" 
+                        type="search" 
+                        placeholder="Search for products, reviews, and more..."
+                        [(ngModel)]="searchQuery"
+                        name="search"
+                    />
+                    <button class="search-button" type="submit" (click)="onSearch()">
+                        Search
+                    </button>
+                </form>
             </div>
-            <div class = "container">
-                <div class="big-text" >All Your Favorite Games --- All In One Place</div>
-                <div class="small-text">
-                    <br>
-                    Create your free account today and have the ability to log and review your favorite games!
-                    <br>
-                    Explore our catagory of games and find more games that you would be interested in playing!
+            } -->
+
+            <!-- Welcome and Categories Section - Only visible to non-registered users -->
+            @if (!authService.currentUserSig()) {
+            <div class="title-container">
+                <div class="big-text">
+                    Welcome to 
+                    <span class="title" data-text="Review">Review</span><span class="title-yellow" data-text="Next">Next</span>
                 </div>
             </div>
-            <div class = "sign-up">
-                <div class="medium-text">Sign Up Now!</div>
-                <div class="small-text"><br></div>
-                <span routerLink="register" class="button">Register</span>
+            <div class="container">
+                <div class="welcome-text-container">
+                    <div class="big-text">All Your Favorites — with Trusted Reviews and Ratings</div>
+                    <div class="small-text">
+                        Create your free account today to log and share reviews of your favorite content.
+                        <br>
+                        Browse our categories to find more you'll enjoy!
+                    </div>
+                </div>
+    
+                
+                <!-- Categories Section -->
+                <div class="categories-section">
+                    <h3>Browse Categories</h3>
+                    <div class="categories-grid">
+                        <!-- Original Set -->
+                        <a routerLink="games" class="category-card">
+                            <mat-icon>sports_esports</mat-icon>
+                            <span>Games</span>
+                        </a>
+                        <a routerLink="books" class="category-card">
+                            <mat-icon>menu_book</mat-icon>
+                            <span>Books</span>
+                        </a>
+                        <a routerLink="movies" class="category-card">
+                            <mat-icon>movie</mat-icon>
+                            <span>Movies</span>
+                        </a>
+                        <a routerLink="electronic-gadgets" class="category-card">
+                            <mat-icon>devices</mat-icon>
+                            <span>Gadgets</span>
+                        </a>
+                        <a routerLink="apps" class="category-card">
+                            <mat-icon>apps</mat-icon>
+                            <span>Apps</span>
+                        </a>
+                        <a routerLink="web-series" class="category-card">
+                            <mat-icon>live_tv</mat-icon>
+                            <span>Web Series</span>
+                        </a>
+                        <a routerLink="beauty-products" class="category-card">
+                            <mat-icon>spa</mat-icon>
+                            <span>Beauty Products</span>
+                        </a>
+                        
+                        <!-- Duplicate Set for Seamless Scrolling -->
+                        <a routerLink="games" class="category-card">
+                            <mat-icon>sports_esports</mat-icon>
+                            <span>Games</span>
+                        </a>
+                        <a routerLink="books" class="category-card">
+                            <mat-icon>menu_book</mat-icon>
+                            <span>Books</span>
+                        </a>
+                        <a routerLink="movies" class="category-card">
+                            <mat-icon>movie</mat-icon>
+                            <span>Movies</span>
+                        </a>
+                        <a routerLink="electronic-gadgets" class="category-card">
+                            <mat-icon>devices</mat-icon>
+                            <span>Gadgets</span>
+                        </a>
+                        <a routerLink="apps" class="category-card">
+                            <mat-icon>apps</mat-icon>
+                            <span>Apps</span>
+                        </a>
+                        <a routerLink="web-series" class="category-card">
+                            <mat-icon>live_tv</mat-icon>
+                            <span>Web Series</span>
+                        </a>
+                        <a routerLink="beauty-products" class="category-card">
+                            <mat-icon>spa</mat-icon>
+                            <span>Beauty Products</span>
+                        </a>
+                </div>
+                </div>
             </div>
+            }
         </div>
     </body>
 </html>
