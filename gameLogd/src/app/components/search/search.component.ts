@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { GameFirebaseService } from '../../services/gameFirebase.service';
 import { Game } from '../../models/game.model';
 import { GameSearchListComponent } from '../game-search-list/game-search-list.component';
+// Game-only search page. Category-specific pages exist for books and movies.
 
 @Component({
   selector: 'app-search',
@@ -37,6 +38,7 @@ export class SearchComponent implements OnInit {
   performSearch() {
     if (!this.searchQuery.trim()) {
       this.searchResults = [];
+      
       return;
     }
 
@@ -81,6 +83,7 @@ export class SearchComponent implements OnInit {
         this.isLoading = false;
       }
     });
+
   }
 
   getSimilarityScore(title: string, query: string): number {
@@ -91,4 +94,6 @@ export class SearchComponent implements OnInit {
     }
     return matches / query.length;
   }
+
+  
 }

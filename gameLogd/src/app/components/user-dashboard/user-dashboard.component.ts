@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { ReviewService } from '../../services/review.service';
@@ -48,7 +48,8 @@ export class UserDashboardComponent implements OnInit {
     private reviewService: ReviewService,
     private gameLogService: GameLogService,
     private bookReviewService: BookReviewService,
-    private movieReviewService: MovieReviewService
+    private movieReviewService: MovieReviewService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -116,6 +117,10 @@ export class UserDashboardComponent implements OnInit {
       book: this.totalBookReviews,
       movie: this.totalMovieReviews
     });
+  }
+
+  navigateToCategory(category: string): void {
+    this.router.navigate([category]);
   }
 
 } 

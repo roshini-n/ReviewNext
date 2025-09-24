@@ -1,8 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
 import { Book } from '../../../models/book.model';
 
 @Component({
@@ -10,15 +8,16 @@ import { Book } from '../../../models/book.model';
   standalone: true,
   imports: [
     CommonModule,
-    MatListModule,
-    MatIconModule,
-    MatButtonModule
+    RouterModule
   ],
   templateUrl: './book-search-list.component.html',
   styleUrl: './book-search-list.component.css'
 })
 export class BookSearchListComponent {
   @Input() books: Book[] = [];
+  @Input() loading = false;
+  @Input() error: string | null = null;
+  @Input() emptyMessage = 'No books found.';
   @Output() bookSelected = new EventEmitter<Book>();
 
   onBookClick(book: Book): void {
