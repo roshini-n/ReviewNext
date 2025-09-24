@@ -5,13 +5,14 @@ import { Observable, map, catchError, throwError } from 'rxjs';
 export interface OmdbMovieResult {
   Poster: string;
   Director: string;
+  Writer: string;   // 👈 add Writer for Web Series Creator
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class OmdbService {
-  private readonly apiKey = 'c548c414'; // <-- User's OMDb API key
+  private readonly apiKey = 'c548c414'; // <-- your OMDb API key
   private readonly baseUrl = 'https://www.omdbapi.com/';
 
   constructor(private http: HttpClient) {}
@@ -21,16 +22,17 @@ export class OmdbService {
     return this.http.get<any>(url).pipe(
       map(response => {
         if (response.Response === 'False') {
-          return { Poster: '', Director: '' };
+          return { Poster: '', Director: '', Writer: '' };
         }
         return {
           Poster: response.Poster || '',
-          Director: response.Director || ''
+          Director: response.Director || '',
+          Writer: response.Writer || ''  // 👈 mapped from OMDb response
         };
       }),
-      catchError(error => {
+      catchError(() => {
         return throwError(() => new Error('Failed to fetch movie data'));
       })
     );
   }
-} 
+}
