@@ -1,59 +1,26 @@
 <body>
-<div class="profile-container">
-  <div class="profile-header">
-    <div class="profile-image-container" (click)="openAvatarDialog()">
-      <img [src]="image" alt="Profile Picture" class="profile-image">
-      <div class="image-overlay">
-        <mat-icon>photo_camera</mat-icon>
-        <span>Change Avatar</span>
-      </div>
+<div class="flex-container">
+    <mat-card class="profile-card" alt="Profile Picture">
+        <img mat-card-img length="100dp" width="100dp" id="pp">
+        
+        <h3 class="profile-text">{{username}}</h3>
+        <p class="profile-text">{{bio}}</p>
+        
+    </mat-card>
+    <div class="profile-button-container">
+        <mat-list class="profile-button-list">
+            <button mat-raised-button class="profile-button" routerLink="/mylog">Log</button>
+            <mat-divider></mat-divider>
+            <button mat-raised-button class="profile-button" (click)="openImageDialog('0ms', '0ms')">Change Profile Picture</button>
+            <mat-divider></mat-divider>
+            <button mat-raised-button class="profile-button" (click)="openUsernameDialog('0ms', '0ms')">Change Username</button>
+            <mat-divider></mat-divider>
+            <button mat-raised-button class="profile-button" (click)="openPasswordDialog('0ms', '0ms')">Change Password</button>
+            <mat-divider></mat-divider>
+            <button mat-raised-button class="profile-button" (click)="openBioDialog('0ms', '0ms')">Change Bio</button>
+            <span class="logout_button" (click) = "logout()">Logout</span>
+        </mat-list>
     </div>
-    <div class="profile-info">
-      <h2 class="username" (click)="openUsernameDialog('0ms', '0ms')">
-        {{ username || 'Set Username' }}
-        <mat-icon>edit</mat-icon>
-      </h2>
-      <p class="bio" (click)="openBioDialog('0ms', '0ms')">
-        {{ bio || 'Add a bio' }}
-        <mat-icon>edit</mat-icon>
-      </p>
-    </div>
-  </div>
-
-  <div class="profile-content">
-    <mat-tab-group>
-      <mat-tab label="My Lists">
-        <div class="tab-content">
-          <div class="list-grid">
-            <mat-card class="list-card" routerLink="/my_lists">
-              <mat-card-content>
-                <mat-icon>list</mat-icon>
-                <h3>My Lists</h3>
-                <p>View and manage your lists</p>
-              </mat-card-content>
-            </mat-card>
-          </div>
-        </div>
-      </mat-tab>
-      
-      <mat-tab label="My Log">
-        <div class="tab-content">
-          <div class="list-grid">
-            <mat-card class="list-card" routerLink="/mylog">
-              <mat-card-content>
-                <mat-icon>history</mat-icon>
-                <h3>My Log</h3>
-                <p>View your activity history</p>
-              </mat-card-content>
-            </mat-card>
-          </div>
-        </div>
-      </mat-tab>
-    </mat-tab-group>
-  </div>
-
-  <div class="profile-actions">
-    <button mat-raised-button color="warn" (click)="logout()">Logout</button>
-  </div>
+    
 </div>
 </body>

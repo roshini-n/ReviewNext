@@ -1,25 +1,23 @@
-<div class="page-container">
-    <div class="content-wrapper">
-        <p-splitter [panelSizes]="[25, 75]" [style]="{ height: '600px'}" styleClass="mb-8">
-            <ng-template #panel>
-                <div class="flex items-center justify-center h-full fill-container scrollable">
-                    <h3 class="list-label">My Lists:</h3>
+<p-splitter [panelSizes]="[25, 75]" [style]="{ height: '600px'}" styleClass="mb-8">
+    <ng-template #panel>
+        <div class="flex items-center justify-center h-full fill-container scrollable">
+            <h3 class="list-label">My Lists:</h3>
+            <mat-divider></mat-divider>
+            @for (list of lists; track list) {
+                <div class="list-card" (click)="getGames(list)">{{ list.title }}</div>
+            }
+        </div>
+    </ng-template>
+    <ng-template #panel>
+        <div class="flex items-center justify-center h-full fill-container scrollable">
+            <h3 class="description"> {{ currTitle }} </h3>
+            @if (currGames.length > 0) {
+                @if (currDescription) {
+                    <p class="description"> {{ currDescription }}</p>
                     <mat-divider></mat-divider>
-                    @for (list of lists; track list) {
-                        <div class="list-card" (click)="getGames(list)">{{ list.title }}</div>
-                    }
-                </div>
-            </ng-template>
-            <ng-template #panel>
-                <div class="flex items-center justify-center h-full fill-container scrollable">
-                    <h3 class="description"> {{ currTitle }} </h3>
-                    @if (currGames.length > 0) {
-                        @if (currDescription) {
-                            <p class="description"> {{ currDescription }}</p>
-                            <mat-divider></mat-divider>
-                        }
-                        <button mat-raised-button 
-                            class="fill-container edit-list-button" 
+                }
+                <button mat-raised-button 
+                    class="fill-container edit-list-button" 
                     [routerLink]="'/edit_list/' + currId">Edit List</button>
                 <button mat-raised-button 
                     class="fill-container edit-list-button" 

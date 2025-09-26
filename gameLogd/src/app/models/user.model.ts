@@ -1,7 +1,5 @@
 import { GameLog } from './gameLog.model';
 import { Rating } from './rating.model';
-import { Book } from './book.model';
-
 
 export interface User {
   // Basic User Info

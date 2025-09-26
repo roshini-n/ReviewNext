@@ -1,149 +1,76 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import { GameFirebaseService } from '../../services/gameFirebase.service';
-import { IGDBService } from '../../services/igdb.service';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { Observable, debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-add-game',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatChipsModule,
-    MatIconModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatAutocompleteModule
-  ],
+  imports: [CommonModule, MatInputModule, MatFormFieldModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatAutocompleteModule],
   templateUrl: './add-game.component.html',
   styleUrl: './add-game.component.css'
 })
 export class AddGameComponent implements OnInit {
-  private fb = inject(FormBuilder);
-  private gameService = inject(GameFirebaseService);
-  private igdbService = inject(IGDBService);
-  private snackBar = inject(MatSnackBar);
-  private router = inject(Router);
+  gameFirebaseService = inject(GameFirebaseService);
 
-  gameForm: FormGroup;
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
-  platforms: string[] = [];
-  selectedGenres: string[] = [];
-  isSubmitting = false;
-  isSearchingImage = false;
+  gameForm = new FormGroup({
+    title: new FormControl('', Validators.required),
+    description: new FormControl(''),
+    platformInput: new FormControl(''),
+    genreInput: new FormControl(''),
+    releaseDate: new FormControl(''),
+    developer: new FormControl(''),
+    publisher: new FormControl(''),
+    imageUrl: new FormControl('')
+  });
 
-  // Available options for platforms and genres
   options: string[] = [
-    "PC", "PlayStation 5", "PlayStation 4", "Xbox Series X|S", "Xbox One",
-    "Nintendo Switch", "Nintendo 3DS", "Nintendo Wii U", "Mobile", "VR",
-    "Other"
+    "NES", "SNES", "N64", "PS", "PS2", "PS3", "PS4",
+    "Xbox", "Xbox 360", "Xbox One", "PC", "Switch", "Wii", 
+    "Wii U", "Gamecube", "Gameboy", "Gameboy Color", "Gameboy Advance", 
+    "DS", "3DS", "PSP", "PS Vita", "Mobile", "Other"
   ];
-
+  
   genres: string[] = [
-    "Action", "Adventure", "RPG", "Strategy", "Sports", "Racing",
-    "Puzzle", "Platformer", "Fighting", "Shooter", "Simulation",
-    "Horror", "MMO", "MOBA", "Battle Royale", "Card Game", "Board Game",
-    "Educational", "Music", "Party", "Sandbox"
+    "Action", "Adventure", "RPG", "Shooter", "Horror", "Platformer", 
+    "Puzzle", "Fighting", "Racing", "Strategy", "Simulation", "Sports", "Looter Shooter", "MMO"
   ];
 
   filteredOptions!: Observable<string[]>;
   filteredGenres!: Observable<string[]>;
 
-  constructor() {
-    this.gameForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(1)]],
-      description: ['', [Validators.required, Validators.minLength(10)]],
-      platformInput: [''],
-      genreInput: [''],
-      releaseDate: ['', Validators.required],
-      developer: ['', [Validators.required, Validators.minLength(1)]],
-      publisher: ['', [Validators.required, Validators.minLength(1)]],
-      imageUrl: ['', [Validators.pattern('https?://.*')]]
-    });
-  }
+  platforms: string[] = [];
+  selectedGenres: string[] = [];
 
   ngOnInit() {
-    // Filter options for platforms and genres
-    this.filteredOptions = this.gameForm.get('platformInput')?.valueChanges.pipe(
+    this.filteredOptions = this.gameForm.controls.platformInput.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '', this.options))
-    ) || new Observable<string[]>();
+    );
 
-    this.filteredGenres = this.gameForm.get('genreInput')?.valueChanges.pipe(
+    this.filteredGenres = this.gameForm.controls.genreInput.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '', this.genres))
-    ) || new Observable<string[]>();
-
-    // Subscribe to title changes to fetch game image
-    this.gameForm.get('title')?.valueChanges.pipe(
-      debounceTime(500),
-      distinctUntilChanged(),
-      filter(title => title && title.length > 2)
-    ).subscribe(title => {
-      this.isSearchingImage = true;
-      const releaseDate = this.gameForm.get('releaseDate')?.value;
-      const year = releaseDate ? new Date(releaseDate).getFullYear() : undefined;
-      
-      this.igdbService.searchGame(title, year).subscribe({
-        next: (result) => {
-          console.log('Received search result:', result);
-          if (result.imageUrl) {
-            console.log('Setting form values:', {
-              imageUrl: result.imageUrl,
-              developer: result.developer,
-              publisher: result.publisher
-            });
-            this.gameForm.patchValue({ 
-              imageUrl: result.imageUrl,
-              developer: result.developer,
-              publisher: result.publisher
-            }, { emitEvent: false });
-            console.log('Form values after update:', this.gameForm.value);
-          }
-          this.isSearchingImage = false;
-        },
-        error: (error) => {
-          console.error('Error fetching game information:', error);
-          this.isSearchingImage = false;
-        }
-      });
-    });
-  }
-
-  private _filter(value: string, options: string[]): string[] {
-    const filterValue = value.toLowerCase();
-    return options.filter(option => 
-      option.toLowerCase().includes(filterValue)
     );
   }
 
+  private _filter(value: string, list: string[]): string[] {
+    const filterValue = value.toLowerCase();
+    return list.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
   addPlatform() {
-    const platformValue = this.gameForm.get('platformInput')?.value;
+    const platformValue = this.gameForm.controls.platformInput.value;
     if (platformValue && !this.platforms.includes(platformValue)) {
       this.platforms.push(platformValue);
     }
-    this.gameForm.get('platformInput')?.setValue('');
+    this.gameForm.controls.platformInput.setValue('');
   }
 
   removePlatform(platform: string) {
@@ -151,56 +78,43 @@ export class AddGameComponent implements OnInit {
   }
 
   addGenre() {
-    const genreValue = this.gameForm.get('genreInput')?.value;
+    const genreValue = this.gameForm.controls.genreInput.value;
     if (genreValue && !this.selectedGenres.includes(genreValue)) {
       this.selectedGenres.push(genreValue);
     }
-    this.gameForm.get('genreInput')?.setValue('');
+    this.gameForm.controls.genreInput.setValue('');
   }
 
   removeGenre(genre: string) {
     this.selectedGenres = this.selectedGenres.filter(g => g !== genre);
   }
 
-  onSubmit() {
-    if (this.gameForm.valid && this.platforms.length > 0 && this.selectedGenres.length > 0) {
-      this.isSubmitting = true;
-      const newGame = {
-        ...this.gameForm.value,
-        platforms: this.platforms,
-        genres: this.selectedGenres,
-        rating: 0,
-        totalRatingScore: 0,
-        numRatings: 0,
-        views: 0,
-        releaseDate: this.gameForm.get('releaseDate')?.value.toISOString(),
-        dateAdded: new Date().toISOString()
-      };
-
-      this.gameService.addGame(newGame).subscribe({
-        next: () => {
-          this.snackBar.open('Game added successfully!', 'Close', { duration: 3000 });
-          this.router.navigate(['/games']);
-        },
-        error: (error) => {
-          console.error('Error adding game:', error);
-          this.snackBar.open('Error adding game. Please try again.', 'Close', { duration: 3000 });
-          this.isSubmitting = false;
-        }
-      });
-    } else {
-      let errorMessage = 'Please fill in all required fields';
-      if (this.platforms.length === 0) {
-        errorMessage += ' and add at least one platform';
-      }
-      if (this.selectedGenres.length === 0) {
-        errorMessage += ' and add at least one genre';
-      }
-      this.snackBar.open(errorMessage, 'Close', { duration: 3000 });
+  sendDataToFirebase() {
+    if (!this.gameForm.valid) {
+      alert("Please fill in all required fields");
+      return;
     }
-  }
+    
+    const finalImageUrl = this.gameForm.value.imageUrl || 'https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
 
-  onCancel(): void {
-    this.router.navigate(['/games']);
+    this.gameFirebaseService.addGame(
+      this.gameForm.value.title || '',
+      this.platforms,
+      this.gameForm.value.developer || '',
+      this.gameForm.value.description || '',
+      this.gameForm.value.releaseDate || '',
+      this.gameForm.value.publisher || '',
+      this.selectedGenres,
+      finalImageUrl,
+      0,
+      0,
+      0
+    );
+
+    this.gameForm.reset();
+    this.platforms = [];
+    this.selectedGenres = [];
+    
+    alert("Game has been added!");
   }
 }

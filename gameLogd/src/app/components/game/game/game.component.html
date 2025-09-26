@@ -1,61 +1,29 @@
 <!--Eventually separate these into their own components and add individual filters for each carousel-->
 <!--Currently displays all games in database-->
 
-<div class="page-container">
-  <div class="content-wrapper">
-    <div class="game-container">
-      <div class="header-section">
-    <h1>Games</h1>
-    @if (authService.currentUserSig()) {
-    <button mat-raised-button color="primary" (click)="onAddGame()">
-      <mat-icon>add</mat-icon>
-      Add Game
-    </button>
-    }
-  </div>
-
-  <h2>Trending</h2>
-  <p-carousel [value]="trendingGames" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
+<h2>Trending: </h2>
+<p-carousel [value]="games" [numVisible]="5" [numScroll]="1" [circular]="true">
     <ng-template let-game pTemplate="item">
-      <div class="game-card">
-        <a [routerLink]="['/games', game.id]">
-          <img class="thumbnail" [src]="game.imageUrl" [alt]="game.title">
-          <div class="game-info">
-            <h3>{{ game.title }}</h3>
-            <p>Rating: {{ game.rating }}/5</p>
-          </div>
-        </a>
-      </div>
-    </ng-template>
-  </p-carousel>
+      <a [href]="'games/' + game.id">
+        <img class="thumbnail" [src]="game.imageUrl" [alt]="game.title">
+      </a>
+    </ng-template> 
+</p-carousel>
 
-  <h2>Top Rated</h2>
-  <p-carousel [value]="topRatedGames" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
-    <ng-template let-game pTemplate="item">
-      <div class="game-card">
-        <a [routerLink]="['/games', game.id]">
-          <img class="thumbnail" [src]="game.imageUrl" [alt]="game.title">
-          <div class="game-info">
-            <h3>{{ game.title }}</h3>
-            <p>Rating: {{ game.rating }}/5</p>
-          </div>
-        </a>
-      </div>
-    </ng-template>
-  </p-carousel>
+<h2>Top Rated: </h2>
+<p-carousel [value]="games" [numVisible]="5" [numScroll]="1" [circular]="true">
+  <ng-template let-game pTemplate="item">
+    <a [href]="'games/' + game.id">
+      <img class="thumbnail" [src]="game.imageUrl" [alt]="game.title">
+    </a>
+  </ng-template> 
+</p-carousel>
 
-  <!-- <h2>Most Popular</h2>
-  <p-carousel [value]="popularGames" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
-    <ng-template let-game pTemplate="item">
-      <div class="game-card">
-        <a [routerLink]="['/games', game.id]">
-          <img class="thumbnail" [src]="game.imageUrl" [alt]="game.title">
-          <div class="game-info">
-            <h3>{{ game.title }}</h3>
-            <p>Rating: {{ game.rating }}/5</p>
-          </div>
-        </a>
-      </div>
-    </ng-template>
-  </p-carousel> -->
-</div>
+<h2>Most Popular:</h2>
+<p-carousel [value]="games" [numVisible]="5" [numScroll]="1" [circular]="true">
+  <ng-template let-game pTemplate="item">
+    <a [href]="'games/' + game.id">
+      <img class="thumbnail" [src]="game.imageUrl" [alt]="game.title">
+    </a>
+  </ng-template> 
+</p-carousel>
