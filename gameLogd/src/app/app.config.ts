@@ -12,6 +12,9 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 
+
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyBgnAfd9fgw6KIfvYSitl0sqr5_TkJRF3M",
   authDomain: "gamelogd.firebaseapp.com",
