@@ -1,66 +1,113 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Router } from '@angular/router';
 import { BeautyProductFirebaseService } from '../../../services/beautyProductFirebase.service';
-import { BeautyProduct } from '../../../models/beauty-product.model';
+import { BeautyProductsApiService } from '../../../services/beauty-products-api.service';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-add-beauty-product',
+  templateUrl: './add-beauty-product.component.html',
+  styleUrls: ['./add-beauty-product.component.css'],
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
-    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatButtonModule,
     MatSelectModule,
     MatIconModule,
     MatProgressSpinnerModule
-  ],
-  templateUrl: './add-beauty-product.component.html',
-  styleUrls: ['./add-beauty-product.component.css']
+  ]
 })
 export class AddBeautyProductComponent implements OnInit {
-  private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private beautyProductService = inject(BeautyProductFirebaseService);
-
   beautyProductForm: FormGroup;
   isSubmitting = false;
 
-  constructor() {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private beautyProductService: BeautyProductFirebaseService,
+    private beautyProductsApi: BeautyProductsApiService
+  ) {
     this.beautyProductForm = this.fb.group({
       title: ['', Validators.required],
       brand: ['', Validators.required],
-      description: ['', Validators.required],
+      description: ['', Validators.required], // ✅ user enters manually
       category: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(0)]],
-      imageUrl: ['', Validators.required],
+      imageUrl: ['', Validators.required],   // ✅ auto-filled from API
       benefits: [''],
-      usageInstructions: ['']
+      usageInstructions: ['']                // ✅ auto-filled from API
     });
   }
 
   ngOnInit(): void {
-    // Additional initialization logic if needed
+    // Listen for title and brand changes
+    const title$ = this.beautyProductForm.get('title')!.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    );
+
+    const brand$ = this.beautyProductForm.get('brand')!.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    );
+
+    // Re-run search when either field changes
+    title$.pipe(switchMap(() => this.searchProduct())).subscribe();
+    brand$.pipe(switchMap(() => this.searchProduct())).subscribe();
+  }
+
+  private searchProduct() {
+    const title = this.beautyProductForm.get('title')?.value;
+    const brand = this.beautyProductForm.get('brand')?.value;
+
+    if (title && brand) {
+      return this.beautyProductsApi.searchProduct(title, brand).pipe(
+        switchMap(result => {
+          if (result) {
+            this.beautyProductForm.patchValue(
+              {
+                imageUrl: result.imageUrl || '',
+                usageInstructions: result.usageInstructions || ''
+                // ❌ no description patching, user types it manually
+              },
+              { emitEvent: false }
+            );
+          }
+          return of(null); // always return observable
+        })
+      );
+    }
+
+    return of(null);
   }
 
   onSubmit(): void {
-    if (this.beautyProductForm.valid) {
-      const beautyProductData = this.beautyProductForm.value;
+    if (this.beautyProductForm.valid && !this.isSubmitting) {
+      this.isSubmitting = true;
+
+      const beautyProductData = {
+        ...this.beautyProductForm.value,
+        createdAt: new Date()
+      };
+
       this.beautyProductService.addBeautyProduct(beautyProductData)
-        .then(() => {
-          this.router.navigate(['/beauty-products']);
-        })
+        .then(() => this.router.navigate(['/beauty-products']))
         .catch((error: Error) => {
           console.error('Error adding beauty product:', error);
+          this.isSubmitting = false;
         });
     }
   }
@@ -68,4 +115,4 @@ export class AddBeautyProductComponent implements OnInit {
   onCancel(): void {
     this.router.navigate(['/beauty-products']);
   }
-} 
+}

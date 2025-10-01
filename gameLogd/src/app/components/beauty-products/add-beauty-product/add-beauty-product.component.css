@@ -7,6 +7,58 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.search-section {
+  background: #f8f9fa !important;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+}
+
+.search-section h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.search-form {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.search-form mat-form-field {
+  flex: 1;
+}
+
+.search-results {
+  margin-top: 1.5rem;
+}
+
+.result-content {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  margin-top: 1rem;
+}
+
+.product-image {
+  width: 200px;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.usage-instructions {
+  flex: 1;
+}
+
+.no-results {
+  color: #666;
+  font-style: italic;
+  margin-top: 1rem;
+}
+
 h1 {
   color: #FEE715;
   margin-bottom: 2rem;
