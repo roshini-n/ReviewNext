@@ -2,6 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 
+export interface TmdbTVResult {
+  poster_path?: string;
+  name?: string;
+  overview?: string;
+  first_air_date?: string;
+  [key: string]: any;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,66 +20,54 @@ export class TMDBService {
 
   constructor(private http: HttpClient) {}
 
+  // Search movies (existing)
   searchMovie(title: string, year?: number): Observable<string> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.accessToken}`,
       'Content-Type': 'application/json'
     });
 
-    // First try exact search with year if provided
     let searchParams: any = {
       query: title,
       include_adult: 'false',
       language: 'en-US',
       page: '1'
     };
+    if (year) searchParams.year = year;
 
-    if (year) {
-      searchParams.year = year;
-    }
-
-    return this.http.get<any>(`${this.baseUrl}/search/movie`, {
-      headers,
-      params: searchParams
-    }).pipe(
+    return this.http.get<any>(`${this.baseUrl}/search/movie`, { headers, params: searchParams }).pipe(
       map(response => {
         if (response.results && response.results.length > 0) {
-          // Try to find exact match first
-          const exactMatch = response.results.find((movie: any) => {
-            const movieTitle = movie.title.toLowerCase();
-            const searchTitle = title.toLowerCase();
-            return movieTitle === searchTitle;
-          });
-
-          if (exactMatch) {
-            return this.getBestImage(exactMatch);
-          }
-
-          // If no exact match, try to find closest match
-          const closestMatch = response.results.find((movie: any) => {
-            const movieTitle = movie.title.toLowerCase();
-            const searchTitle = title.toLowerCase();
-            return movieTitle.includes(searchTitle) || searchTitle.includes(movieTitle);
-          }) || response.results[0];
-
-          return this.getBestImage(closestMatch);
+          const exactMatch = response.results.find((movie: any) => movie.title.toLowerCase() === title.toLowerCase());
+          return exactMatch ? this.getBestImage(exactMatch) : this.getBestImage(response.results[0]);
         }
         return '';
       })
     );
   }
 
-  private getBestImage(movie: any): string {
-    // Try to get the highest quality poster first
-    if (movie.poster_path) {
-      return `${this.imageBaseUrl}${movie.poster_path}`;
-    }
-    
-    // Fall back to backdrop if no poster
-    if (movie.backdrop_path) {
-      return `${this.imageBaseUrl}${movie.backdrop_path}`;
-    }
+  // 🔹 New: Search TV shows / web series
+  searchTV(title: string): Observable<TmdbTVResult | null> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.accessToken}`,
+      'Content-Type': 'application/json'
+    });
 
+    const searchParams = {
+      query: title,
+      language: 'en-US',
+      page: '1'
+    };
+
+    return this.http.get<any>(`${this.baseUrl}/search/tv`, { headers, params: searchParams }).pipe(
+      map(response => (response.results && response.results.length > 0 ? response.results[0] : null))
+    );
+  }
+
+  private getBestImage(item: any): string {
+    if (item.poster_path) return `${this.imageBaseUrl}${item.poster_path}`;
+    if (item.backdrop_path) return `${this.imageBaseUrl}${item.backdrop_path}`;
     return '';
   }
-} 
+}
+

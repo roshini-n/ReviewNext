@@ -15,12 +15,12 @@ import { MatListModule } from '@angular/material/list';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-// ... other component imports ...
+import { AddBeautyProductComponent } from './components/beauty-products/add-beauty-product/add-beauty-product.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    // ... other components ...
+    AddBeautyProductComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,4 +41,4 @@ import { AppComponent } from './app.component';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { } 
+export class AppModule { }
