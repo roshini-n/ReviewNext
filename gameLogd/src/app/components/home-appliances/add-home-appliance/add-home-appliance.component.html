@@ -1,0 +1,130 @@
+<div class="add-home-appliance-container">
+  <h1>Add New Home Appliance</h1>
+  
+  <form [formGroup]="homeApplianceForm" (ngSubmit)="onSubmit()" class="home-appliance-form">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" placeholder="Enter appliance title">
+        <mat-error *ngIf="homeApplianceForm.get('title')?.hasError('required')">
+          Title is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Brand</mat-label>
+        <input matInput formControlName="brand" placeholder="Enter brand name">
+        <mat-error *ngIf="homeApplianceForm.get('brand')?.hasError('required')">
+          Brand is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="4" placeholder="Enter appliance description"></textarea>
+        <mat-error *ngIf="homeApplianceForm.get('description')?.hasError('required')">
+          Description is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="category">
+          <mat-option value="kitchen">Kitchen Appliances</mat-option>
+          <mat-option value="laundry">Laundry Appliances</mat-option>
+          <mat-option value="cleaning">Cleaning Appliances</mat-option>
+          <mat-option value="climate">Climate Control</mat-option>
+          <mat-option value="entertainment">Entertainment</mat-option>
+          <mat-option value="other">Other</mat-option>
+        </mat-select>
+        <mat-error *ngIf="homeApplianceForm.get('category')?.hasError('required')">
+          Category is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Price</mat-label>
+        <input matInput type="number" formControlName="price" placeholder="Enter price">
+        <mat-error *ngIf="homeApplianceForm.get('price')?.hasError('required')">
+          Price is required
+        </mat-error>
+        <mat-error *ngIf="homeApplianceForm.get('price')?.hasError('min')">
+          Price must be greater than 0
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Model</mat-label>
+        <input matInput formControlName="model" placeholder="Enter model number">
+        <mat-error *ngIf="homeApplianceForm.get('model')?.hasError('required')">
+          Model is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Image URL</mat-label>
+        <input matInput formControlName="imageUrl" placeholder="Enter image URL">
+        <mat-error *ngIf="homeApplianceForm.get('imageUrl')?.hasError('required')">
+          Image URL is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Dimensions</mat-label>
+        <input matInput formControlName="dimensions" placeholder="Enter dimensions (L x W x H)">
+        <mat-error *ngIf="homeApplianceForm.get('dimensions')?.hasError('required')">
+          Dimensions are required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Weight</mat-label>
+        <input matInput formControlName="weight" placeholder="Enter weight">
+        <mat-error *ngIf="homeApplianceForm.get('weight')?.hasError('required')">
+          Weight is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Power Consumption</mat-label>
+        <input matInput formControlName="powerConsumption" placeholder="Enter power consumption">
+        <mat-error *ngIf="homeApplianceForm.get('powerConsumption')?.hasError('required')">
+          Power consumption is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Features</mat-label>
+        <textarea matInput formControlName="features" rows="3" placeholder="Enter features (comma-separated)"></textarea>
+        <mat-error *ngIf="homeApplianceForm.get('features')?.hasError('required')">
+          Features are required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Warranty</mat-label>
+        <input matInput formControlName="warranty" placeholder="Enter warranty period">
+        <mat-error *ngIf="homeApplianceForm.get('warranty')?.hasError('required')">
+          Warranty is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="!homeApplianceForm.valid">
+        Add Home Appliance
+      </button>
+      <button mat-button type="button" routerLink="/home-appliances">Cancel</button>
+    </div>
+  </form>
+</div> 

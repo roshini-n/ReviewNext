@@ -1,0 +1,56 @@
+<div class="documentary-container">
+  <div class="header-section">
+    <h1>Documentaries</h1>
+    @if (authService.currentUserSig()) {
+    <button mat-raised-button color="primary" routerLink="/add_documentary">
+      <mat-icon>add</mat-icon>
+      Add Documentary
+    </button>
+    }
+  </div>
+
+  <h2>Trending</h2>
+  <p-carousel [value]="trendingDocumentaries" [numVisible]="5" [numScroll]="1" [circular]="true">
+    <ng-template let-documentary pTemplate="item">
+      <div class="documentary-card">
+        <a [routerLink]="['/documentaries', documentary.id]">
+          <img class="thumbnail" [src]="documentary.imageUrl" [alt]="documentary.title">
+          <div class="documentary-info">
+            <h3>{{ documentary.title }}</h3>
+            <p>Rating: {{ documentary.rating }}/5</p>
+          </div>
+        </a>
+      </div>
+    </ng-template>
+  </p-carousel>
+
+  <h2>Top Rated</h2>
+  <p-carousel [value]="topRatedDocumentaries" [numVisible]="5" [numScroll]="1" [circular]="true">
+    <ng-template let-documentary pTemplate="item">
+      <div class="documentary-card">
+        <a [routerLink]="['/documentaries', documentary.id]">
+          <img class="thumbnail" [src]="documentary.imageUrl" [alt]="documentary.title">
+          <div class="documentary-info">
+            <h3>{{ documentary.title }}</h3>
+            <p>Rating: {{ documentary.rating }}/5</p>
+          </div>
+        </a>
+      </div>
+    </ng-template>
+  </p-carousel>
+
+  <h2>Most Popular</h2>
+  <p-carousel [value]="popularDocumentaries" [numVisible]="5" [numScroll]="1" [circular]="true">
+    <ng-template let-documentary pTemplate="item">
+      <div class="documentary-card">
+        <a [routerLink]="['/documentaries', documentary.id]">
+          <img class="thumbnail" [src]="documentary.imageUrl" [alt]="documentary.title">
+          <div class="documentary-info">
+            <h3>{{ documentary.title }}</h3>
+            <p>Rating: {{ documentary.rating }}/5</p>
+          </div>
+        </a>
+      </div>
+    </ng-template>
+  </p-carousel>
+</div> 

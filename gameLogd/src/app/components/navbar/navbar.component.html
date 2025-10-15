@@ -1,0 +1,162 @@
+<mat-toolbar color="primary" id="leftside" [class.home-navbar]="isHomePage">
+  <!--Logo-->
+  <h1 [routerLink]="authService.currentUserSig() ? '/dashboard' : '/'" class="site-title" style="cursor: pointer;">
+    Review<span class="highlight">Next</span>
+  </h1>
+
+  <!--Search in the middle-->
+<!-- @if (authService.currentUserSig()) {
+  <div class="search-container">
+    <form class="d-flex search-form">
+      <input
+        class="form-control me-2 search-input"
+        type="search"
+        aria-label="Search"
+        [(ngModel)]="searchQuery"
+        name="search"
+      />
+      <button
+        class="btn btn-outline-light search-button"
+        type="submit"
+        (click)="onSearch()"
+      >
+        Search
+      </button>
+    </form>
+  </div>
+} -->
+
+@if (!isLoginOrRegister) {
+    <div class="search-container">
+      <form class="search-form">
+        <input 
+          class="search-input" 
+          type="search" 
+          placeholder="Search for products, reviews, and more..."
+          [(ngModel)]="searchQuery"
+          name="search"
+        />
+        <button class="search-button" type="submit" (click)="onSearch()">
+          Search
+        </button>
+      </form>
+    </div>
+  }
+
+  <!--Buttons on the right-->
+  <div class="right-buttons">
+    @if (authService.currentUserSig() && !isUserDashboard) {
+      @if (!(isAdmin && router.url.includes('admin'))) {
+        <button mat-button routerLink="/dashboard" color="grey-back">
+          <mat-icon>dashboard</mat-icon>
+          <span class="navbar_button">Dashboard</span>
+        </button>
+        <button mat-button [matMenuTriggerFor]="categoryMenu" color="grey-back">
+          <span class="navbar_button">Categories</span>
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+        <button mat-button [matMenuTriggerFor]="userMenu" color="grey-back">
+          <span class="navbar_button">My Account</span>
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+      }
+    }
+    @if (authService.currentUserSig() == null && !isLoginOrRegister) {
+    <button mat-button color="grey-back" routerLink="login">
+      <span class="navbar_button">Login</span>
+    </button>
+    <div class="divider"></div>
+    <!-- <button mat-button color="grey-back" routerLink="register">
+      <span class="navbar_button">Register</span>
+    </button> -->
+    } @if (authService.currentUserSig()) {
+    @if (isAdmin) {
+      <button mat-button routerLink="admin" class="admin-button" color="warn">
+        <mat-icon>admin_panel_settings</mat-icon>
+        <span class="navbar_button">Admin</span>
+      </button>
+    }
+    <button mat-button routerLink="profile" class="profile-button">
+      <img [src]="avatarUrl" alt="Profile" class="profile-image">
+    </button>
+    }
+  </div>
+
+</mat-toolbar>
+
+<!-- Always present in DOM -->
+<mat-menu #categoryMenu="matMenu">
+  <button mat-menu-item routerLink="games">
+    <mat-icon>sports_esports</mat-icon>
+    <span>Games</span>
+  </button>
+  <button mat-menu-item routerLink="books">
+    <mat-icon>menu_book</mat-icon>
+    <span>Books</span>
+  </button>
+  <button mat-menu-item routerLink="movies">
+    <mat-icon>movie</mat-icon>
+    <span>Movies</span>
+  </button>
+  <button mat-menu-item routerLink="electronic-gadgets">
+    <mat-icon>devices</mat-icon>
+    <span>Electronic Gadgets</span>
+  </button>
+  <!-- <button mat-menu-item routerLink="apps">
+    <mat-icon>apps</mat-icon>
+    <span>Apps</span>
+  </button> -->
+  <button mat-menu-item routerLink="web-series">
+    <mat-icon>live_tv</mat-icon>
+    <span>Web Series</span>
+  </button>
+  <!-- <button mat-menu-item routerLink="documentaries">
+    <mat-icon>videocam</mat-icon>
+    <span>Documentaries</span>
+  </button> -->
+  <button mat-menu-item routerLink="beauty-products">
+    <mat-icon>spa</mat-icon>
+    <span>Beauty Products</span>
+  </button>
+  <!-- <button mat-menu-item routerLink="home-appliances">
+    <mat-icon>home</mat-icon>
+    <span>Home Appliances</span>
+  </button> -->
+</mat-menu>
+
+<!-- User Account Menu -->
+<mat-menu #userMenu="matMenu">
+  <button mat-menu-item routerLink="profile">
+    <mat-icon>person</mat-icon>
+    <span>My Profile</span>
+  </button>
+  <button mat-menu-item routerLink="my-lists">
+    <mat-icon>list</mat-icon>
+    <span>My Lists</span>
+  </button>
+  <button mat-menu-item routerLink="mylog">
+    <mat-icon>book</mat-icon>
+    <span>My Logs</span>
+  </button>
+  <mat-divider></mat-divider>
+  <button mat-menu-item (click)="authService.logout()">
+    <mat-icon>logout</mat-icon>
+    <span>Logout</span>
+  </button>
+</mat-menu>
+
+<!-- Theme Menu -->
+<mat-menu #themeMenu="matMenu">
+  <button mat-menu-item (click)="switchToLightTheme()">
+    <mat-icon>light_mode</mat-icon>
+    <span>Light</span>
+  </button>
+  <button mat-menu-item (click)="switchToDarkTheme()">
+    <mat-icon>dark_mode</mat-icon>
+    <span>Dark</span>
+  </button>
+  <button mat-menu-item (click)="switchToCustomTheme()">
+    <mat-icon>palette</mat-icon>
+    <span>Custom</span>
+  </button>
+</mat-menu>

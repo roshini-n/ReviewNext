@@ -1,0 +1,22 @@
+<div class="search-container">
+  <h2 *ngIf="searchQuery" class="search-title">
+    Results for "{{ searchQuery }}"
+  </h2>
+
+  <section>
+    <h3>Games</h3>
+    <app-game-search-list [games]="gameResults" [loading]="isLoading" [error]="error" emptyMessage="No games found"></app-game-search-list>
+  </section>
+
+  <section>
+    <h3>Books</h3>
+    <app-book-search-list [books]="bookResults"></app-book-search-list>
+  </section>
+
+  <section>
+    <h3>Movies</h3>
+    <app-movie-search-list [movies]="movieResults"></app-movie-search-list>
+  </section>
+</div>
+
+

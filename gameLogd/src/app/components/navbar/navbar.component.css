@@ -1,0 +1,363 @@
+:root {
+  --navbar-bg: #fff;
+  --navbar-text: #000;
+  --profile-border-color: #FEE715;
+}
+
+[data-theme='dark'] {
+  --navbar-bg: #000;
+  --navbar-text: #fff;
+  --profile-border-color: #ffffff;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.right-spacer {
+  flex: 1 1 auto;
+}
+
+.mat-toolbar.mat-primary {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+  box-shadow: var(--shadow-md);
+  color: var(--primary-text);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32px;
+  height: 70px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mat-toolbar.mat-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primary-gradient);
+  opacity: 0.8;
+}
+
+.mat-toolbar.mat-primary.home-navbar {
+  background: #ffffff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  min-height: 64px;
+  position: relative;
+  z-index: 1000;
+}
+
+.mat-grey-back {
+  background: rgba(0, 229, 255, 0.1);
+}
+
+.site-title {
+  font-family: 'Inter', 'Roboto', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: var(--primary-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-right: 40px;
+  margin-top: 0;
+  margin-bottom: 0;
+  position: relative;
+  z-index: 1001;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.site-title .highlight {
+  background: var(--accent-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+}
+
+.site-title:hover {
+  transform: translateY(-2px) scale(1.02);
+  filter: brightness(1.1);
+}
+
+.search-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 12px;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.search-input {
+  padding: 8px 12px;
+  margin-right: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  width: 100%;
+  max-width: 300px;
+  color: #333;
+  font-size: 1rem;
+  height: 36px;
+  transition: all 0.3s ease;
+}
+
+.search-button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #333;
+  white-space: nowrap;
+  font-weight: 500;
+  font-size: 1rem;
+  height: 36px;
+  transition: all 0.3s ease;
+}
+
+.search-button:hover {
+  background: rgba(255, 255, 255, 0.35);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.right-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 0;
+}
+
+.right-buttons button {
+  color: var(--primary-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  position: relative;
+  z-index: 1001;
+  text-transform: capitalize;
+  letter-spacing: 0.3px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.right-buttons button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--accent-gradient);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: -1;
+}
+
+.right-buttons button:hover {
+  color: var(--white-text);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-primary);
+}
+
+.right-buttons button:hover::before {
+  left: 0;
+  opacity: 1;
+}
+
+.divider {
+  width: 5px;
+  height: auto;
+  display: inline-block;
+}
+
+.big-divider {
+  width: 100px;
+  height: auto;
+  display: inline-block;
+}
+
+.showHide {
+  display: none;
+}
+
+/* Desktop */
+@media screen and (min-width: 768px) {
+  .showHide {
+    display: block;
+  }
+  #leftside > button {
+    display: none;
+  }
+}
+
+.custom-menu {
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 229, 255, 0.15);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 4px;
+}
+
+.menu-btn {
+  width: 100%;
+  height: 48px;
+  margin: 2px 0;
+  border-radius: 8px;
+  text-align: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333333 !important;
+  font-size: 1rem;
+  font-weight: 500;
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.menu-btn:hover {
+  background: rgba(0, 229, 255, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 229, 255, 0.2);
+}
+
+.search-form.responsive {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  padding: 0 8px;
+}
+
+.dropdown {
+  color: var(--profile-border-color) !important;
+  height: 40px;
+  border-radius: 8px;
+  padding: 0 10px;
+  background-color: #292929;
+  border: 1px solid var(--profile-border-color);
+  font-size: 1rem;
+  margin-left: 8px;
+}
+
+.dropdown:focus {
+  outline: none;
+  border-color: #ffffff;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.profile-image-nav {
+  margin-left: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+/* PROFILE BUTTON & IMAGE FIXES */
+.profile-button {
+  width: 40px;
+  height: 40px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(0, 229, 255, 0.3);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.profile-button:hover {
+  border-color: #ffffff;
+}
+
+/* .profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+} */
+
+.navbar_button {
+  color: #1a1a1a;
+  font-weight: 600;
+  position: relative;
+  z-index: 1001;
+}
+
+/* Admin Button Styles */
+.admin-button {
+  margin-right: 12px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  color: white !important;
+  border-radius: 6px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+  transition: all 0.3s ease;
+}
+
+.admin-button:hover {
+  background: linear-gradient(135deg, #ee5a24 0%, #ff6b6b 100%);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.5);
+  transform: translateY(-1px);
+}
+
+.admin-button .navbar_button {
+  color: white !important;
+  font-weight: 600;
+}
+
+.admin-button mat-icon {
+  color: white !important;
+  margin-right: 4px;
+}

@@ -1,0 +1,50 @@
+<div class="page-container">
+    <div class="content-wrapper">
+        <form class="center" [formGroup]="listForm">
+            <h2 class="align-left">Create a New List:</h2>
+            <mat-form-field class="fill-container">
+                <mat-label>Title</mat-label>
+                <input matInput formControlName="title">
+            </mat-form-field>
+
+            <mat-form-field class="fill-container">
+                <mat-label>Description</mat-label>
+                <textarea matInput formControlName="description"></textarea>
+            </mat-form-field>
+
+            <button mat-raised-button (click)="openDialog()" class="fill-container create-list-button">Add Game</button>
+            @if (selectedGames.length > 0) {
+                <h4 class="align-left">Selected Games:</h4>
+                <div class="game-grid">
+                @for (game of selectedGames; track game) {
+                    <div 
+                    class="game-card" 
+                    (click)="removeGame(gameElm)" 
+            #gameElm
+            [attr.data-idx]="selectedGames.indexOf(game)">
+                <div class="game-image-container">
+                    <img
+                    *ngIf="game.imageUrl"
+                    [src]="game.imageUrl"
+                    [alt]="game.title"
+                    class="game-image"
+                    />
+                    <img
+                    *ngIf="!game.imageUrl"
+                    src="assets/images/placeholder.png"
+                    alt="No image available"
+                    class="game-image"
+                    />
+                </div>
+                <div class="game-details">
+                    <h3 class="game-title">{{ game.title }}</h3>
+                    <p *ngIf="game.developer" class="game-developer">
+                        {{ game.developer }}
+                    </p>
+                </div>
+            </div>  
+        }
+        </div>
+    }
+    <button mat-raised-button class="fill-container" (click)="onEnter()">Enter</button>
+</form>

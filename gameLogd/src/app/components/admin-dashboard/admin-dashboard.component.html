@@ -1,0 +1,242 @@
+<div class="admin-dashboard-container">
+  <div class="admin-header">
+    <h1>
+      <mat-icon>admin_panel_settings</mat-icon>
+      Admin Dashboard
+    </h1>
+    <button mat-raised-button color="primary" (click)="refreshData()">
+      <mat-icon>refresh</mat-icon>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Admin Statistics Cards -->
+  <div class="admin-stats">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon users">group</mat-icon>
+          <div class="stat-info">
+            <h3>{{ adminStats.totalUsers || 0 }}</h3>
+            <p>Total Users</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon admins">shield</mat-icon>
+          <div class="stat-info">
+            <h3>{{ adminStats.adminUsers || 0 }}</h3>
+            <p>Admin Users</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon regular">person</mat-icon>
+          <div class="stat-info">
+            <h3>{{ adminStats.regularUsers || 0 }}</h3>
+            <p>Regular Users</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Admin Actions Section -->
+  <div class="admin-actions">
+    <mat-card class="action-card">
+      <mat-card-content>
+        <div class="action-content">
+          <mat-icon class="action-icon category">category</mat-icon>
+          <div class="action-info">
+            <h3>Category Management</h3>
+            <p>Add, edit, or remove review categories</p>
+            <button mat-raised-button color="primary" (click)="openCategoryManagement()">
+              <mat-icon>settings</mat-icon>
+              Manage Categories
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="action-card">
+      <mat-card-content>
+        <div class="action-content">
+          <mat-icon class="action-icon reviews">rate_review</mat-icon>
+          <div class="action-info">
+            <h3>Review Management</h3>
+            <p>Monitor and moderate user reviews</p>
+            <button mat-raised-button color="accent" disabled>
+              <mat-icon>upcoming</mat-icon>
+              Coming Soon
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- User Management Section -->
+  <mat-card class="user-management-card">
+    <mat-card-header>
+      <mat-card-title>User Management</mat-card-title>
+      <mat-card-subtitle>Manage all registered users</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Search Box -->
+      <div class="search-container">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search users by username or email</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input 
+            matInput 
+            [(ngModel)]="searchQuery" 
+            (input)="onSearchChange()"
+            placeholder="Type to search..."
+          >
+          <button mat-icon-button matSuffix *ngIf="searchQuery" (click)="searchQuery = ''; onSearchChange()">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+
+      <!-- Loading Spinner -->
+      <div class="loading-container" *ngIf="isLoading">
+        <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+        <p>Loading users...</p>
+      </div>
+
+      <!-- Users Table -->
+      <div class="users-table-container" *ngIf="!isLoading">
+        <table mat-table [dataSource]="filteredUsers" class="users-table">
+          
+          <!-- Avatar Column -->
+          <ng-container matColumnDef="avatar">
+            <th mat-header-cell *matHeaderCellDef>Avatar</th>
+            <td mat-cell *matCellDef="let user">
+              <div class="user-avatar">
+                <img 
+                  *ngIf="user.avatarUrl" 
+                  [src]="user.avatarUrl" 
+                  [alt]="user.username"
+                  class="avatar-image"
+                  onerror="this.style.display='none'"
+                >
+                <mat-icon *ngIf="!user.avatarUrl" class="default-avatar">account_circle</mat-icon>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Username Column -->
+          <ng-container matColumnDef="username">
+            <th mat-header-cell *matHeaderCellDef>Username</th>
+            <td mat-cell *matCellDef="let user">
+              <div class="user-info">
+                <span class="username">{{ user.username }}</span>
+                <span class="user-id">ID: {{ user.id }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Email Column -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let user">
+              <span class="email">{{ user.email }}</span>
+              <mat-icon 
+                *ngIf="user.email === 'admin@example.com'" 
+                class="admin-badge"
+                title="Admin User"
+              >
+                shield
+              </mat-icon>
+            </td>
+          </ng-container>
+
+          <!-- Reviews Column -->
+          <ng-container matColumnDef="reviews">
+            <th mat-header-cell *matHeaderCellDef>Reviews</th>
+            <td mat-cell *matCellDef="let user">
+              <span class="stat-number">{{ getTotalReviews(user) }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="logs">
+            <th mat-header-cell *matHeaderCellDef>Logs</th>
+            <td mat-cell *matCellDef="let user">
+              <span class="stat-number">{{ getTotalLogs(user) }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="totalActivity">
+            <th mat-header-cell *matHeaderCellDef>Total Activity</th>
+            <td mat-cell *matCellDef="let user">
+              <span class="stat-number">{{ getTotalActivity(user) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let user">
+              <button 
+                mat-icon-button 
+                color="warn" 
+                (click)="deleteUser(user)"
+                [disabled]="user.email === 'admin@example.com'"
+                [title]="user.email === 'admin@example.com' ? 'Cannot delete admin user' : 'Delete user'"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <!-- User Reviews Section -->
+        <tr *ngFor="let user of filteredUsers">
+          <td colspan="7" class="user-reviews-cell">
+            <div class="user-reviews-list">
+              <h4>Reviews by {{ user.username }}:</h4>
+              <div *ngIf="userReviews.get(user.id)?.length; else noReviews">
+                <div *ngFor="let review of userReviews.get(user.id)" class="review-item">
+                  <div class="review-meta">
+                    <span class="review-category">
+                      <ng-container *ngIf="review.gameTitle">Game: {{ review.gameTitle }}</ng-container>
+                      <ng-container *ngIf="review.bookTitle">Book: {{ review.bookTitle }}</ng-container>
+                    </span>
+                    <span class="review-date">{{ review.datePosted | date:'short' }}</span>
+                    <span class="review-rating">Rating: {{ review.rating }}</span>
+                  </div>
+                  <div class="review-text">{{ review.reviewText }}</div>
+                  <button *ngIf="isAdmin" mat-icon-button color="warn" (click)="deleteReview(review.id, user.id)" title="Delete Review">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <ng-template #noReviews>
+                <div class="no-reviews">No reviews found for this user.</div>
+              </ng-template>
+            </div>
+          </td>
+        </tr>
+        </table>
+
+        <!-- No Users Found -->
+        <div class="no-users" *ngIf="filteredUsers.length === 0 && !isLoading">
+          <mat-icon>search_off</mat-icon>
+          <p>No users found matching your search criteria.</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

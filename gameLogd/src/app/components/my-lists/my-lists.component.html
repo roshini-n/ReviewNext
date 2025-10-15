@@ -1,0 +1,72 @@
+<div class="page-container">
+    <div class="content-wrapper">
+        <p-splitter [panelSizes]="[25, 75]" [style]="{ height: '600px'}" styleClass="mb-8">
+            <ng-template #panel>
+                <div class="flex items-center justify-center h-full fill-container scrollable">
+                    <h3 class="list-label">My Lists:</h3>
+                    <mat-divider></mat-divider>
+                    @for (list of lists; track list) {
+                        <div class="list-card" (click)="getGames(list)">{{ list.title }}</div>
+                    }
+                </div>
+            </ng-template>
+            <ng-template #panel>
+                <div class="flex items-center justify-center h-full fill-container scrollable">
+                    <h3 class="description"> {{ currTitle }} </h3>
+                    @if (currGames.length > 0) {
+                        @if (currDescription) {
+                            <p class="description"> {{ currDescription }}</p>
+                            <mat-divider></mat-divider>
+                        }
+                        <button mat-raised-button 
+                            class="fill-container edit-list-button" 
+                    [routerLink]="'/edit_list/' + currId">Edit List</button>
+                <button mat-raised-button 
+                    class="fill-container edit-list-button" 
+                    (click)="deleteList(currId)">Delete List</button>
+                <mat-divider></mat-divider>
+                <div class="game-grid">
+                @for (game of currGames; track game) {
+                    <div class="game-card" >
+                        <div class="game-image-container">
+                            <img
+                            *ngIf="game.imageUrl"
+                            [src]="game.imageUrl"
+                            [alt]="game.title"
+                            class="game-image"
+                            />
+                            <img
+                            *ngIf="!game.imageUrl"
+                            src="assets/images/placeholder.png"
+                            alt="No image available"
+                            class="game-image"
+                            />
+                        </div>
+                        <div class="game-details">
+                            <h3 class="game-title">{{ game.title }}</h3>
+                            <p *ngIf="game.developer" class="game-developer">
+                                {{ game.developer }}
+                            </p>
+                        </div>
+                    </div>  
+                }
+                </div>
+            }
+            @else {
+                @if (clickedOnce == true) {
+                    <p class="description">{{ currDescription }}</p>
+                    <mat-divider></mat-divider>
+                    <button mat-raised-button
+                        class="fill-container edit-list-button" 
+                        [routerLink]="'/edit_list/' + currId">Edit List</button>
+                    <button mat-raised-button 
+                        class="fill-container edit-list-button" 
+                        (click)="deleteList(currId)">Delete List</button>
+                    <p class="description">List is empty</p>
+                }
+            }
+        </div>
+    </ng-template>
+</p-splitter>
+
+<button mat-raised-button routerLink="/create_list" class="create-list-button">Create New List</button>

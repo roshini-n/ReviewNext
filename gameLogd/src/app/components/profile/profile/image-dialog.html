@@ -1,0 +1,54 @@
+<h2 mat-dialog-title>Choose Profile Picture</h2>
+
+<mat-dialog-content>
+  <div class="avatar-grid">
+    <div class="avatar-option" [class.selected]="selectedAvatar === 'assets/cat.png'" (click)="selectAvatar('assets/cat.png')">
+      <img src="assets/cat.png" alt="Cat Avatar">
+    </div>
+    <div class="avatar-option" [class.selected]="selectedAvatar === 'assets/chicken.png'" (click)="selectAvatar('assets/chicken.png')">
+      <img src="assets/chicken.png" alt="Chicken Avatar">
+    </div>
+    <div class="avatar-option" [class.selected]="selectedAvatar === 'assets/dinosaur.png'" (click)="selectAvatar('assets/dinosaur.png')">
+      <img src="assets/dinosaur.png" alt="Dinosaur Avatar">
+    </div>
+    <div class="avatar-option" [class.selected]="selectedAvatar === 'assets/kitty.png'" (click)="selectAvatar('assets/kitty.png')">
+      <img src="assets/kitty.png" alt="Kitty Avatar">
+    </div>
+    <div class="avatar-option" [class.selected]="selectedAvatar === 'assets/man.png'" (click)="selectAvatar('assets/man.png')">
+      <img src="assets/man.png" alt="Man Avatar">
+    </div>
+    <div class="avatar-option" [class.selected]="selectedAvatar === 'assets/panda.png'" (click)="selectAvatar('assets/panda.png')">
+      <img src="assets/panda.png" alt="Panda Avatar">
+    </div>
+    <div class="avatar-option" [class.selected]="selectedAvatar === 'assets/pikachu.png'" (click)="selectAvatar('assets/pikachu.png')">
+      <img src="assets/pikachu.png" alt="Pikachu Avatar">
+    </div>
+    <div class="avatar-option" [class.selected]="selectedAvatar === 'assets/robot.png'" (click)="selectAvatar('assets/robot.png')">
+      <img src="assets/robot.png" alt="Robot Avatar">
+    </div>
+    <div class="avatar-option" [class.selected]="selectedAvatar === 'assets/superhero.png'" (click)="selectAvatar('assets/superhero.png')">
+      <img src="assets/superhero.png" alt="Superhero Avatar">
+    </div>
+    <div class="avatar-option" [class.selected]="selectedAvatar === 'assets/woman.png'" (click)="selectAvatar('assets/woman.png')">
+      <img src="assets/woman.png" alt="Woman Avatar">
+    </div>
+  </div>
+
+  <div class="error-message">
+    @if (errorMessage) {
+      {{ errorMessage }}
+    }
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="!selectedAvatar || isUpdating" (click)="submitImage(selectedAvatar!)">
+    @if (isUpdating) {
+      <mat-spinner diameter="20"></mat-spinner>
+    }
+    @if (!isUpdating) {
+      <span>Update Profile Picture</span>
+    }
+  </button>
+</mat-dialog-actions>

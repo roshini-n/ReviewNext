@@ -1,0 +1,41 @@
+<div class="game-search-container">
+  <div *ngIf="loading" class="loading">
+    <div class="loader"></div>
+  </div>
+
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error && series.length === 0" class="no-results">
+    <p>{{ emptyMessage }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error && series.length > 0" class="game-grid">
+    <div *ngFor="let s of series" class="game-card">
+      <a [routerLink]="['/web-series']" class="game-link">
+        <div class="game-image-container">
+          <img
+            *ngIf="s.imageUrl"
+            [src]="s.imageUrl"
+            [alt]="s.title"
+            class="game-image"
+          />
+          <img
+            *ngIf="!s.imageUrl"
+            src="assets/images/placeholder.png"
+            alt="No image available"
+            class="game-image"
+          />
+        </div>
+        <div class="game-details">
+          <h3 class="game-title">{{ s.title }}</h3>
+          <p *ngIf="s.platform" class="game-developer">{{ s.platform }}</p>
+          <p *ngIf="s.rating" class="game-rating">{{ s.rating }}/5</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+

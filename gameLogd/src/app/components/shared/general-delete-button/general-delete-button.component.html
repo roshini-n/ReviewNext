@@ -1,0 +1,12 @@
+<button mat-raised-button color="warn" (click)="openModal()">Delete</button>
+
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <h2>Confirm Deletion</h2>
+    <p>Are you sure you want to delete this item?</p>
+    <div class="modal-actions">
+      <button mat-button color="primary" (click)="closeModal()">Cancel</button>
+      <button mat-raised-button color="warn" (click)="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>

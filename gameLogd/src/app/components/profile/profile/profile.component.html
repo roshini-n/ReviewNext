@@ -1,0 +1,251 @@
+<div class="modern-profile-container">
+  <!-- Hero Section with Enhanced Background -->
+  <div class="profile-hero">
+    <div class="hero-background"></div>
+    <div class="hero-content">
+      <div class="profile-card">
+        <div class="profile-image-wrapper" (click)="openAvatarDialog()">
+          <div class="profile-image-container">
+            <img [src]="image" alt="Profile Picture" class="profile-image">
+            <div class="image-overlay">
+              <mat-icon>photo_camera</mat-icon>
+              <span>Change Avatar</span>
+            </div>
+          </div>
+          <div class="profile-ring"></div>
+        </div>
+        
+        <div class="profile-details">
+          <h1 class="profile-username" (click)="openUsernameDialog('0ms', '0ms')">
+            {{ username || 'Set Username' }}
+            <mat-icon class="edit-icon">edit</mat-icon>
+          </h1>
+          <p class="profile-bio" (click)="openBioDialog('0ms', '0ms')">
+            {{ bio || 'Add a bio to tell others about yourself' }}
+            <mat-icon class="edit-icon">edit</mat-icon>
+          </p>
+          
+          <!-- Profile Stats -->
+          <div class="profile-stats">
+            <div class="stat-item">
+              <span class="stat-number">{{ getTotalReviews() }}</span>
+              <span class="stat-label">Reviews</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-number">{{ getTotalRatings() }}</span>
+              <span class="stat-label">Ratings</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-number">{{ getTotalLists() }}</span>
+              <span class="stat-label">Lists</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="profile-main">
+    <div class="content-wrapper">
+      <!-- Enhanced Tab Navigation -->
+      <mat-tab-group class="modern-tabs" animationDuration="300ms">
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>dashboard</mat-icon>
+            <span>Dashboard</span>
+          </ng-template>
+          <div class="tab-content-modern">
+            <div class="dashboard-grid">
+              <!-- Quick Actions Card -->
+              <mat-card class="action-card quick-actions">
+                <mat-card-header>
+                  <mat-card-title>
+                    <mat-icon>flash_on</mat-icon>
+                    Quick Actions
+                  </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="action-buttons">
+                    <button mat-fab color="primary" routerLink="/create_list" matTooltip="Create New List">
+                      <mat-icon>add</mat-icon>
+                    </button>
+                    <button mat-fab color="accent" routerLink="/search" matTooltip="Search Content">
+                      <mat-icon>search</mat-icon>
+                    </button>
+                    <button mat-fab routerLink="/dashboard" matTooltip="Go to Dashboard">
+                      <mat-icon>home</mat-icon>
+                    </button>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <!-- Recent Activity Card -->
+              <mat-card class="action-card recent-activity">
+                <mat-card-header>
+                  <mat-card-title>
+                    <mat-icon>timeline</mat-icon>
+                    Recent Activity
+                  </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="activity-item">
+                    <mat-icon class="activity-icon">rate_review</mat-icon>
+                    <div class="activity-details">
+                      <span class="activity-text">Latest reviews and ratings</span>
+                      <span class="activity-time">View your recent activity</span>
+                    </div>
+                  </div>
+                  <button mat-stroked-button routerLink="/mylog" class="view-all-btn">
+                    <mat-icon>visibility</mat-icon>
+                    View All Activity
+                  </button>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </mat-tab>
+        
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>list</mat-icon>
+            <span>My Lists</span>
+          </ng-template>
+          <div class="tab-content-modern">
+            <div class="lists-section">
+              <div class="section-header">
+                <h3>Your Personal Collections</h3>
+                <button mat-raised-button color="primary" routerLink="/create_list">
+                  <mat-icon>add</mat-icon>
+                  Create New List
+                </button>
+              </div>
+              
+              <mat-card class="feature-card lists-card" routerLink="/my_lists">
+                <div class="card-background">
+                  <mat-icon class="background-icon">collections</mat-icon>
+                </div>
+                <mat-card-content>
+                  <div class="card-header">
+                    <mat-icon class="card-icon">list_alt</mat-icon>
+                    <h3>My Lists</h3>
+                  </div>
+                  <p class="card-description">
+                    Organize your favorite games, books, movies, and more into custom collections. 
+                    Create, edit, and share your personal lists with others.
+                  </p>
+                  <div class="card-footer">
+                    <span class="view-text">View & Manage Lists</span>
+                    <mat-icon>arrow_forward</mat-icon>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </mat-tab>
+        
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>history</mat-icon>
+            <span>Activity Log</span>
+          </ng-template>
+          <div class="tab-content-modern">
+            <div class="activity-section">
+              <div class="section-header">
+                <h3>Your Activity History</h3>
+                <button mat-raised-button color="accent" routerLink="/mylog">
+                  <mat-icon>open_in_new</mat-icon>
+                  View Full Log
+                </button>
+              </div>
+              
+              <mat-card class="feature-card activity-card" routerLink="/mylog">
+                <div class="card-background">
+                  <mat-icon class="background-icon">analytics</mat-icon>
+                </div>
+                <mat-card-content>
+                  <div class="card-header">
+                    <mat-icon class="card-icon">history</mat-icon>
+                    <h3>Activity Log</h3>
+                  </div>
+                  <p class="card-description">
+                    Track all your reviews, ratings, and interactions across different categories. 
+                    See your progress and discover patterns in your preferences.
+                  </p>
+                  <div class="card-footer">
+                    <span class="view-text">View Activity History</span>
+                    <mat-icon>arrow_forward</mat-icon>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </mat-tab>
+        
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>settings</mat-icon>
+            <span>Settings</span>
+          </ng-template>
+          <div class="tab-content-modern">
+            <div class="settings-section">
+              <div class="section-header">
+                <h3>Account Settings</h3>
+              </div>
+              
+              <div class="settings-grid">
+                <mat-card class="settings-card">
+                  <mat-card-content>
+                    <div class="setting-item">
+                      <mat-icon>person</mat-icon>
+                      <div class="setting-details">
+                        <h4>Profile Information</h4>
+                        <p>Update your username and bio</p>
+                      </div>
+                      <button mat-icon-button (click)="openUsernameDialog('0ms', '0ms')">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+                
+                <mat-card class="settings-card">
+                  <mat-card-content>
+                    <div class="setting-item">
+                      <mat-icon>photo</mat-icon>
+                      <div class="setting-details">
+                        <h4>Profile Picture</h4>
+                        <p>Change your avatar image</p>
+                      </div>
+                      <button mat-icon-button (click)="openAvatarDialog()">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+                
+                <mat-card class="settings-card danger-card">
+                  <mat-card-content>
+                    <div class="setting-item">
+                      <mat-icon>logout</mat-icon>
+                      <div class="setting-details">
+                        <h4>Sign Out</h4>
+                        <p>Log out of your account</p>
+                      </div>
+                      <button mat-raised-button color="warn" (click)="logout()">
+                        <mat-icon>exit_to_app</mat-icon>
+                        Logout
+                      </button>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>
