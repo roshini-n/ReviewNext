@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
+import { FooterComponent } from '../footer/footer.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, FormsModule, MatIconModule, MatButtonModule],
+  imports: [RouterLink, FormsModule, MatIconModule, MatButtonModule, FooterComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
