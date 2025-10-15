@@ -11,7 +11,7 @@
 }
 
 h2 {
-  color: #FEE715;
+  color: #954535;
   margin-bottom: 2rem;
   font-size: 1.8rem;
   font-weight: 500;
@@ -55,8 +55,8 @@ h2 {
 }
 
 button[type="submit"] {
-  background-color: #FEE715;
-  color: #000;
+  background-color: #954535;
+color: #fff;
   padding: 0.5rem 2rem;
 }
 

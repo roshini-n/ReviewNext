@@ -60,7 +60,7 @@
 }
 
 h1 {
-  color: #FEE715;
+  color: #954535;
   margin-bottom: 2rem;
   font-size: 2rem;
   font-weight: 500;
@@ -84,17 +84,18 @@ mat-form-field {
 
 .form-actions {
   display: flex;
-  gap: 1rem;
   justify-content: flex-end;
-  margin-top: 1rem;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
 button[type="submit"] {
-  background-color: #FEE715;
-  color: #000;
-  font-weight: 500;
-  padding: 8px 16px;
-  border-radius: 4px;
+  background-color: #954535;
+  color: #fff;
+}
+
+button[type="submit"]:hover {
+  background-color: #7a3929;
 }
 
 button[type="submit"]:disabled {
@@ -104,8 +105,8 @@ button[type="submit"]:disabled {
 }
 
 button[type="button"] {
-  color: #FEE715;
-  border: 1px solid #FEE715;
+background-color: #954535;
+color: #fff;
 }
 
 /* Strong overrides for white background and dark text */
@@ -152,8 +153,8 @@ input, textarea, select {
 }
 
 .mat-form-field-appearance-outline .mat-form-field-outline-thick {
-  color: #FEE715 !important;
-  border-color: #FEE715 !important;
+  color: #954535 !important;
+  border-color: #954535 !important;
 }
 
 .mat-select-arrow {
@@ -171,8 +172,8 @@ input, textarea, select {
 }
 
 .mat-chip {
-  background: #FEE715 !important;
-  color: #000 !important;
+  background-color: #954535;
+color: #fff;
 }
 .button-row {
   display: flex;
@@ -184,14 +185,14 @@ input, textarea, select {
 
 /* Remove hover/focus/active for all buttons */
 button, button:active, button:focus, button:hover {
-  background: #FEE715 !important;
-  color: #000 !important;
+  background: #954535 !important;
+  color: #fff !important;
   box-shadow: none !important;
 }
 
 button[mat-button], button[mat-raised-button], button[mat-icon-button] {
-  background: #FEE715 !important;
-  color: #000 !important;
+  background: #954535 !important;
+  color: #fff !important;
 }
 
 @media (max-width: 768px) {

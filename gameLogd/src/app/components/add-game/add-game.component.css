@@ -29,7 +29,7 @@ box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 h1 {
-color: #FEE715;
+color: #954535;
 margin-bottom: 2rem;
 font-size: 2rem;
 }
@@ -56,8 +56,8 @@ gap: 0.5rem;
 }
 
 mat-chip {
-background-color: #FEE715;
-color: #000;
+background-color: #954535;
+color: #fff;
 }
 
 .form-actions {
@@ -68,12 +68,12 @@ margin-top: 2rem;
 }
 
 button[type="submit"] {
-background-color: #FEE715;
-color: #000;
+background-color: #954535;
+color: #fff;
 }
 
 button[type="submit"]:hover {
-background-color: #e6d100;
+background-color: #7a3929;
 }
 
 @media (max-width: 768px) {

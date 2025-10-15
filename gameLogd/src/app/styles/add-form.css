@@ -247,13 +247,13 @@ input, textarea, select {
 }
 
 .mat-chip {
-  background: #FEE715 !important;
-  color: #000 !important;
+ background-color: #954535;
+color: #fff;
 }
 
 .mat-chip:hover, .mat-chip:focus, .mat-chip:active {
-  background: #FEE715 !important;
-  color: #000 !important;
+  background-color: #954535;
+color: #fff;
 }
 
 .mat-form-field-appearance-outline .mat-form-field-outline {
@@ -262,19 +262,19 @@ input, textarea, select {
 
 /* Remove hover/focus/active for all buttons */
 button, button:active, button:focus, button:hover {
-  background: #FEE715 !important;
-  color: #000 !important;
+ background-color: #954535;
+color: #fff;
   box-shadow: none !important;
 }
 
 button[mat-button], button[mat-raised-button], button[mat-icon-button] {
-  background: #FEE715 !important;
-  color: #000 !important;
+ background-color: #954535;
+color: #fff;
 }
 
 button[mat-button]:hover, button[mat-raised-button]:hover, button[mat-icon-button]:hover {
-  background: #FEE715 !important;
-  color: #000 !important;
+  background-color: #954535;
+color: #fff;
 }
 
 /* End strong overrides */ 

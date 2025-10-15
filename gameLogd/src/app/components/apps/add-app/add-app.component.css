@@ -126,14 +126,14 @@ input, textarea, select {
 }
 
 .mat-chip {
-  background: #FEE715 !important;
-  color: #000 !important;
+  background: #954535 !important;
+  color: #fff !important;
 }
 
 /* Remove hover/focus/active for all buttons */
 button, button:active, button:focus, button:hover {
-  background: #FEE715 !important;
-  color: #000 !important;
+  background: #954535 !important;
+  color: #fff !important;
   box-shadow: none !important;
 }
 
