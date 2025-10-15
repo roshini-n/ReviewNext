@@ -42,25 +42,25 @@ button, input, select, textarea {
 
 
 .navbar_button {
-    color: #FEE715;
+    color: #D4A373;
     font-size: large;
 }
 
 /* Global variables */
 :root {
-  --primary-bg: #e6ffff;
-  --secondary-bg: rgba(255, 255, 255, 0.1);
-  --primary-text: #333333;
-  --secondary-text: #666666;
-  --accent-color: #00e5ff;
-  --border-color: rgba(0, 229, 255, 0.2);
+  --primary-bg: #FEFAE0;
+  --secondary-bg: rgba(212, 163, 115, 0.1);
+  --primary-text: #4A3728;
+  --secondary-text: #967259;
+  --accent-color: #D4A373;
+  --border-color: rgba(212, 163, 115, 0.2);
   --input-bg: rgba(255, 255, 255, 0.9);
-  --input-border: rgba(0, 229, 255, 0.3);
+  --input-border: rgba(212, 163, 115, 0.3);
   --error-color: #e74c3c;
-  --success-color: #2ecc71;
-  --shadow-color: rgba(0, 229, 255, 0.1);
-  --navbar-text: #333333;
-  --navbar-button-hover: rgba(0, 229, 255, 0.1);
+  --success-color: #85A67C;
+  --shadow-color: rgba(212, 163, 115, 0.1);
+  --navbar-text: #4A3728;
+  --navbar-button-hover: rgba(212, 163, 115, 0.1);
 }
 
 /* Global styles */

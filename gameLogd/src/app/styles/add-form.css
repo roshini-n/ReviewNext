@@ -93,19 +93,19 @@ mat-chip:active {
 /* Theme-specific styles */
 :root {
   /* Light theme (default) */
-  --surface-card: #ffffff;
-  --surface-ground: #f5f5f5;
-  --text-color: #333333;
-  --primary-color: #FEE715;
-  --primary-color-text: #000000;
-  --primary-600: #e6d100;
-  --label-color: #666666;
-  --border-color: #e0e0e0;
-  --background-color: #ffffff;
-  --card-background: #ffffff;
-  --text-primary: #333333;
-  --text-secondary: #666666;
-  --accent-color: #FEE715;
+  --surface-card: #FEFAE0;
+  --surface-ground: #FAEDCD;
+  --text-color: #4A3728;
+  --primary-color: #D4A373;
+  --primary-color-text: #FEFAE0;
+  --primary-600: #C89B7B;
+  --label-color: #967259;
+  --border-color: #E9EDC9;
+  --background-color: #FEFAE0;
+  --card-background: #FEFAE0;
+  --text-primary: #4A3728;
+  --text-secondary: #967259;
+  --accent-color: #CCD5AE;
   --error-color: #f44336;
 }
 

@@ -4,7 +4,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #073f4e 0, #cbd9dd 10%, #95cede 20%, #78bdd2 35%, #42acca 50%, #0096bf 75%, #03313d 100%);
+    background: linear-gradient(135deg, #FAEDCD 0%, #FEFAE0 25%, #E9EDC9 50%, #D4A373 75%, #CCD5AE 100%);
     overflow: hidden;
     z-index: 0;
     pointer-events: none;
@@ -387,9 +387,9 @@ hr {
 .search-button {
     padding: 8px 16px;
     border-radius: 8px;
-    border: 1px solid rgba(0, 229, 255, 0.3);
-    background: rgba(0, 229, 255, 0.2);
-    color: #333333;
+    border: 1px solid rgba(212, 163, 115, 0.3);
+    background: rgba(212, 163, 115, 0.2);
+    color: #4A3728;
     cursor: pointer;
     font-weight: 500;
     font-size: 1rem;
@@ -409,17 +409,17 @@ hr {
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(255, 255, 255, 0.2),
+        rgba(254, 250, 224, 0.2),
         transparent
     );
     transition: 0.5s;
 }
 
 .search-button:hover {
-    background: rgba(0, 229, 255, 0.3);
+    background: rgba(212, 163, 115, 0.3);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 229, 255, 0.2);
-    border-color: rgba(0, 229, 255, 0.4);
+    box-shadow: 0 4px 12px rgba(212, 163, 115, 0.2);
+    border-color: rgba(212, 163, 115, 0.4);
 }
 
 @keyframes searchFadeIn {
@@ -477,13 +477,13 @@ hr {
     align-items: center;
     justify-content: center;
     padding: 1rem;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(254, 250, 224, 0.15);
     border-radius: 14px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 32px rgba(74, 55, 40, 0.15);
     text-decoration: none;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 229, 255, 0.3);
+    border: 1px solid rgba(212, 163, 115, 0.3);
     transform-style: preserve-3d;
     perspective: 1000px;
 }
@@ -634,15 +634,15 @@ hr {
 /* Light theme - Matching dashboard colors */
 :root,
 [data-theme="light"] {
-    --text-color: #333333;
-    --accent-color: #00e5ff;
-    --background-color: #f8f9fa;
-    --card-background: rgba(255, 255, 255, 0.1);
+    --text-color: #4A3728;
+    --accent-color: #D4A373;
+    --background-color: #FEFAE0;
+    --card-background: rgba(212, 163, 115, 0.1);
     --input-background: rgba(255, 255, 255, 0.1);
-    --input-border: rgba(0, 229, 255, 0.2);
-    --input-focus-border: #00e5ff;
-    --input-focus-shadow: rgba(0, 229, 255, 0.2);
-    --placeholder-color: #757575;
+    --input-border: rgba(212, 163, 115, 0.2);
+    --input-focus-border: #D4A373;
+    --input-focus-shadow: rgba(212, 163, 115, 0.2);
+    --placeholder-color: #967259;
 }
 
 .big-text {

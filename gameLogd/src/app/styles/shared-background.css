@@ -3,7 +3,7 @@
     min-height: 100vh;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg, #073f4e 0, #cbd9dd 10%, #95cede 20%, #78bdd2 35%, #42acca 50%, #0096bf 75%, #03313d 100%);
+    background: linear-gradient(135deg, #FAEDCD 0%, #FEFAE0 25%, #E9EDC9 50%, #D4A373 75%, #CCD5AE 100%);
     display: flex;
     flex-direction: column;
     font-family: 'Roboto', sans-serif;

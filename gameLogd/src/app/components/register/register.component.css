@@ -3,7 +3,7 @@
     height: 100vh;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg, #073f4e 0, #cbd9dd 10%, #95cede 20%, #78bdd2 35%, #42acca 50%, #0096bf 75%, #03313d 100%);
+    background: linear-gradient(135deg, #FAEDCD 0%, #FEFAE0 25%, #E9EDC9 50%, #D4A373 75%, #CCD5AE 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -53,12 +53,12 @@
     font-size: 3rem;
     font-weight: 700;
     margin: 0;
-    background: linear-gradient(45deg, #000000, #000000, #000000);
+    background: linear-gradient(45deg, #4A3728, #967259, #D4A373);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     font-family: 'Roboto', sans-serif;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 2px 2px 4px rgba(74, 55, 40, 0.3);
 }
 
 .brand-subtitle {
