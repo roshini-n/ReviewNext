@@ -224,7 +224,7 @@
     right: 16px;
     background: none;
     border: none;
-    color: #999;
+    color: #E5E4E2;
     cursor: pointer;
     padding: 4px;
     border-radius: 50%;
@@ -237,8 +237,8 @@
 }
 
 .toggle-password:hover {
-    background: rgba(255, 215, 0, 0.1);
-    color: #FFD700;
+    background: #CD7F32;
+    color: #DAA06D;
 }
 
 .toggle-password mat-icon {
@@ -309,8 +309,8 @@
 
 /* Login Button */
 .login-button {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    color: #2c3e50;
+   background: linear-gradient(135deg, #D4A373 0%, #C89B7B 100%);
+    color: #FEFAE0;
     border: none;
     border-radius: 12px;
     padding: 14px 24px;
@@ -329,8 +329,8 @@
 
 .login-button:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
-    background: linear-gradient(135deg, #FFA500 0%, #FFD700 100%);
+    box-shadow: 0 10px 20px rgba(212, 163, 115, 0.3);
+    background: linear-gradient(135deg, #C89B7B 0%, #D4A373 100%);
 }
 
 .login-button:active:not(:disabled) {
@@ -362,7 +362,7 @@
 }
 
 .register-link a {
-    color: #000000;
+    color: #D27D2D;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s ease;
@@ -370,7 +370,7 @@
 }
 
 .register-link a:hover {
-    color: #333333;
+   color: #4A3728
 }
 
 /* Error Messages */

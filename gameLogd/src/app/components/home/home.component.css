@@ -477,13 +477,13 @@ hr {
     align-items: center;
     justify-content: center;
     padding: 1rem;
-    background: rgba(254, 250, 224, 0.15);
+    background: rgba(247, 239, 230, 0.15);
     border-radius: 14px;
-    box-shadow: 0 8px 32px rgba(74, 55, 40, 0.15);
+    box-shadow: 0 8px 32px rgba(75, 46, 23, 0.15);
     text-decoration: none;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(212, 163, 115, 0.3);
+    border: 1px solid rgba(92, 64, 51, 0.3);
     transform-style: preserve-3d;
     perspective: 1000px;
 }
@@ -495,7 +495,7 @@ hr {
     border-radius: 20px;
     background: linear-gradient(
         135deg,
-        rgba(0, 229, 255, 0.2),
+        rgba(92, 64, 51, 0.2),
         rgba(255, 255, 255, 0.1)
     );
     opacity: 0;
@@ -504,7 +504,7 @@ hr {
 
 .category-card:hover {
     transform: translateY(-10px) scale(1.05) rotateX(10deg);
-    box-shadow: 0 20px 40px rgba(0, 229, 255, 0.3);
+    box-shadow: 0 20px 40px rgba(92, 64, 51, 0.2);
 }
 
 .category-card:hover::before {
@@ -516,14 +516,14 @@ hr {
     height: 1.75rem;
     width: 1.75rem;
     margin-bottom: 0.5rem;
-    color: #d6a77a; /* Soft caramel color */
+    color: #4b2e17; /* Dark brown */
     transition: transform 0.4s ease, color 0.3s ease;
-    filter: drop-shadow(0 2px 4px rgba(92, 64, 51, 0.15));
+    filter: drop-shadow(0 2px 4px rgba(75, 46, 23, 0.15));
 }
 
 .category-card:hover mat-icon {
     transform: scale(1.2) translateZ(20px);
-    color: #c08a60; /* Slightly darker on hover */
+    color: #5c4033; /* Soft brown for hover */
 }
 
 .category-card span {
