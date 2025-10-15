@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    background: #0a1929;
+    background: #FAEDCD;
     min-height: 100vh;
 }
 
@@ -9,7 +9,7 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
-    color: white;
+    color: #4A3728;
     overflow: hidden;
 }
 
@@ -22,10 +22,10 @@ body {
     bottom: 0;
     background: 
         linear-gradient(45deg,
-        rgba(0, 229, 255, 0.15) 0%,
-        rgba(147, 51, 234, 0.15) 33%,
-        rgba(41, 121, 255, 0.15) 66%,
-        rgba(0, 229, 255, 0.15) 100%);
+        rgba(212, 163, 115, 0.15) 0%,
+        rgba(150, 114, 89, 0.15) 33%,
+        rgba(74, 55, 40, 0.15) 66%,
+        rgba(212, 163, 115, 0.15) 100%);
     background-size: 400% 400%;
     animation: gradientFlow 20s ease infinite;
     pointer-events: none;
@@ -41,7 +41,7 @@ body {
     bottom: 0;
     background: 
         radial-gradient(circle at 50% 50%,
-        rgba(0, 229, 255, 0.1) 0%,
+        rgba(212, 163, 115, 0.1) 0%,
         transparent 50%);
     opacity: 0.5;
     pointer-events: none;
@@ -104,7 +104,7 @@ body {
     overflow: hidden;
     cursor: pointer;
     border: 3px solid transparent;
-    background: linear-gradient(45deg, #00e5ff, #2979ff) border-box;
+    background: linear-gradient(45deg, #D4A373, #967259) border-box;
     -webkit-mask: 
         linear-gradient(#fff 0 0) padding-box,
         linear-gradient(#fff 0 0);
@@ -168,7 +168,7 @@ body {
 .username {
     font-size: 2rem;
     margin: 0;
-    color: #fff;
+    color: #4A3728;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -186,7 +186,7 @@ body {
 }
 
 .bio {
-    color: #ccc;
+    color: #4A3728;
     margin: 0.5rem 0;
     display: flex;
     align-items: center;
@@ -276,8 +276,8 @@ body {
 
 .list-card:hover {
     transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 8px 32px rgba(0, 229, 255, 0.15);
-    border-color: rgba(0, 229, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(212, 163, 115, 0.15);
+    border-color: rgba(212, 163, 115, 0.3);
 }
 
 .list-card:hover::before {
@@ -296,7 +296,7 @@ body {
 .list-card mat-icon {
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    color: #00e5ff;
+    color: #D4A373;
     animation: iconFloat 3s ease-in-out infinite;
 }
 
@@ -308,17 +308,17 @@ body {
 .list-card mat-icon {
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    color: #FEE715;
+    color: #4A3728;
 }
 
 .list-card h3 {
     margin: 0;
-    color: #fff;
+    color: #4A3728;
 }
 
 .list-card p {
     margin: 0.5rem 0 0;
-    color: #ccc;
+    color: #4A3728;
 }
 
 .profile-actions {
@@ -329,12 +329,12 @@ body {
 
 /* Material tabs customization */
 ::ng-deep .mat-mdc-tab-group {
-    --mdc-tab-indicator-active-indicator-color: #00e5ff;
-    --mat-tab-header-active-label-text-color: #00e5ff;
-    --mat-tab-header-active-ripple-color: #00e5ff;
+    --mdc-tab-indicator-active-indicator-color: #D4A373;
+    --mat-tab-header-active-label-text-color: #D4A373;
+    --mat-tab-header-active-ripple-color: #D4A373;
     --mat-tab-header-active-background-color: rgba(255, 255, 255, 0.05);
-    --mat-tab-header-active-focus-label-text-color: #00e5ff;
-    --mat-tab-header-active-hover-label-text-color: #00e5ff;
+    --mat-tab-header-active-focus-label-text-color: #D4A373;
+    --mat-tab-header-active-hover-label-text-color: #D4A373;
 }
 
 ::ng-deep .mat-mdc-tab-header {
@@ -345,13 +345,13 @@ body {
 }
 
 ::ng-deep .mat-mdc-tab {
-    color: rgba(255, 255, 255, 0.8);
+    color: #4A3728;
     transition: all 0.3s ease;
 }
 
 ::ng-deep .mat-mdc-tab:hover {
-    color: #00e5ff;
-    background: rgba(0, 229, 255, 0.1);
+    color: #D4A373;
+    background: rgba(212, 163, 115, 0.1);
 }
 
 ::ng-deep .mat-mdc-tab-body-wrapper {
@@ -432,8 +432,8 @@ body {
 }
 
 .avatar-option.selected {
-  border-color: #00e5ff;
-  box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+  border-color: #D4A373;
+  box-shadow: 0 0 15px rgba(212, 163, 115, 0.5);
 }
 
 .avatar-option::before {
@@ -443,7 +443,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 229, 255, 0.2);
+  background: rgba(212, 163, 115, 0.2);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -472,8 +472,8 @@ mat-dialog-actions button:not([disabled]) {
 }
 
 mat-dialog-actions button:not([disabled]):hover {
-  background: rgba(0, 229, 255, 0.2);
-  border-color: rgba(0, 229, 255, 0.4);
+  background: rgba(212, 163, 115, 0.2);
+  border-color: rgba(212, 163, 115, 0.4);
   transform: translateY(-2px);
 }
 
@@ -571,7 +571,7 @@ mat-spinner {
 }
 
 ::ng-deep .mat-mdc-form-field-label {
-    color: rgba(255, 255, 255, 0.6) !important;
+    color: #4A3728 !important;
 }
 
 mat-dialog-actions {
@@ -591,8 +591,8 @@ mat-dialog-actions button {
 }
 
 mat-dialog-actions button:hover {
-    background: rgba(0, 229, 255, 0.2);
-    border-color: rgba(0, 229, 255, 0.4);
+    background: rgba(212, 163, 115, 0.2);
+    border-color: rgba(212, 163, 115, 0.4);
     transform: translateY(-2px);
 }
 
@@ -621,15 +621,11 @@ mat-dialog-title {
     padding: 0;
     font-size: 24px;
     font-weight: 500;
-    color: #fff;
-    background: linear-gradient(45deg, #00e5ff, #2979ff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #4A3728;
 }
 
 mat-dialog-content p {
     margin: 0 0 20px 0;
-    color: rgba(255, 255, 255, 0.8);
+    color: #4A3728;
     line-height: 1.6;
 }

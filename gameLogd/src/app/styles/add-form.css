@@ -114,16 +114,16 @@ mat-chip:active {
   --surface-card: #ffffff;
   --surface-ground: #f5f5f5;
   --text-color: #333333;
-  --primary-color: #FEE715;
-  --primary-color-text: #000000;
-  --primary-600: #e6d100;
+  --primary-color: #000000;
+  --primary-color-text: #FFFFFF;
+  --primary-600: #333333;
   --label-color: #666666;
   --border-color: #e0e0e0;
   --background-color: #ffffff;
   --card-background: #ffffff;
   --text-primary: #333333;
   --text-secondary: #666666;
-  --accent-color: #FEE715;
+  --accent-color: #000000;
   --error-color: #f44336;
 }
 

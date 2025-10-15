@@ -194,8 +194,8 @@
 }
 
 .input-wrapper input:focus {
-    border-color: #FFD700;
-    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+    border-color: #000000;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
 }
 
 .input-wrapper input.error {
@@ -270,8 +270,8 @@
 }
 
 .remember-me input[type="checkbox"]:checked + .checkmark {
-    background: #FFD700;
-    border-color: #FFD700;
+    background: #000000;
+    border-color: #000000;
 }
 
 .remember-me input[type="checkbox"]:checked + .checkmark::after {
@@ -286,7 +286,7 @@
 }
 
 .forgot-password {
-    color: #FFD700;
+    color: #000000;
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
@@ -295,7 +295,7 @@
 }
 
 .forgot-password:hover {
-    color: #FFA500;
+    color: #333333;
 }
 
 /* Login Button */

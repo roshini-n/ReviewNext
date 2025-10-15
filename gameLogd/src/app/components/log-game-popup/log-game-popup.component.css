@@ -54,12 +54,12 @@
 }
 
 .rating-star.filled {
-  color: #FEE715;
-  text-shadow: 0 0 10px rgba(254, 231, 21, 0.4);
+  color: #000000;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 
 .rating-star.hovered {
-  color: #FEE715;
+  color: #000000;
   opacity: 0.9;
 }
 
@@ -116,7 +116,7 @@ mat-dialog-actions {
   display: flex;
   padding: 24px 28px;
   background-color: #212121;
-  border-bottom: 1px solid #FEE715;
+  border-bottom: 1px solid #000000;
   position: relative;
   color: #fff;
 }
@@ -153,7 +153,7 @@ mat-dialog-actions {
   margin: 0;
   font-size: 20px;
   font-weight: 600;
-  color: #FEE715;
+  color: #000000;
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
@@ -173,7 +173,7 @@ mat-dialog-actions {
 }
 
 .close-button:hover {
-  color: #FEE715;
+  color: #000000;
   transform: rotate(90deg);
 }
 
@@ -246,20 +246,20 @@ mat-dialog-actions {
 }
 
 .save-button {
-  background-color: #FEE715;
-  color: #222;
+  background-color: #000000;
+  color: #FFFFFF;
   font-weight: 500;
   min-width: 100px;
   letter-spacing: 0.5px;
   border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(254, 231, 21, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease;
 }
 
 .save-button:hover:not(:disabled) {
-  background-color: #FFED4A;
+  background-color: #333333;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(254, 231, 21, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .save-button:active:not(:disabled) {
@@ -277,7 +277,7 @@ mat-dialog-actions {
 }
 
 .mat-datepicker-toggle:hover {
-  color: #FEE715;
+  color: #000000;
 }
 
 ::ng-deep .mat-datepicker-content {
@@ -320,10 +320,12 @@ mat-dialog-actions {
 }
 
 /* Update Material overrides */
+And finally, update the datepicker text field focus color:
+
 ::ng-deep .minimal-dialog .mat-mdc-text-field-wrapper.mdc-text-field--focused .mdc-notched-outline__leading,
 ::ng-deep .minimal-dialog .mat-mdc-text-field-wrapper.mdc-text-field--focused .mdc-notched-outline__notch,
 ::ng-deep .minimal-dialog .mat-mdc-text-field-wrapper.mdc-text-field--focused .mdc-notched-outline__trailing {
-  border-color: #FEE715 !important;
+  border-color: #000000 !important;
   border-width: 2px;
 }
 
@@ -333,9 +335,9 @@ mat-dialog-actions {
 }
 
 ::ng-deep .minimal-checkbox:hover .mdc-checkbox__background {
-  border-color: #FEE715 !important;
+  border-color: #000000 !important;
 }
 
 ::ng-deep .minimal-checkbox .mdc-checkbox__background.mdc-checkbox--selected {
-  background-color: #FEE715 !important;
+  background-color: #000000 !important;
 }
