@@ -49,26 +49,26 @@
   font-family: 'Roboto', sans-serif;
   font-size: 1.6rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: #967259;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-right: 32px;
   margin-top: 0;
   margin-bottom: 0;
-  text-shadow: 0 2px 4px rgba(0, 229, 255, 0.3);
+  text-shadow: 0 2px 4px rgba(212, 163, 115, 0.3);
   position: relative;
   z-index: 1001;
 }
 
 .site-title .highlight {
-  color: #00b8d4;
-  text-shadow: 0 2px 4px rgba(0, 184, 212, 0.4);
+  color: #D4A373;
+  text-shadow: 0 2px 4px rgba(212, 163, 115, 0.4);
   font-weight: 700;
 }
 
 .site-title:hover {
   transform: translateY(-1px);
-  text-shadow: 0 4px 8px rgba(0, 184, 212, 0.5);
+  text-shadow: 0 4px 8px rgba(212, 163, 115, 0.5);
 }
 
 .search-container {
