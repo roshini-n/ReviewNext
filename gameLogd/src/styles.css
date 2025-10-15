@@ -10,7 +10,7 @@
 }
 
 .blue {
-  color: #1870e4;
+  color: var(--primary-color);
 }
 
 body {
@@ -42,37 +42,45 @@ button, input, select, textarea {
 
 
 .navbar_button {
-    color: #D4A373;
+    color: var(--primary-color);
     font-size: large;
 }
 
 /* Global variables */
 :root {
-  --primary-bg: #FEFAE0;
-  --secondary-bg: rgba(212, 163, 115, 0.1);
-  --primary-text: #4A3728;
-  --secondary-text: #967259;
-  --accent-color: #D4A373;
-  --border-color: rgba(212, 163, 115, 0.2);
+  --primary-color: #b67c52;
+  --secondary-color: #d6a77a;
+  --background-color: #f7efe6;
+  --card-bg: #f3e2d1;
+  --heading-text: #4b2e17;
+  --body-text: #5c4033;
+  --highlight: #c08a60;
+  --link-color: #a97444;
+  --primary-bg: var(--background-color);
+  --secondary-bg: var(--card-bg);
+  --primary-text: var(--body-text);
+  --secondary-text: var(--heading-text);
+  --accent-color: var(--primary-color);
+  --border-color: rgba(182, 124, 82, 0.2);
   --input-bg: rgba(255, 255, 255, 0.9);
-  --input-border: rgba(212, 163, 115, 0.3);
+  --input-border: rgba(182, 124, 82, 0.3);
   --error-color: #e74c3c;
   --success-color: #85A67C;
-  --shadow-color: rgba(212, 163, 115, 0.1);
-  --navbar-text: #4A3728;
-  --navbar-button-hover: rgba(212, 163, 115, 0.1);
+  --shadow-color: rgba(182, 124, 82, 0.1);
+  --navbar-text: var(--heading-text);
+  --navbar-button-hover: rgba(182, 124, 82, 0.1);
 }
 
 /* Global styles */
 html {
   min-height: 100%;
-  background: linear-gradient(135deg, #e6ffff, #ccffff);
+  background: var(--background-color);
 }
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
-  background-color: var(--primary-bg);
-  color: var(--primary-text);
+  background-color: var(--background-color);
+  color: var(--body-text);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 

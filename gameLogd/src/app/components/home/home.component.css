@@ -20,8 +20,8 @@
     background: repeating-linear-gradient(45deg, 
         transparent,
         transparent 100px,
-        rgba(120, 189, 210, 0.25) 100px,
-        rgba(120, 189, 210, 0.25) 200px
+        rgba(40, 40, 40, 0.25) 100px,
+        rgba(40, 40, 40, 0.25) 200px
     );
     animation: waveFlow 20s linear infinite;
     transform-origin: center;
@@ -34,8 +34,8 @@
     background: repeating-linear-gradient(45deg, 
         transparent,
         transparent 80px,
-        rgba(66, 172, 202, 0.2) 80px,
-        rgba(66, 172, 202, 0.2) 160px
+        rgba(35, 35, 35, 0.2) 80px,
+        rgba(35, 35, 35, 0.2) 160px
     );
     transform: scale(1.1);
 }
@@ -47,8 +47,8 @@
     background: repeating-linear-gradient(-45deg, 
         transparent,
         transparent 120px,
-        rgba(149, 206, 222, 0.18) 120px,
-        rgba(149, 206, 222, 0.18) 240px
+        rgba(45, 45, 45, 0.18) 120px,
+        rgba(45, 45, 45, 0.18) 240px
     );
     transform: scale(1.2);
 }
@@ -59,8 +59,8 @@
     background: repeating-linear-gradient(60deg, 
         transparent,
         transparent 150px,
-        rgba(203, 217, 221, 0.15) 150px,
-        rgba(203, 217, 221, 0.15) 300px
+        rgba(50, 50, 50, 0.15) 150px,
+        rgba(50, 50, 50, 0.15) 300px
     );
     transform: scale(1.3);
 }
@@ -516,27 +516,28 @@ hr {
     height: 1.75rem;
     width: 1.75rem;
     margin-bottom: 0.5rem;
-    color: #1a1a1a;
-    transition: transform 0.4s ease;
-    filter: drop-shadow(0 2px 4px rgba(17, 24, 39, 0.15));
+    color: #d6a77a; /* Soft caramel color */
+    transition: transform 0.4s ease, color 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(92, 64, 51, 0.15));
 }
 
 .category-card:hover mat-icon {
     transform: scale(1.2) translateZ(20px);
+    color: #c08a60; /* Slightly darker on hover */
 }
 
 .category-card span {
     font-size: 0.9rem;
     font-weight: 500;
     text-align: center;
-    transition: transform 0.4s ease;
-    color: #1a1a1a;
+    transition: transform 0.4s ease, color 0.3s ease;
+    color: #4b2e17; /* Dark brown for text */
     text-shadow: none;
     margin-top: 0.25rem;
 }
 
 .category-card span:hover {
-    color: #0b1220;
+    color: #5c4033; /* Slightly different shade on hover */
 }
 
 .category-card:hover span {
@@ -601,48 +602,48 @@ hr {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: rgba(0, 229, 255, 0.2);
+    background: rgba(40, 40, 40, 0.2);
     animation: float3D 15s ease-in-out infinite;
     transform-style: preserve-3d;
-    box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+    box-shadow: 0 0 20px rgba(40, 40, 40, 0.2);
     backdrop-filter: blur(5px);
-    border: 1px solid rgba(0, 229, 255, 0.1);
+    border: 1px solid rgba(40, 40, 40, 0.1);
 }
 
 @keyframes float3D {
     0%, 100% {
         transform: translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg);
         opacity: 0.9;
-        box-shadow: 0 0 30px rgba(0, 229, 255, 0.4);
+        box-shadow: 0 0 30px rgba(40, 40, 40, 0.4);
     }
     25% {
         transform: translate3d(50px, -30px, 100px) rotateX(45deg) rotateY(45deg);
         opacity: 0.7;
-        box-shadow: 0 0 40px rgba(0, 229, 255, 0.5);
+        box-shadow: 0 0 40px rgba(40, 40, 40, 0.5);
     }
     50% {
         transform: translate3d(100px, 0, 50px) rotateX(-45deg) rotateY(90deg);
         opacity: 0.5;
-        box-shadow: 0 0 50px rgba(0, 229, 255, 0.6);
+        box-shadow: 0 0 50px rgba(40, 40, 40, 0.6);
     }
     75% {
         transform: translate3d(50px, 30px, 100px) rotateX(45deg) rotateY(135deg);
         opacity: 0.7;
-        box-shadow: 0 0 40px rgba(0, 229, 255, 0.5);
+        box-shadow: 0 0 40px rgba(40, 40, 40, 0.5);
     }
 }
 /* Light theme - Matching dashboard colors */
 :root,
 [data-theme="light"] {
-    --text-color: #4A3728;
-    --accent-color: #D4A373;
-    --background-color: #FEFAE0;
-    --card-background: rgba(212, 163, 115, 0.1);
+    --text-color: #4b2e17;
+    --accent-color: #d6a77a;
+    --background-color: #f7efe6;
+    --card-background: rgba(214, 167, 122, 0.1);
     --input-background: rgba(255, 255, 255, 0.1);
-    --input-border: rgba(212, 163, 115, 0.2);
-    --input-focus-border: #D4A373;
-    --input-focus-shadow: rgba(212, 163, 115, 0.2);
-    --placeholder-color: #967259;
+    --input-border: rgba(214, 167, 122, 0.2);
+    --input-focus-border: #c08a60;
+    --input-focus-shadow: rgba(214, 167, 122, 0.2);
+    --placeholder-color: #5c4033;
 }
 
 .big-text {
@@ -694,7 +695,7 @@ hr {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: rgba(0, 255, 255, 0.1);
+    background: rgba(40, 40, 40, 0.1);
     border-radius: 50%;
     filter: blur(8px);
 }
