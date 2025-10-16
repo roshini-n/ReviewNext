@@ -92,11 +92,11 @@
     background: rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 229, 255, 0.2);
+    border: 1px solid rgba(128, 0, 32, 0.2);
     transform-style: preserve-3d;
     animation: cardScaleIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     opacity: 0;
-    box-shadow: 0 4px 16px rgba(0, 229, 255, 0.12);
+    box-shadow: 0 4px 16px rgba(128, 0, 32, 0.12);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -106,8 +106,8 @@
 
 .stat-card:hover {
     transform: translateY(-8px) rotateX(8deg);
-    box-shadow: 0 15px 30px rgba(0, 229, 255, 0.2);
-    border-color: rgba(0, 229, 255, 0.4);
+    box-shadow: 0 15px 30px rgba(128, 0, 32, 0.2);
+    border-color: rgba(128, 0, 32, 0.4);
 }
 
 .stat-card mat-card-content {
@@ -220,13 +220,13 @@
 
 .quick-actions button:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 229, 255, 0.2);
+    box-shadow: 0 10px 20px rgba(128, 0, 32, 0.2);
     background: rgba(255, 255, 255, 0.15);
 }
 
 .quick-actions mat-icon {
     margin-right: 0.5rem;
-    color: #00e5ff;
+    color: #800020;
 }
 
 @media (max-width: 768px) {
@@ -281,22 +281,9 @@
     font-weight: 600;
     color: #0b1220;
     margin-bottom: 2rem;
-    position: relative;
 }
 
 .categories-title:hover { color: #1b2a4a; }
-
-.categories-title::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 3px;
-    background: linear-gradient(90deg, #00e5ff, #00b8d4);
-    border-radius: 2px;
-}
 
 .categories-grid {
     display: grid;
@@ -314,7 +301,7 @@
     gap: 0.5rem;
     padding: 1.5rem 1rem;
     background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(0, 229, 255, 0.2);
+    border: 1px solid rgba(128, 0, 32, 0.2);
     border-radius: 12px;
     backdrop-filter: blur(8px);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -332,7 +319,7 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(128, 0, 32, 0.1), transparent);
     transition: left 0.5s ease;
 }
 
@@ -342,8 +329,8 @@
 
 .category-button:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 229, 255, 0.2);
-    border-color: rgba(0, 229, 255, 0.4);
+    box-shadow: 0 10px 25px rgba(128, 0, 32, 0.2);
+    border-color: rgba(128, 0, 32, 0.4);
     background: rgba(255, 255, 255, 0.15);
 }
 
