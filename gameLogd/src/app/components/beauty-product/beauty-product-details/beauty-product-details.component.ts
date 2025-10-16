@@ -28,6 +28,7 @@ import { Review } from '../../../models/review.model';
 import { BeautyProductFirebaseService } from '../../../services/beautyProductFirebase.service';
 import { BeautyProduct } from '../../../models/beauty-product.model';
 import { Firestore, collection, query, where, orderBy, collectionData } from '@angular/fire/firestore';
+import { BeautyProductEditDialogComponent } from '../beauty-product-edit-dialog/beauty-product-edit-dialog.component';
 
 @Component({
   selector: 'app-beauty-product-details',
@@ -54,7 +55,8 @@ import { Firestore, collection, query, where, orderBy, collectionData } from '@a
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule,
-    GeneralDeleteButtonComponent
+    GeneralDeleteButtonComponent,
+    BeautyProductEditDialogComponent
   ],
   templateUrl: './beauty-product-details.component.html',
   styleUrls: ['./beauty-product-details.component.css']
@@ -129,17 +131,27 @@ export class BeautyProductDetailsComponent implements OnInit {
   onEditProduct() {
     if (!this.product || !this.productId) return;
 
-    // TODO: Implement edit dialog
-    // const dialogRef = this.dialog.open(BeautyProductEditDialogComponent, {
-    //   width: '600px',
-    //   data: { ...this.product }
-    // });
+    const dialogRef = this.dialog.open(BeautyProductEditDialogComponent, {
+      width: '600px',
+      data: { ...this.product }
+    });
 
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.loadProductDetails();
-    //   }
-    // });
+    dialogRef.afterClosed().subscribe(async result => {
+      if (result) {
+        try {
+          await this.beautyProductFirebaseService.updateBeautyProduct(this.productId!, result);
+          this.product = result;
+          this.snackBar.open('Product updated successfully', 'Close', {
+            duration: 3000
+          });
+        } catch (error) {
+          console.error('Error updating product:', error);
+          this.snackBar.open('Failed to update product', 'Close', {
+            duration: 3000
+          });
+        }
+      }
+    });
   }
 
   onTabChange(index: number) {

@@ -43,15 +43,15 @@ export class ElectronicGadgetSearchComponent implements OnInit {
     const normalizedQuery = this.searchQuery.replace(/\s+/g, '');
     this.gadgetService.getElectronicGadgets().subscribe({
       next: (items: ElectronicGadget[]) => {
-        const exactMatches = items.filter((g) => (g.title || '').replace(/\s+/g, '').includes(normalizedQuery));
+        const exactMatches = items.filter((g) => (g.name || '').replace(/\s+/g, '').includes(normalizedQuery));
         if (exactMatches.length > 0) {
           this.results = exactMatches;
         } else {
           const similarRanked = items
-            .map((g) => ({ gadget: g, score: this.getSimilarityScore((g.title || '').toLowerCase(), normalizedQuery.toLowerCase()) }))
+            .map((g) => ({ gadget: g, score: this.getSimilarityScore((g.name || '').toLowerCase(), normalizedQuery.toLowerCase()) }))
             .sort((a, b) => b.score - a.score)
             .map((x) => x.gadget);
-          const aboveThreshold = similarRanked.filter((g) => this.getSimilarityScore((g.title || '').toLowerCase(), normalizedQuery.toLowerCase()) > 0.3);
+          const aboveThreshold = similarRanked.filter((g) => this.getSimilarityScore((g.name || '').toLowerCase(), normalizedQuery.toLowerCase()) > 0.3);
           this.results = aboveThreshold.length > 0 ? aboveThreshold : similarRanked.slice(0, 5);
         }
         this.isLoading = false;
@@ -64,11 +64,11 @@ export class ElectronicGadgetSearchComponent implements OnInit {
     });
   }
 
-  private getSimilarityScore(title: string, query: string): number {
+  private getSimilarityScore(name: string, query: string): number {
     let matches = 0;
-    const titleSet = new Set(title);
+    const nameSet = new Set(name);
     for (const char of query) {
-      if (titleSet.has(char)) matches++;
+      if (nameSet.has(char)) matches++;
     }
     return query.length ? matches / query.length : 0;
   }

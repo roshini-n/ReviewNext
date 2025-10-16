@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { WebSeriesEditDialogComponent } from '../webseries-edit-dialog/webseries-edit-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -54,7 +55,8 @@ import { Firestore, collection, query, where, orderBy, collectionData } from '@a
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule,
-    GeneralDeleteButtonComponent
+    GeneralDeleteButtonComponent,
+    WebSeriesEditDialogComponent
   ],
   templateUrl: './webseries-details.component.html',
   styleUrls: ['./webseries-details.component.css']
@@ -129,17 +131,16 @@ export class WebSeriesDetailsComponent implements OnInit {
   onEditSeries() {
     if (!this.webSeries || !this.seriesId) return;
 
-    // TODO: Implement edit dialog
-    // const dialogRef = this.dialog.open(WebSeriesEditDialogComponent, {
-    //   width: '600px',
-    //   data: { ...this.webSeries }
-    // });
+    const dialogRef = this.dialog.open(WebSeriesEditDialogComponent, {
+      width: '600px',
+      data: { ...this.webSeries }
+    });
 
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.loadSeriesDetails();
-    //   }
-    // });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadSeriesDetails();
+      }
+    });
   }
 
   onTabChange(index: number) {

@@ -18,7 +18,7 @@
           <img
             *ngIf="g.imageUrl"
             [src]="g.imageUrl"
-            [alt]="g.title"
+            [alt]="g.name"
             class="game-image"
           />
           <img
@@ -29,7 +29,7 @@
           />
         </div>
         <div class="game-details">
-          <h3 class="game-title">{{ g.title }}</h3>
+          <h3 class="game-title">{{ g.name }}</h3>
           <p *ngIf="g.brand" class="game-developer">{{ g.brand }}</p>
           <p *ngIf="g.rating" class="game-rating">{{ g.rating }}/5</p>
         </div>
