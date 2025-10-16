@@ -1,0 +1,243 @@
+:root {
+  --bg-primary: #1a1a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --accent-color: #FEE715;
+  --border-color: #333;
+  --card-bg: #2d2d2d;
+  --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --section-bg: #1f1f1f;
+  --rating-color: #ffd700;
+  --rating-empty: #666;
+  --error-color: #ff5252;
+  --description-text: #FFFFFF;
+  --review-text: #FFFFFF;
+  --log-text: #FFFFFF;
+  --tab-content-bg: #1f1f1f;
+  --tab-content-text: #FFFFFF;
+}
+
+.book-details-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.book-header {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.book-image {
+  width: 100%;
+  height: 450px;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+}
+
+.book-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background-color: white;
+  padding: 20px;
+}
+
+.book-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.book-info h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.book-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.book-meta p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.book-meta strong {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.book-genres {
+  margin: 10px 0;
+}
+
+mat-chip {
+  background-color: var(--accent-color) !important;
+  color: #000000 !important;
+}
+
+.book-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.book-actions button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-content {
+  padding: 20px;
+  background-color: var(--tab-content-bg);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  color: var(--text-primary);
+}
+
+.description-content {
+  line-height: 1.6;
+  color: var(--description-text);
+}
+
+.description-content h3 {
+  color: var(--accent-color);
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.description-content ul {
+  list-style-type: disc;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+.description-content li {
+  margin-bottom: 8px;
+}
+
+.reviews-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.review-item {
+  margin-bottom: 20px;
+}
+
+.review-item mat-card {
+  background-color: var(--card-bg);
+  color: var(--review-text);
+}
+
+.review-item mat-card-header {
+  margin-bottom: 16px;
+}
+
+.review-item mat-card-title {
+  color: var(--text-primary);
+  font-size: 1.2em;
+  margin-bottom: 4px;
+}
+
+.review-item mat-card-subtitle {
+  color: var(--text-secondary);
+}
+
+.review-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.review-rating mat-icon {
+  color: var(--rating-empty);
+}
+
+.review-rating mat-icon.filled {
+  color: var(--rating-color);
+}
+
+.no-reviews {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 20px;
+  color: var(--text-primary);
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: var(--error-color);
+}
+
+::ng-deep .mat-mdc-tab-group {
+  --mdc-tab-indicator-active-indicator-color: var(--accent-color);
+}
+
+::ng-deep .mat-mdc-tab {
+  --mat-tab-header-inactive-label-text-color: var(--text-secondary);
+  --mat-tab-header-active-label-text-color: var(--text-primary);
+  --mat-tab-header-active-ripple-color: var(--accent-color);
+  --mat-tab-header-inactive-ripple-color: var(--accent-color);
+}
+
+::ng-deep .mat-mdc-tab.mdc-tab--active {
+  color: var(--accent-color) !important;
+  opacity: 1;
+}
+
+::ng-deep .mat-mdc-tab-header {
+  background-color: var(--background-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+@media (max-width: 768px) {
+  .book-header {
+    grid-template-columns: 1fr;
+  }
+
+  .book-image {
+    height: 300px;
+  }
+
+  .book-actions {
+    flex-direction: column;
+  }
+
+  .book-actions button {
+    width: 100%;
+  }
+}

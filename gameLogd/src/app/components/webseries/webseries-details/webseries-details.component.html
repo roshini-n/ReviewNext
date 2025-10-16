@@ -1,0 +1,77 @@
+<div class="book-details-container" *ngIf="!isLoading">
+  <div class="book-header">
+    <div class="book-image">
+      <img [src]="webSeries?.imageUrl" [alt]="webSeries?.title" class="book-cover">
+    </div>
+    <div class="book-info">
+      <h1>{{webSeries?.title}}</h1>
+      <div class="book-meta">
+        <p><strong>Creator:</strong> {{webSeries?.creator}}</p>
+        <p><strong>Network/Platform:</strong> {{webSeries?.network}}</p>
+        <p><strong>Release Date:</strong> {{webSeries?.releaseDate | date}}</p>
+        <p><strong>Seasons:</strong> {{webSeries?.seasons}}</p>
+        <p><strong>Episodes:</strong> {{webSeries?.episodes}}</p>
+        <p><strong>Rating:</strong> {{webSeries?.rating | number:'1.1-1'}} ({{webSeries?.numRatings}} ratings)</p>
+        <p><strong>Status:</strong> {{webSeries?.status}}</p>
+      </div>
+      <div class="book-genres">
+        <mat-chip-listbox>
+          <mat-chip *ngFor="let genre of webSeries?.genres">{{genre}}</mat-chip>
+        </mat-chip-listbox>
+      </div>
+      @if (authService.currentUserSig()) {
+      <div class="book-actions">
+        <button mat-raised-button color="primary" (click)="openLogSeriesPopup()">
+          <mat-icon>add</mat-icon>
+          Add to Watchlist
+        </button>
+        <button mat-raised-button color="warn" (click)="onEditSeries()">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+
+  <mat-tab-group (selectedTabChange)="onTabChange($event.index)">
+    <mat-tab label="Description">
+      <div class="tab-content description-content">
+        <p>{{webSeries?.description}}</p>
+      </div>
+    </mat-tab>
+    <mat-tab label="Reviews">
+      <div class="tab-content reviews-content">
+        <div *ngIf="reviews.length === 0" class="no-reviews">
+          No reviews yet. Be the first to review this series!
+        </div>
+        <div *ngFor="let review of reviews" class="review-item">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>{{review.username || 'Anonymous'}}</mat-card-title>
+              <mat-card-subtitle>{{review.datePosted | date}}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p>{{review.reviewText}}</p>
+              <div class="review-rating">
+                <mat-icon *ngFor="let star of [1,2,3,4,5]" 
+                         [class.filled]="star <= review.rating">
+                  star
+                </mat-icon>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<div class="loading-container" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+  <p>Loading series details...</p>
+</div>
+
+<div class="error-container" *ngIf="error">
+  <p class="error-message">{{error}}</p>
+</div>

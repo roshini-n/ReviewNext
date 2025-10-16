@@ -43,15 +43,15 @@ export class BeautyProductSearchComponent implements OnInit {
     const normalizedQuery = this.searchQuery.replace(/\s+/g, '');
     this.beautyService.getBeautyProducts().subscribe({
       next: (items: BeautyProduct[]) => {
-        const exactMatches = items.filter((p) => p.title.replace(/\s+/g, '').includes(normalizedQuery));
+        const exactMatches = items.filter((p) => p.name.replace(/\s+/g, '').includes(normalizedQuery));
         if (exactMatches.length > 0) {
           this.results = exactMatches;
         } else {
           const similarRanked = items
-            .map((p) => ({ product: p, score: this.getSimilarityScore(p.title.toLowerCase(), normalizedQuery.toLowerCase()) }))
+            .map((p) => ({ product: p, score: this.getSimilarityScore(p.name.toLowerCase(), normalizedQuery.toLowerCase()) }))
             .sort((a, b) => b.score - a.score)
             .map((x) => x.product);
-          const aboveThreshold = similarRanked.filter((p) => this.getSimilarityScore(p.title.toLowerCase(), normalizedQuery.toLowerCase()) > 0.3);
+          const aboveThreshold = similarRanked.filter((p) => this.getSimilarityScore(p.name.toLowerCase(), normalizedQuery.toLowerCase()) > 0.3);
           this.results = aboveThreshold.length > 0 ? aboveThreshold : similarRanked.slice(0, 5);
         }
         this.isLoading = false;
