@@ -115,28 +115,7 @@
     color: #333333;
 }
 
-body {
-    background: #f8f9fa;
-    min-height: 100vh;
-    position: relative;
-    overflow-x: hidden;
-}
-
-body::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-        135deg,
-        rgba(0, 229, 255, 0.1),
-        rgba(0, 184, 212, 0.15)
-    );
-    backdrop-filter: blur(10px);
-    z-index: 1;
-}
+/* Removed body styling - not needed in component */
 
 @keyframes gradientShift {
     0% {
@@ -177,17 +156,18 @@ body::before {
 }
 
 .main-container {
-    min-height: auto;
+    min-height: calc(100vh - 64px); /* Full height minus navbar */
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0.5rem 0 0 0; /* Minimal top padding */
+    justify-content: center;
+    padding: 0.5rem 0 3rem 0; /* Add bottom padding for spacing before footer */
     background-color: transparent;
     animation: fadeInUp 1s ease-out;
     position: relative;
     z-index: 2;
-    margin-bottom: 0; /* Remove bottom margin */
-    margin-top: 0; /* Remove top margin */
+    margin-bottom: 0;
+    margin-top: 0;
 }
 
 @keyframes fadeInUp {
@@ -297,6 +277,7 @@ body::before {
     border-radius: 8px;
     margin: 0 auto;
     display: block;
+    padding-bottom: 0;
 }
 
 .sign-up {
@@ -442,8 +423,8 @@ hr {
 
 /* Categories Section */
 .categories-section {
-    margin: 2rem auto;
-    padding: 1rem;
+    margin: 2rem auto 0 auto;
+    padding: 1rem 1rem 0 1rem;
     position: relative;
     overflow: hidden;
     max-width: 1200px;
@@ -466,7 +447,7 @@ hr {
 .categories-grid {
     display: flex;
     gap: 2rem;
-    padding: 1rem;
+    padding: 1rem 1rem 0 1rem;
     position: relative;
     animation: autoScroll 60s linear infinite;
 }
@@ -572,7 +553,7 @@ hr {
     background: rgba(255, 255, 255, 0.1);
     padding: 2rem;
     border-radius: 12px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(0, 229, 255, 0.3);
@@ -712,6 +693,19 @@ hr {
         animation: none;
         opacity: 0.5;
     }
+}
+
+/* Ensure footer is visible above fixed backgrounds */
+::ng-deep app-footer {
+    position: relative;
+    z-index: 100;
+    display: block;
+    width: 100%;
+}
+
+::ng-deep app-footer .footer {
+    position: relative;
+    z-index: 100;
 }
 
 
