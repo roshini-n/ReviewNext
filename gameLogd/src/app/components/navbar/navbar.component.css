@@ -82,7 +82,7 @@
   font-family: 'Roboto', sans-serif;
   font-size: 1.6rem;
   font-weight: 700;
-  color: var(--heading-text);
+  color: #D27D2D;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-right: 32px;
@@ -94,7 +94,7 @@
 }
 
 .site-title .highlight {
-  color: var(--primary-color);
+  color:#800000;
   text-shadow: 0 2px 4px rgba(182, 124, 82, 0.4);
   font-weight: 700;
 }
