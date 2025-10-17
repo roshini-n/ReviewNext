@@ -532,13 +532,13 @@ hr {
     font-weight: 500;
     text-align: center;
     transition: transform 0.4s ease, color 0.3s ease;
-    color: #000000; /* Changed to black */
+    color: #800000 !important; /* Black color by default with !important to override theme */
     text-shadow: none;
     margin-top: 0.25rem;
 }
 
 .category-card span:hover {
-    color: #5c4033; /* Slightly different shade on hover */
+    color: #800020 !important; /* Burgundy color on hover with !important */
 }
 
 .category-card:hover span {
