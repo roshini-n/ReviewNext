@@ -13,12 +13,36 @@
   color: var(--primary-color);
 }
 
+/* Global page layout styles */
 body {
   margin: 0;
   padding: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   font-size: 16px;
   line-height: 1.5;
+  min-height: auto;
+}
+
+/* Main content wrapper for all pages */
+app-root {
+  display: block;
+  min-height: auto;
+}
+
+/* Global content container styles */
+.content-container {
+  padding-top: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ensure all main content areas have proper spacing */
+router-outlet + * {
+  display: block;
+  padding-top: 0;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0; /* Remove margins */
 }
 
 h1 {
@@ -69,6 +93,7 @@ button, input, select, textarea {
   --shadow-color: rgba(182, 124, 82, 0.1);
   --navbar-text: var(--heading-text);
   --navbar-button-hover: rgba(182, 124, 82, 0.1);
+  --navbar-height: 64px; /* Add navbar height variable */
 }
 
 /* Global styles */

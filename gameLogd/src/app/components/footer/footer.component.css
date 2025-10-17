@@ -16,9 +16,10 @@
   background-color: var(--footer-bg);
   color: var(--footer-text);
   text-align: center;
-  padding: 1rem 0;
+  padding: 0.5rem 0;
   font-size: 0.9rem;
   width: 100%;
+  margin: 0;
 }
 
 .footer .container {

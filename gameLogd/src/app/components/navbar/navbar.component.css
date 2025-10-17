@@ -1,13 +1,36 @@
 :root {
-  --navbar-bg: var(--card-bg);
+  --navbar-bg: rgba(255, 255, 255, 0.1);
   --navbar-text: var(--heading-text);
   --profile-border-color: var(--primary-color);
+  --navbar-height: 64px;
 }
 
 [data-theme='dark'] {
-  --navbar-bg: #000;
+  --navbar-bg: rgba(0, 0, 0, 0.1);
   --navbar-text: #fff;
   --profile-border-color: #ffffff;
+}
+
+/* Add padding to body to account for fixed navbar */
+/* Main navigation styles */
+:host {
+  display: block;
+  height: var(--navbar-height);
+}
+
+.navbar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: var(--navbar-height);
+}
+
+/* Add a spacer div after the navbar */
+.navbar-spacer {
+  height: var(--navbar-height);
+  width: 100%;
 }
 
 .example-spacer {
@@ -19,26 +42,36 @@
 }
 
 .mat-toolbar.mat-primary {
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border-bottom: none;
-  box-shadow: none;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   color: #1a1a1a;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 24px;
   height: 64px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
 }
 
 .mat-toolbar.mat-primary.home-navbar {
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   min-height: 64px;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .mat-grey-back {
