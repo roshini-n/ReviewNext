@@ -21,15 +21,14 @@ import { BookComponent } from './components/books/book/book.component';
 import { BookDetailsComponent } from './components/books/book-details/book-details.component';
 import { MovieComponent } from './components/movie/movie/movie.component';
 import { MovieDetailsComponent } from './components/movie/movie-details/movie-details.component';
-import { AppComponent } from './components/apps/app/app.component';
 import { WebSeriesComponent } from './components/web-series/web-series/web-series.component';
-import { DocumentaryComponent } from './components/documentaries/documentary/documentary.component';
 import { BeautyProductComponent } from './components/beauty-products/beauty-product/beauty-product.component';
-import { HomeApplianceComponent } from './components/home-appliances/home-appliance/home-appliance.component';
 import { ElectronicGadgetComponent } from './components/electronic-gadgets/electronic-gadget.component';
 import { ElectronicGadgetDetailsComponent } from './components/electronic-gadget/electronic-gadget-details/electronic-gadget-details.component';
 import { UserDashboardComponent } from './components/user-dashboard/user-dashboard.component';
 import { authGuard } from './guards/auth.guard';
+import { WebSeriesDetailsComponent } from './components/webseries/webseries-details/webseries-details.component';
+import { BeautyProductDetailsComponent } from './components/beauty-product/beauty-product-details/beauty-product-details.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent }, // default route
@@ -58,19 +57,17 @@ export const routes: Routes = [
   { path: 'electronic-gadgets/:id', component: ElectronicGadgetDetailsComponent },
   { path: 'add_electronic_gadget', loadComponent: () => import('./components/electronic-gadgets/add-electronic-gadget/add-electronic-gadget.component').then(m => m.AddElectronicGadgetComponent), canActivate: [authGuard] },
   
-  // Other routes
-  { path: 'apps', component: AppComponent },
+  // Web Series routes
   { path: 'web-series', component: WebSeriesComponent },
   { path: 'web-series-search', component: WebSeriesSearchComponent },
-  { path: 'documentaries', component: DocumentaryComponent },
+  { path: 'web-series/:id', component: WebSeriesDetailsComponent },
+  { path: 'add_web_series', loadComponent: () => import('./components/web-series/add-web-series/add-web-series.component').then(m => m.AddWebSeriesComponent), canActivate: [authGuard] },
+  
+  // Beauty Product routes
   { path: 'beauty-products', component: BeautyProductComponent },
   { path: 'beauty-product-search', component: BeautyProductSearchComponent },
-  { path: 'home-appliances', component: HomeApplianceComponent },
-  { path: 'add_app', loadComponent: () => import('./components/apps/add-app/add-app.component').then(m => m.AddAppComponent), canActivate: [authGuard] },
-  { path: 'add_web_series', loadComponent: () => import('./components/web-series/add-web-series/add-web-series.component').then(m => m.AddWebSeriesComponent), canActivate: [authGuard] },
-  { path: 'add_documentary', loadComponent: () => import('./components/documentaries/add-documentary/add-documentary.component').then(m => m.AddDocumentaryComponent), canActivate: [authGuard] },
+  { path: 'beauty-products/:id', component: BeautyProductDetailsComponent },
   { path: 'add_beauty_product', loadComponent: () => import('./components/beauty-products/add-beauty-product/add-beauty-product.component').then(m => m.AddBeautyProductComponent), canActivate: [authGuard] },
-  { path: 'add_home_appliance', loadComponent: () => import('./components/home-appliances/add-home-appliance/add-home-appliance.component').then(m => m.AddHomeApplianceComponent), canActivate: [authGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: 'create_list', component: CreateListComponent, canActivate: [authGuard] },
   { path: 'my_lists', component: MyListsComponent, canActivate: [authGuard] },

@@ -30,6 +30,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { MovieEditDialogComponent } from '../movie-edit-dialog/movie-edit-dialog.component';
 
 @Component({
   selector: 'app-movie-details',
@@ -122,7 +123,32 @@ export class MovieDetailsComponent implements OnInit {
       });
       return;
     }
-    // Implement edit movie functionality
+
+    if (!this.movie) return;
+
+    const dialogRef = this.dialog.open(MovieEditDialogComponent, {
+      width: '600px',
+      data: { ...this.movie }
+    });
+
+    dialogRef.afterClosed().subscribe(async result => {
+      if (result) {
+        try {
+          const movieId = this.route.snapshot.paramMap.get('id');
+          if (!movieId) return;
+          await this.movieService.updateMovie(movieId, result);
+          this.movie = result;
+          this.snackBar.open('Movie updated successfully', 'Close', {
+            duration: 3000
+          });
+        } catch (error) {
+          console.error('Error updating movie:', error);
+          this.snackBar.open('Failed to update movie', 'Close', {
+            duration: 3000
+          });
+        }
+      }
+    });
   }
 
   onDeleteMovie() {

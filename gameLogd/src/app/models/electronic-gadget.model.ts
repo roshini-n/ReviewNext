@@ -1,20 +1,18 @@
 export interface ElectronicGadget {
   id?: string;
-  title: string;
+  name: string; // Changed from title to name to match the form
   description: string;
   imageUrl: string;
   rating: number;
   price: number;
   brand: string;
   category: string;
-  specifications: {
-    processor?: string;
-    ram?: string;
-    storage?: string;
-    display?: string;
-    battery?: string;
-    [key: string]: string | undefined;
-  };
+  model: string;
+  color?: string;
+  releaseDate?: Date;
+  warranty?: string;
+  availability?: string;
+  specifications: string[]; // Changed to array of strings for easier management
   features: string[];
   reviews: {
     userId: string;

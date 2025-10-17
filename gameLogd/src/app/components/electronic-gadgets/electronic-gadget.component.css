@@ -28,27 +28,30 @@ app-root {
 
 .header-section h1 {
   margin: 0;
-  color: #333;
+  color: #800020;
+  font-weight: 700;
   font-size: 2em;
 }
 
-/* .header-section button {
+.header-section button {
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #FEE715;
-  color: #000;
-  font-weight: 500;
-  padding: 8px 16px;
-  border-radius: 4px;
+  background-color: #C18857 !important;
+  color: #fff !important;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 8px;
   transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 2px 8px rgba(193, 136, 87, 0.2);
 }
 
 .header-section button:hover {
-  background-color: #e6d100;
+  background-color: #DDA15E !important;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(254, 231, 21, 0.2);
-} */
+  box-shadow: 0 4px 12px rgba(193, 136, 87, 0.35);
+}
 
 .header-section button mat-icon {
   font-size: 20px;

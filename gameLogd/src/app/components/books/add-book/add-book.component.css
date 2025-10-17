@@ -2,16 +2,17 @@
   max-width: 1200px;
   margin: 2rem auto;
   padding: 2rem;
-  background-color: white;
+  background-color: #F5F5DC;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
-  color: #FEE715;
+  color: #800020;
   margin-bottom: 2rem;
   font-size: 1.8rem;
-  font-weight: 500;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
 }
 
 .book-form {
@@ -38,8 +39,8 @@ h2 {
 }
 
 .chips-container {
-  background-color: #f8f9fa;
-  padding: 1rem;
+  background-color: #C18857;
+  color: #fff;
   border-radius: 8px;
 }
 
@@ -58,14 +59,40 @@ h2 {
 }
 
 button[type="submit"] {
-  background-color: #FEE715;
-  color: #000;
-  padding: 0.5rem 2rem;
+  background-color: #C18857 !important;
+  color: #fff !important;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 2px 8px rgba(193, 136, 87, 0.2);
+}
+
+button[type="submit"]:hover {
+  background-color: #DDA15E !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(193, 136, 87, 0.35);
 }
 
 button[type="submit"]:disabled {
   background-color: #ccc;
   color: #666;
+}
+
+/* Cancel button - no color */
+button[mat-button] {
+  background-color: transparent !important;
+  color: #666 !important;
+  box-shadow: none !important;
+  border: 1px solid #ddd;
+}
+
+button[mat-button]:hover {
+  background-color: #f5f5f5 !important;
+  color: #333 !important;
+  transform: none;
+  box-shadow: none !important;
 }
 
 /* Override Material styles */
@@ -82,11 +109,11 @@ button[type="submit"]:disabled {
 }
 
 ::ng-deep .mat-mdc-text-field-wrapper {
-  background-color: white !important;
+  background-color: #F5F5DC !important;
 }
 
 ::ng-deep .mat-mdc-form-field-flex {
-  background-color: white !important;
+  background-color: #F5F5DC !important;
 }
 
 ::ng-deep .mat-mdc-input-element {
@@ -118,8 +145,8 @@ button[type="submit"]:disabled {
 
 /* Chip styles */
 ::ng-deep .mat-mdc-chip {
-  background-color: #FEE715 !important;
-  color: #000 !important;
+  background-color: #C18857 !important;
+  color: #fff !important;
 }
 
 ::ng-deep .mat-mdc-chip-remove {

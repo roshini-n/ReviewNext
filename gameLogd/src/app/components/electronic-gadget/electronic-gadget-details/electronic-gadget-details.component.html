@@ -1,15 +1,20 @@
 <div class="book-details-container" *ngIf="!isLoading">
   <div class="book-header">
     <div class="book-image">
-      <img [src]="gadget?.imageUrl" [alt]="gadget?.title" class="book-cover">
+      <img [src]="gadget?.imageUrl" [alt]="gadget?.name" class="book-cover">
     </div>
     <div class="book-info">
-      <h1>{{gadget?.title}}</h1>
+      <h1>{{gadget?.name}}</h1>
       <div class="book-meta">
         <p><strong>Brand:</strong> {{gadget?.brand}}</p>
+        <p><strong>Model:</strong> {{gadget?.model}}</p>
         <p><strong>Category:</strong> {{gadget?.category}}</p>
         <p><strong>Price:</strong> ${{gadget?.price}}</p>
         <p><strong>Rating:</strong> {{gadget?.rating | number:'1.1-1'}}/5</p>
+        <p *ngIf="gadget?.color"><strong>Color:</strong> {{gadget?.color}}</p>
+        <p *ngIf="gadget?.availability"><strong>Availability:</strong> {{gadget?.availability}}</p>
+        <p *ngIf="gadget?.warranty"><strong>Warranty:</strong> {{gadget?.warranty}}</p>
+        <p *ngIf="gadget?.releaseDate"><strong>Release Date:</strong> {{gadget?.releaseDate | date}}</p>
       </div>
       <div class="book-genres">
         <mat-chip-listbox>
@@ -39,11 +44,9 @@
     </mat-tab>
     <mat-tab label="Specifications">
       <div class="tab-content">
-        <div class="specifications">
-          <div *ngFor="let spec of gadget?.specifications | keyvalue">
-            <p *ngIf="spec.value"><strong>{{spec.key | titlecase}}:</strong> {{spec.value}}</p>
-          </div>
-        </div>
+        <ul class="specifications">
+          <li *ngFor="let spec of gadget?.specifications">{{spec}}</li>
+        </ul>
       </div>
     </mat-tab>
     <mat-tab label="Reviews">

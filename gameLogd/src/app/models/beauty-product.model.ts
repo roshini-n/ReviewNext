@@ -1,12 +1,9 @@
 export interface BeautyProduct {
     id: string;
-    title: string;
+    name: string;
     description: string;
     brand: string;
-    releaseDate: string;
-    manufacturer: string;
-    distributor: string;
-    sales: number;
+    launchDate: string;
     rating: number;
     imageUrl: string;
     totalRatingScore: number;
@@ -14,8 +11,10 @@ export interface BeautyProduct {
     category: string;
     price: number;
     size: string;
-    ingredients: string[];
-    skinType: string[];
+    ingredients: string;
+    skinType: string;
     benefits: string[];
-    usage: string;
+    skinConcerns: string[];
+    howToUse: string;
+    dateAdded: string;
 } 

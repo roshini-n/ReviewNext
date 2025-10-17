@@ -20,6 +20,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ElectronicGadgetFirebaseService } from '../../../services/electronicGadgetFirebase.service';
 import { ElectronicGadget } from '../../../models/electronic-gadget.model';
+import { ElectronicGadgetEditDialogComponent } from '../electronic-gadget-edit-dialog/electronic-gadget-edit-dialog.component';
 
 @Component({
   selector: 'app-electronic-gadget-details',
@@ -39,6 +40,7 @@ import { ElectronicGadget } from '../../../models/electronic-gadget.model';
     MatTabsModule,
     ReactiveFormsModule,
     GeneralDeleteButtonComponent,
+    ElectronicGadgetEditDialogComponent,
   ],
   templateUrl: './electronic-gadget-details.component.html',
   styleUrl: './electronic-gadget-details.component.css',
@@ -120,7 +122,36 @@ export class ElectronicGadgetDetailsComponent implements OnInit {
   }
 
   onEditGadget() {
-    // TODO: Implement edit gadget functionality
+    if (!this.authService.currentUserSig()) {
+      this.snackBar.open('Please log in to edit gadgets', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
+    if (!this.gadget || !this.gadgetId) return;
+
+    const dialogRef = this.dialog.open(ElectronicGadgetEditDialogComponent, {
+      width: '600px',
+      data: { ...this.gadget }
+    });
+
+    dialogRef.afterClosed().subscribe(async result => {
+      if (result) {
+        try {
+          await this.electronicGadgetService.updateElectronicGadget(this.gadgetId!, result);
+          this.gadget = result;
+          this.snackBar.open('Gadget updated successfully', 'Close', {
+            duration: 3000
+          });
+        } catch (error) {
+          console.error('Error updating gadget:', error);
+          this.snackBar.open('Failed to update gadget', 'Close', {
+            duration: 3000
+          });
+        }
+      }
+    });
   }
 
   editReview(review: Review) {

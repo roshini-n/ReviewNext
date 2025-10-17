@@ -10,15 +10,39 @@
 }
 
 .blue {
-  color: #1870e4;
+  color: var(--primary-color);
 }
 
+/* Global page layout styles */
 body {
   margin: 0;
   padding: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   font-size: 16px;
   line-height: 1.5;
+  min-height: auto;
+}
+
+/* Main content wrapper for all pages */
+app-root {
+  display: block;
+  min-height: auto;
+}
+
+/* Global content container styles */
+.content-container {
+  padding-top: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ensure all main content areas have proper spacing */
+router-outlet + * {
+  display: block;
+  padding-top: 0;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0; /* Remove margins */
 }
 
 h1 {
@@ -42,37 +66,46 @@ button, input, select, textarea {
 
 
 .navbar_button {
-    color: #FEE715;
+    color: var(--primary-color);
     font-size: large;
 }
 
 /* Global variables */
 :root {
-  --primary-bg: #e6ffff;
-  --secondary-bg: rgba(255, 255, 255, 0.1);
-  --primary-text: #333333;
-  --secondary-text: #666666;
-  --accent-color: #00e5ff;
-  --border-color: rgba(0, 229, 255, 0.2);
+  --primary-color: #b67c52;
+  --secondary-color: #d6a77a;
+  --background-color: #f7efe6;
+  --card-bg: #f3e2d1;
+  --heading-text: #4b2e17;
+  --body-text: #5c4033;
+  --highlight: #c08a60;
+  --link-color: #a97444;
+  --primary-bg: var(--background-color);
+  --secondary-bg: var(--card-bg);
+  --primary-text: var(--body-text);
+  --secondary-text: var(--heading-text);
+  --accent-color: var(--primary-color);
+  --border-color: rgba(182, 124, 82, 0.2);
   --input-bg: rgba(255, 255, 255, 0.9);
-  --input-border: rgba(0, 229, 255, 0.3);
+  --input-border: rgba(182, 124, 82, 0.3);
   --error-color: #e74c3c;
-  --success-color: #2ecc71;
-  --shadow-color: rgba(0, 229, 255, 0.1);
-  --navbar-text: #333333;
-  --navbar-button-hover: rgba(0, 229, 255, 0.1);
+  --success-color: #85A67C;
+  --shadow-color: rgba(182, 124, 82, 0.1);
+  --navbar-text: var(--heading-text);
+  --navbar-button-hover: rgba(182, 124, 82, 0.1);
+  --navbar-height: 64px; /* Add navbar height variable */
 }
 
 /* Global styles */
 html {
   min-height: 100%;
-  background: linear-gradient(135deg, #e6ffff, #ccffff);
+  background: var(--background-color);
 }
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
-  background-color: var(--primary-bg);
-  color: var(--primary-text);
+  background-color: var(--background-color);
+  color: var(--body-text);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -137,3 +170,6 @@ body {
     padding: 1.5rem;
   }
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
