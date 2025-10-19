@@ -95,21 +95,51 @@ export class AddBeautyProductComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log('onSubmit called');
+    console.log('Form valid:', this.beautyProductForm.valid);
+    console.log('Form value:', this.beautyProductForm.value);
+    console.log('Form errors:', this.getFormValidationErrors());
+    
     if (this.beautyProductForm.valid && !this.isSubmitting) {
       this.isSubmitting = true;
+      console.log('Starting submission...');
 
       const beautyProductData = {
         ...this.beautyProductForm.value,
         createdAt: new Date()
       };
 
+      console.log('Beauty product data to save:', beautyProductData);
+
       this.beautyProductService.addBeautyProduct(beautyProductData)
-        .then(() => this.router.navigate(['/beauty-products']))
+        .then((docRef) => {
+          console.log('Beauty product added successfully with ID:', docRef.id);
+          this.router.navigate(['/beauty-products']);
+        })
         .catch((error: Error) => {
           console.error('Error adding beauty product:', error);
+          console.error('Error details:', error.message);
+          alert('Failed to add beauty product: ' + error.message);
           this.isSubmitting = false;
         });
+    } else {
+      console.log('Form is invalid or already submitting');
+      if (!this.beautyProductForm.valid) {
+        console.log('Invalid fields:', this.getFormValidationErrors());
+        alert('Please fill in all required fields');
+      }
     }
+  }
+
+  getFormValidationErrors() {
+    const errors: any = {};
+    Object.keys(this.beautyProductForm.controls).forEach(key => {
+      const controlErrors = this.beautyProductForm.get(key)?.errors;
+      if (controlErrors) {
+        errors[key] = controlErrors;
+      }
+    });
+    return errors;
   }
 
   onCancel(): void {
