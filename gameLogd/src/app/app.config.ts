@@ -3,8 +3,10 @@ import { provideRouter } from '@angular/router';
 import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideStorage, getStorage } from '@angular/fire/storage';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -29,10 +31,12 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(),
     provideAnimations(),
+    provideNativeDateAdapter(),
     [
       provideFirebaseApp(() => initializeApp(firebaseConfig)),
       provideFirestore(() => getFirestore()),
-      provideAuth(() => getAuth())
+      provideAuth(() => getAuth()),
+      provideStorage(() => getStorage())
     ],
     provideAnimationsAsync(),
     providePrimeNG({

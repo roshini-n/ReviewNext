@@ -31,6 +31,8 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MovieEditDialogComponent } from '../movie-edit-dialog/movie-edit-dialog.component';
+import { LogMoviePopupComponent } from '../../log-movie-popup/log-movie-popup.component';
+import { Review } from '../../../models/review.model';
 
 @Component({
   selector: 'app-movie-details',
@@ -55,7 +57,8 @@ import { MovieEditDialogComponent } from '../movie-edit-dialog/movie-edit-dialog
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    LogMoviePopupComponent
   ],
   templateUrl: './movie-details.component.html',
   styleUrls: ['./movie-details.component.css']
@@ -74,11 +77,17 @@ export class MovieDetailsComponent implements OnInit {
   selectedTab = 0;
   isLoading = true;
   error: string | null = null;
+  reviews: Review[] = [];
+  currentUserId: string | null = null;
+  movieId: string | null = null;
 
-  ngOnInit() {
-    const movieId = this.route.snapshot.paramMap.get('id');
-    if (movieId) {
-      this.loadMovieDetails(movieId);
+  async ngOnInit() {
+    this.movieId = this.route.snapshot.paramMap.get('id');
+    this.currentUserId = await this.authService.getUid();
+
+    if (this.movieId) {
+      this.loadMovieDetails(this.movieId);
+      this.getReviews();
     }
   }
 
@@ -103,7 +112,78 @@ export class MovieDetailsComponent implements OnInit {
       });
       return;
     }
-    // Implement add to log functionality
+
+    if (!this.movie || !this.movieId) return;
+
+    const dialogRef = this.dialog.open(LogMoviePopupComponent, {
+      maxWidth: '550px',
+      width: '95vw',
+      panelClass: ['movie-log-dialog', 'minimal-theme-dialog'],
+      autoFocus: false,
+      backdropClass: 'minimal-backdrop',
+      data: {
+        movie: this.movie,
+        movieId: this.movieId,
+      },
+    });
+
+    dialogRef.componentInstance.reviewUpdated.subscribe((updatedReview) => {
+      console.log('Review updated:', updatedReview);
+      const index = this.reviews.findIndex(r => r.id === updatedReview.id);
+      if (index !== -1) {
+        this.reviews[index] = updatedReview;
+      } else {
+        this.reviews.unshift(updatedReview);
+      }
+      this.updateMovieRating();
+      if (this.movieId) {
+        this.loadMovieDetails(this.movieId);
+      }
+    });
+
+    dialogRef.afterClosed().subscribe();
+  }
+
+  getReviews() {
+    if (!this.movieId) return;
+    
+    this.movieReviewService.getReviewsByMovieId(this.movieId).subscribe({
+      next: (reviews: Review[]) => {
+        this.reviews = reviews.map(review => ({
+          ...review,
+          datePosted: review.datePosted instanceof Date ? review.datePosted : new Date(review.datePosted)
+        }));
+        this.updateMovieRating();
+      },
+      error: (error: Error) => {
+        console.error('Error loading reviews:', error);
+        this.snackBar.open('Failed to load reviews', 'Close', {
+          duration: 3000
+        });
+      }
+    });
+  }
+
+  private updateMovieRating() {
+    if (!this.movie || !this.reviews.length) return;
+
+    const totalRating = this.reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalRating / this.reviews.length;
+
+    const updatedMovie = {
+      ...this.movie,
+      rating: averageRating,
+      numRatings: this.reviews.length,
+      totalRatingScore: totalRating
+    };
+
+    if (this.movieId) {
+      this.movieService.updateMovie(this.movieId, updatedMovie).then(() => {
+        this.movie = updatedMovie;
+      }).catch((error) => {
+        console.error('Error updating movie rating:', error);
+      });
+    }
   }
 
   onAddReview() {

@@ -10,41 +10,21 @@ import { AuthService } from './auth.service';
 export class BookReviewService {
   private firestore = inject(Firestore);
   private authService = inject(AuthService);
-  private reviewsCollection = collection(this.firestore, 'book_reviews');
+  private reviewsCollection = collection(this.firestore, 'bookReviews');
 
   // Add a new book review
   addReview(review: Omit<Review, 'id'>): Observable<Review> {
-    return this.authService.user$.pipe(
-      switchMap(user => {
-        if (!user) {
-          return throwError(() => new Error('User not authenticated'));
-        }
-
-        const reviewData = {
-          ...review,
-          userId: review.userId || user.uid,
-          datePosted: new Date(),
-          username: user.displayName || 'Anonymous',
-          likes: 0
-        };
-
-        return from(addDoc(this.reviewsCollection, reviewData)).pipe(
-          map(docRef => {
-            const newReview: Review = {
-              ...reviewData,
-              id: docRef.id
-            };
-            updateDoc(docRef, { id: docRef.id });
-            return newReview;
-          })
-        );
-      })
+    return from(
+      addDoc(this.reviewsCollection, review).then((docRef) => ({
+        ...review,
+        id: docRef.id
+      } as Review))
     );
   }
 
   // Update an existing book review
   updateReview(reviewId: string, changes: Partial<Review>): Observable<Review> {
-    const reviewDoc = doc(this.firestore, `book_reviews/${reviewId}`);
+    const reviewDoc = doc(this.firestore, `bookReviews/${reviewId}`);
     const updatedChanges = {
       ...changes,
       lastUpdated: new Date()
@@ -63,7 +43,7 @@ export class BookReviewService {
 
   // Delete a book review
   deleteReview(reviewId: string): Observable<void> {
-    const reviewDoc = doc(this.firestore, `book_reviews/${reviewId}`);
+    const reviewDoc = doc(this.firestore, `bookReviews/${reviewId}`);
     return from(deleteDoc(reviewDoc));
   }
 
@@ -99,7 +79,7 @@ export class BookReviewService {
 
   // Get a specific book review by ID
   getReviewById(reviewId: string): Observable<Review | null> {
-    const reviewDoc = doc(this.firestore, `book_reviews/${reviewId}`);
+    const reviewDoc = doc(this.firestore, `bookReviews/${reviewId}`);
     return from(getDoc(reviewDoc)).pipe(
       map(doc => {
         if (doc.exists()) {

@@ -80,7 +80,6 @@ export class LogGamePopupComponent {
       dateStarted: new FormControl(data.log?.dateStarted || null),
       dateCompleted: new FormControl(data.log?.dateCompleted || null),
       review: new FormControl(data.log?.review || '', [
-        Validators.minLength(10),
         Validators.maxLength(500),
       ]),
       isReplay: new FormControl(data.log?.isReplay || false),
@@ -99,6 +98,12 @@ export class LogGamePopupComponent {
 
   async onSubmitClick(): Promise<void> {
     const currentUser = await this.authService.getUid();
+
+    console.log('=== GAME LOG DEBUG ===');
+    console.log('Current User ID:', currentUser);
+    console.log('Game ID:', this.gameId);
+    console.log('Rating:', this.rating);
+    console.log('Form Data:', this.logForm.value);
 
     if (!currentUser) {
       console.error('User ID is not available.');
@@ -154,33 +159,18 @@ export class LogGamePopupComponent {
         rating: this.rating,
       }).subscribe({
         next: () => {
-          // Also create a Review document so dashboards can count it
-          const hasReviewContent = (this.logForm.value.review && this.logForm.value.review.trim().length > 0) || this.rating > 0;
-          if (hasReviewContent) {
-            this.reviewService.addReview({
-              userId: currentUser,
-              gameId: this.gameId,
-              reviewText: this.logForm.value.review || '',
-              rating: this.rating,
-              datePosted: new Date(),
-              username: this.username,
-              likes: 0,
-            }).subscribe({
-              next: () => {},
-              error: () => {
-                console.error('Failed to create review alongside game log');
-              }
-            });
-          }
-
           this.dialogRef.close();
           this.snackBar.open('Game logged successfully', 'Close', {
             duration: 2000,
           });
           this.logUpdated.emit();
         },
-        error: () => {
-          this.snackBar.open('Failed to add log', 'Close', { duration: 2000 });
+        error: (error: any) => {
+          console.error('Error saving game log:', error);
+          const errorMessage = error?.message || 'Failed to add log';
+          this.snackBar.open(`Error: ${errorMessage}`, 'Close', { 
+            duration: 5000 
+          });
         }
       });
     }

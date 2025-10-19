@@ -29,6 +29,8 @@ import { Review } from '../../../models/review.model';
 import { WebSeriesFirebaseService } from '../../../services/webSeriesFirebase.service';
 import { WebSeries } from '../../../models/web-series.model';
 import { Firestore, collection, query, where, orderBy, collectionData } from '@angular/fire/firestore';
+import { LogWebSeriesPopupComponent } from '../../log-webseries-popup/log-webseries-popup.component';
+import { WebSeriesReviewService } from '../../../services/webSeriesReview.service';
 
 @Component({
   selector: 'app-webseries-details',
@@ -56,7 +58,8 @@ import { Firestore, collection, query, where, orderBy, collectionData } from '@a
     MatNativeDateModule,
     MatAutocompleteModule,
     GeneralDeleteButtonComponent,
-    WebSeriesEditDialogComponent
+    WebSeriesEditDialogComponent,
+    LogWebSeriesPopupComponent
   ],
   templateUrl: './webseries-details.component.html',
   styleUrls: ['./webseries-details.component.css']
@@ -69,6 +72,7 @@ export class WebSeriesDetailsComponent implements OnInit {
   public authService = inject(AuthService);
   private webSeriesFirebaseService = inject(WebSeriesFirebaseService);
   private firestore = inject(Firestore);
+  private seriesReviewService = inject(WebSeriesReviewService);
 
   webSeries?: WebSeries;
   reviews: Review[] = [];
@@ -112,20 +116,43 @@ export class WebSeriesDetailsComponent implements OnInit {
   private getReviews() {
     if (!this.seriesId) return;
 
-    const reviewsQuery = query(
-      collection(this.firestore, 'reviews'),
-      where('seriesId', '==', this.seriesId),
-      orderBy('datePosted', 'desc')
-    );
-    
-    collectionData(reviewsQuery, { idField: 'id' }).subscribe({
-      next: (reviews) => {
-        this.reviews = reviews as Review[];
+    this.seriesReviewService.getReviewsBySeriesId(this.seriesId).subscribe({
+      next: (reviews: Review[]) => {
+        this.reviews = reviews.map(review => ({
+          ...review,
+          datePosted: review.datePosted instanceof Date ? review.datePosted : new Date(review.datePosted)
+        }));
+        this.updateSeriesRating();
       },
       error: (error: Error) => {
         console.error('Error loading reviews:', error);
+        this.snackBar.open('Failed to load reviews', 'Close', {
+          duration: 3000
+        });
       }
     });
+  }
+
+  private updateSeriesRating() {
+    if (!this.webSeries || !this.reviews.length) return;
+
+    const totalRating = this.reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalRating / this.reviews.length;
+
+    const updatedSeries = {
+      ...this.webSeries,
+      rating: averageRating,
+      numRatings: this.reviews.length,
+      totalRatingScore: totalRating
+    };
+
+    if (this.seriesId) {
+      this.webSeriesFirebaseService.updateWebSeries(this.seriesId, updatedSeries).then(() => {
+        this.webSeries = updatedSeries;
+      }).catch((error) => {
+        console.error('Error updating series rating:', error);
+      });
+    }
   }
 
   onEditSeries() {
@@ -157,26 +184,32 @@ export class WebSeriesDetailsComponent implements OnInit {
 
     if (!this.webSeries || !this.seriesId) return;
 
-    // TODO: Implement watchlist popup dialog
-    // const dialogRef = this.dialog.open(LogSeriesPopupComponent, {
-    //   maxWidth: '550px',
-    //   width: '95vw',
-    //   panelClass: ['series-log-dialog', 'minimal-theme-dialog'],
-    //   autoFocus: false,
-    //   backdropClass: 'minimal-backdrop',
-    //   data: {
-    //     series: this.webSeries,
-    //     seriesId: this.seriesId
-    //   }
-    // });
+    const dialogRef = this.dialog.open(LogWebSeriesPopupComponent, {
+      maxWidth: '550px',
+      width: '95vw',
+      panelClass: ['series-log-dialog', 'minimal-theme-dialog'],
+      autoFocus: false,
+      backdropClass: 'minimal-backdrop',
+      data: {
+        series: this.webSeries,
+        seriesId: this.seriesId
+      }
+    });
 
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     // Handle after adding to watchlist
-    //     this.snackBar.open('Series added to your watchlist', 'Close', {
-    //       duration: 3000
-    //     });
-    //   }
-    // });
+    dialogRef.componentInstance.reviewUpdated.subscribe((updatedReview) => {
+      console.log('Review updated:', updatedReview);
+      const index = this.reviews.findIndex(r => r.id === updatedReview.id);
+      if (index !== -1) {
+        this.reviews[index] = updatedReview;
+      } else {
+        this.reviews.unshift(updatedReview);
+      }
+      this.updateSeriesRating();
+      if (this.seriesId) {
+        this.loadSeriesDetails();
+      }
+    });
+
+    dialogRef.afterClosed().subscribe();
   }
 }

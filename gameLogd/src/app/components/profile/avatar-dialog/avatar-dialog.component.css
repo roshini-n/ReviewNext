@@ -1,14 +1,19 @@
+/* Preset Avatars Section */
+.preset-section {
+  padding: 8px 0;
+}
+
 .avatar-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 16px;
   padding: 16px 0;
 }
 
 .avatar-option {
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
@@ -37,10 +42,14 @@
   transform: scale(1.1);
 }
 
+/* Error Message */
 .error-message {
   color: #ff4444;
   text-align: center;
   margin-top: 16px;
+  padding: 12px;
+  background: rgba(255, 68, 68, 0.1);
+  border-radius: 8px;
   animation: fadeIn 0.3s ease;
 }
 
@@ -49,6 +58,7 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Dialog Actions */
 mat-dialog-actions {
   padding-top: 16px;
   gap: 8px;

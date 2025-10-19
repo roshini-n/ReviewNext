@@ -65,9 +65,12 @@ export class NavbarComponent implements OnInit {
   loadUserAvatar() {
     this.authService.getUid().then(uid => {
       if (uid) {
-        this.userService.getUserById(uid).subscribe(user => {
+        // Subscribe to live changes so avatar updates immediately after change
+        this.userService.observeUserById(uid).subscribe(user => {
           if (user?.avatarUrl) {
             this.avatarUrl = user.avatarUrl;
+          } else {
+            this.avatarUrl = 'assets/default-avatar.png';
           }
         });
       }

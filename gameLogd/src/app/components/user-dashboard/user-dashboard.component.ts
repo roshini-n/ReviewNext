@@ -7,14 +7,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
-import { ReviewService } from '../../services/review.service';
 import { GameLogService } from '../../services/gamelog.service';
-import { BookReviewService } from '../../services/bookreview.service';
-import { MovieReviewService } from '../../services/movieReview.service';
+import { WebSeriesLogService } from '../../services/webSeriesLog.service';
+import { ElectronicGadgetLogService } from '../../services/electronicGadgetLog.service';
+import { BeautyProductLogService } from '../../services/beautyProductLog.service';
+import { MovieLogService } from '../../services/movieLog.service';
+import { BookLogService } from '../../services/booklog.service';
 import { User } from '../../models/user.model';
 import { combineLatest } from 'rxjs';
-import { Review } from '../../models/review.model';
-import { GameLog } from '../../models/gameLog.model';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -33,22 +33,26 @@ import { GameLog } from '../../models/gameLog.model';
 export class UserDashboardComponent implements OnInit {
   user: User | null = null;
   username: string = '';
-  totalReviews: number = 0;
-  private totalGameReviews: number = 0;
-  private totalBookReviews: number = 0;
-  private totalMovieReviews: number = 0;
-  private totalGameLogDerivedReviews: number = 0;
-  totalRatings: number = 1;
-  totalGameLogs: number = 0;
+  totalReviews: number = 0;  // Logs with rating OR review text (or both)
+  totalRatings: number = 0;  // Logs with rating > 0
+  totalLogs: number = 0;     // Logs with review TEXT (not rating-only)
+  private totalGameLogs: number = 0;
+  private totalBookLogs: number = 0;
+  private totalMovieLogs: number = 0;
+  private totalWebSeriesLogs: number = 0;
+  private totalElectronicGadgetLogs: number = 0;
+  private totalBeautyProductLogs: number = 0;
   isLoading: boolean = true;
 
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private reviewService: ReviewService,
     private gameLogService: GameLogService,
-    private bookReviewService: BookReviewService,
-    private movieReviewService: MovieReviewService,
+    private bookLogService: BookLogService,
+    private movieLogService: MovieLogService,
+    private webSeriesLogService: WebSeriesLogService,
+    private electronicGadgetLogService: ElectronicGadgetLogService,
+    private beautyProductLogService: BeautyProductLogService,
     private router: Router
   ) {}
 
@@ -73,54 +77,67 @@ export class UserDashboardComponent implements OnInit {
   private loadUserStats(userId: string): void {
     console.log('Loading stats for userId:', userId);
 
-    // Combine all review sources into a single live total
+    // Load all category logs and calculate stats from them
     combineLatest([
-      this.reviewService.getReviewsByUserId(userId),
-      this.bookReviewService.getReviewsByUserId(userId),
-      this.movieReviewService.getUserReviews(userId)
+      this.gameLogService.getReviewsByUserId(userId),
+      this.bookLogService.getBookLogsByUserId(userId),
+      this.movieLogService.getMovieLogs(userId),
+      this.webSeriesLogService.getSeriesLogs(userId),
+      this.electronicGadgetLogService.getGadgetLogs(userId),
+      this.beautyProductLogService.getProductLogs(userId)
     ]).subscribe({
-      next: ([gameReviews, bookReviews, movieReviews]) => {
-        this.totalGameReviews = gameReviews.length;
-        this.totalBookReviews = bookReviews.length;
-        this.totalMovieReviews = movieReviews.length;
-        this.updateTotalReviews();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading reviews:', error);
-        this.isLoading = false;
-      }
-    });
-
-    // Load game logs (separate from reviews)
-    this.gameLogService.getReviewsByUserId(userId).subscribe({
-      next: (gameLogs) => {
+      next: ([gameLogs, bookLogs, movieLogs, seriesLogs, gadgetLogs, beautyLogs]) => {
+        // Count individual category logs
         this.totalGameLogs = gameLogs.length;
-        const logsWithRating = gameLogs.filter(log => !!log.rating).length;
-        const logsWithText = gameLogs.filter((log: any) => typeof log.review === 'string' && log.review.trim().length > 0).length;
-        this.totalRatings = logsWithRating;
-        this.totalGameLogDerivedReviews = Math.max(logsWithRating, logsWithText);
-        this.updateTotalReviews();
+        this.totalBookLogs = bookLogs.length;
+        this.totalMovieLogs = movieLogs.length;
+        this.totalWebSeriesLogs = seriesLogs.length;
+        this.totalElectronicGadgetLogs = gadgetLogs.length;
+        this.totalBeautyProductLogs = beautyLogs.length;
+
+        // Combine all logs
+        const allLogs = [...gameLogs, ...bookLogs, ...movieLogs, ...seriesLogs, ...gadgetLogs, ...beautyLogs];
+        
+        // Total Logs = logs with review TEXT (not counting rating-only logs)
+        this.totalLogs = allLogs.filter((log: any) => {
+          const hasReview = log.review && typeof log.review === 'string' && log.review.trim().length > 0;
+          return hasReview;
+        }).length;
+        
+        // Total Ratings = logs with rating > 0
+        this.totalRatings = allLogs.filter((log: any) => log.rating && log.rating > 0).length;
+        
+        // Total Reviews = logs with rating OR review text (or both)
+        this.totalReviews = allLogs.filter((log: any) => {
+          const hasRating = log.rating && log.rating > 0;
+          const hasReview = log.review && typeof log.review === 'string' && log.review.trim().length > 0;
+          return hasRating || hasReview;
+        }).length;
+        
+        console.log('Dashboard stats updated:', {
+          totalReviews: this.totalReviews,
+          totalRatings: this.totalRatings,
+          totalLogs: this.totalLogs,
+          breakdown: {
+            gameLogs: this.totalGameLogs,
+            bookLogs: this.totalBookLogs,
+            movieLogs: this.totalMovieLogs,
+            webSeriesLogs: this.totalWebSeriesLogs,
+            gadgetLogs: this.totalElectronicGadgetLogs,
+            beautyLogs: this.totalBeautyProductLogs
+          }
+        });
+        
+        this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading game logs:', error);
+        console.error('Error loading logs:', error);
+        this.isLoading = false;
       }
-    });
-  }
-
-  private updateTotalReviews(): void {
-    const gameReviewCount = this.totalGameReviews > 0 ? this.totalGameReviews : this.totalGameLogDerivedReviews;
-    this.totalReviews = gameReviewCount + this.totalBookReviews + this.totalMovieReviews;
-    console.log('Total reviews updated:', this.totalReviews, {
-      gameReviews: this.totalGameReviews,
-      gameRatingsFallback: this.totalRatings,
-      book: this.totalBookReviews,
-      movie: this.totalMovieReviews
     });
   }
 
   navigateToCategory(category: string): void {
     this.router.navigate([category]);
   }
-
 } 

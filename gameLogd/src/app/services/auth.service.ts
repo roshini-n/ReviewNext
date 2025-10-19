@@ -68,7 +68,7 @@ export class AuthService {
         ratings: [],
         reviewIds: [],
         bio: '',
-        avatarUrl: '',
+        avatarUrl: 'assets/robot.png', // Set default avatar
       };
 
       // add the user to the 'users' collection with their UID as the document ID

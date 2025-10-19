@@ -23,6 +23,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -322,17 +323,18 @@ export class BookDetailsComponent implements OnInit {
       this.loadBookDetails();
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       if (result) {
-        this.bookLogService.addBookLog(result).then(() => {
+        try {
+          await firstValueFrom(this.bookLogService.addBookLog(result));
           console.log('Book log added');
           this.loadBookDetails();
-        }).catch((error) => {
+        } catch (error: any) {
           console.error('Error adding book log:', error);
           this.snackBar.open('Failed to add book log', 'Close', {
             duration: 3000
           });
-        });
+        }
       }
     });
   }
