@@ -19,6 +19,10 @@ export interface Review {
   movieId?: string;      // reference to the reviewed movie
   movieTitle?: string;   // cache the movie title for display purposes
   
+  // Web Series-related properties (optional)
+  seriesId?: string;     // reference to the reviewed web series
+  seriesTitle?: string;  // cache the series title for display purposes
+  
   reviewText: string;   // the actual review content
   rating: number;      // optional numerical rating (if combined with rating, we need to decicde on this)
   
