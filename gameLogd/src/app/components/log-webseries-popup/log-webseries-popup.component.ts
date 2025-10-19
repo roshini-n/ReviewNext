@@ -86,8 +86,8 @@ export class LogWebSeriesPopupComponent implements OnInit {
     this.logForm = this.fb.group({
       dateAdded: [new Date(), Validators.required],
       dateCompleted: [''],
-      rating: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
-      review: ['', Validators.required],
+      rating: [0, [Validators.min(0), Validators.max(5)]],
+      review: ['', Validators.maxLength(500)],
       status: ['watching', Validators.required],
       currentSeason: [1],
       currentEpisode: [1]
@@ -136,58 +136,69 @@ export class LogWebSeriesPopupComponent implements OnInit {
 
       try {
         // 1. Build the log object
-        const logData: Omit<WebSeriesLog, 'id'> = {
+        const logData: any = {
           userId: currentUser,
           seriesId: this.seriesId,
-          dateAdded: formData.dateAdded,
-          dateCompleted: formData.dateCompleted || undefined,
+          dateAdded: formData.dateAdded instanceof Date ? formData.dateAdded : new Date(formData.dateAdded),
           rating: formData.rating,
           review: formData.review,
           status: formData.status,
           currentSeason: formData.currentSeason,
           currentEpisode: formData.currentEpisode
         };
+        
+        // Add optional fields only if they have values
+        if (formData.dateCompleted) {
+          logData.dateCompleted = formData.dateCompleted instanceof Date ? formData.dateCompleted : new Date(formData.dateCompleted);
+        }
 
         // 2. Save the log
         await firstValueFrom(this.seriesLogService.addSeriesLog(logData));
 
-        // 3. Save the review using WebSeriesReviewService
-        const reviewData: Omit<Review, 'id'> = {
-          userId: currentUser,
-          seriesId: this.seriesId,
-          rating: formData.rating,
-          reviewText: formData.review,
-          datePosted: new Date(),
-          username: this.username,
-          seriesTitle: this.data.series.title,
-          likes: 0
-        };
+        // 3. Save the review using WebSeriesReviewService (only if rating or review text exists)
+        const hasReviewContent = formData.rating > 0 || (formData.review && formData.review.trim().length > 0);
+        
+        let savedReview: Review | null = null;
+        if (hasReviewContent) {
+          const reviewData: Omit<Review, 'id'> = {
+            userId: currentUser,
+            seriesId: this.seriesId,
+            rating: formData.rating || 0,
+            reviewText: formData.review || '',
+            datePosted: new Date(),
+            username: this.username,
+            seriesTitle: this.data.series.title,
+            likes: 0
+          };
 
-        let savedReview: Review;
-        if (this.isEditMode && this.existingReview) {
-          savedReview = await firstValueFrom(
-            this.seriesReviewService.updateReview(this.existingReview.id, {
-              rating: formData.rating,
-              reviewText: formData.review,
-              lastUpdated: new Date()
-            })
-          );
-        } else {
-          savedReview = await firstValueFrom(this.seriesReviewService.addReview(reviewData));
+          if (this.isEditMode && this.existingReview) {
+            savedReview = await firstValueFrom(
+              this.seriesReviewService.updateReview(this.existingReview.id, {
+                rating: formData.rating,
+                reviewText: formData.review,
+                lastUpdated: new Date()
+              })
+            );
+          } else {
+            savedReview = await firstValueFrom(this.seriesReviewService.addReview(reviewData));
+          }
         }
 
         // 4. Emit events and close dialog
         this.logUpdated.emit();
-        this.reviewUpdated.emit(savedReview);
+        if (savedReview) {
+          this.reviewUpdated.emit(savedReview);
+        }
         this.dialogRef.close(savedReview);
 
         this.snackBar.open('Series log and review saved successfully', 'Close', {
           duration: 3000
         });
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error saving series log:', error);
-        this.snackBar.open('Failed to save series log', 'Close', {
-          duration: 3000
+        const errorMessage = error?.message || 'Failed to save series log';
+        this.snackBar.open(`Error: ${errorMessage}`, 'Close', {
+          duration: 5000
         });
       } finally {
         this.isLoading = false;

@@ -23,9 +23,17 @@ export class ElectronicGadgetLogService {
   private firestore = inject(Firestore);
   private gadgetLogsCollection = collection(this.firestore, 'electronicGadgetLogs');
 
+  // Helper to remove undefined values
+  private removeUndefined(obj: any): any {
+    return Object.fromEntries(
+      Object.entries(obj).filter(([_, v]) => v !== undefined)
+    );
+  }
+
   // Add a new gadget log
   addGadgetLog(log: Omit<ElectronicGadgetLog, 'id'>): Observable<void> {
-    return from(addDoc(this.gadgetLogsCollection, log).then(() => void 0));
+    const cleanLog = this.removeUndefined(log);
+    return from(addDoc(this.gadgetLogsCollection, cleanLog).then(() => void 0));
   }
 
   // Get gadget logs for a user
@@ -39,7 +47,8 @@ export class ElectronicGadgetLogService {
   // Update a gadget log
   updateGadgetLog(logId: string, updates: Partial<ElectronicGadgetLog>): Observable<void> {
     const docRef = doc(this.firestore, `electronicGadgetLogs/${logId}`);
-    return from(updateDoc(docRef, updates));
+    const cleanUpdates = this.removeUndefined(updates);
+    return from(updateDoc(docRef, cleanUpdates));
   }
 
   // Delete a gadget log

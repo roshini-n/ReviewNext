@@ -26,6 +26,12 @@ export class GameLogService {
   private gameFirebaseService = inject(GameFirebaseService);
   private gameLogCollection = collection(this.firestore, 'gamelogs');
 
+  // Helper to remove undefined values
+  private removeUndefined(obj: any): any {
+    return Object.fromEntries(
+      Object.entries(obj).filter(([_, v]) => v !== undefined)
+    );
+  }
 
   // add a new GameLog
   addGameLog(gameLog: Omit<GameLog, 'id'>): Observable<string> {
@@ -49,13 +55,14 @@ export class GameLogService {
                 totalRatingScore: game.totalRatingScore + gameLog.rating!
               })).pipe(
                 switchMap(() => {
-                  return from(addDoc(this.gameLogCollection, {
+                  const cleanLog = this.removeUndefined({
                     ...gameLog,
                     datePosted: new Date(),
                     userId: userId,
                     likes: 0,
                     gameId: gameLog.gameId,
-                  })).pipe(
+                  });
+                  return from(addDoc(this.gameLogCollection, cleanLog)).pipe(
                     switchMap((docRef) => {
                       return from(updateDoc(doc(this.gameLogCollection, docRef.id), {
                         id: docRef.id,
@@ -67,13 +74,14 @@ export class GameLogService {
             })
           );
         } else {
-          return from(addDoc(this.gameLogCollection, {
+          const cleanLog = this.removeUndefined({
             ...gameLog,
             datePosted: new Date(),
             userId: userId,
             likes: 0,
             gameId: gameLog.gameId,
-          })).pipe(
+          });
+          return from(addDoc(this.gameLogCollection, cleanLog)).pipe(
             switchMap((docRef) => {
               return from(updateDoc(doc(this.gameLogCollection, docRef.id), {
                 id: docRef.id,
@@ -90,10 +98,10 @@ export class GameLogService {
     const reviewDoc = doc(this.firestore, `gamelogs/${gameLogId}`);
 
     // add lastUpdated timestamp
-    const updatedChanges = {
+    const updatedChanges = this.removeUndefined({
       ...changes,
       lastUpdated: new Date(),
-    };
+    });
 
     return from(updateDoc(reviewDoc, updatedChanges));
   }
@@ -155,7 +163,8 @@ export class GameLogService {
 
   updateGameLog(gameLogId: string, changes: Partial<GameLog>): Observable<void> {
     const reviewDoc = doc(this.firestore, `gamelogs/${gameLogId}`);
-    return from(updateDoc(reviewDoc, changes));
+    const cleanChanges = this.removeUndefined(changes);
+    return from(updateDoc(reviewDoc, cleanChanges));
   }
 
   // check if the current user has already reviewed a game

@@ -87,8 +87,8 @@ export class LogBookPopupComponent implements OnInit {
     this.logForm = this.fb.group({
       dateStarted: [new Date(), Validators.required],
       dateCompleted: [''],
-      rating: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
-      review: ['', Validators.required],
+      rating: [0, [Validators.min(0), Validators.max(5)]],
+      review: ['', Validators.maxLength(500)],
       status: ['reading', Validators.required]
     });
 
@@ -135,56 +135,67 @@ export class LogBookPopupComponent implements OnInit {
 
       try {
         // 1. Build the log object
-        const logData: Omit<BookLog, 'id'> = {
+        const logData: any = {
           userId: currentUser,
           bookId: this.bookId,
-          startDate: formData.dateStarted,
-          endDate: formData.dateCompleted || undefined,
+          startDate: formData.dateStarted instanceof Date ? formData.dateStarted : new Date(formData.dateStarted),
           rating: formData.rating,
           review: formData.review,
           status: formData.status,
         };
+        
+        // Add optional fields only if they have values
+        if (formData.dateCompleted) {
+          logData.endDate = formData.dateCompleted instanceof Date ? formData.dateCompleted : new Date(formData.dateCompleted);
+        }
 
         // 2. Save the log
-        await this.bookLogService.addBookLog(logData);
+        await firstValueFrom(this.bookLogService.addBookLog(logData));
 
-        // 3. Save the review using BookReviewService
-        const reviewData: Omit<Review, 'id'> = {
-          userId: currentUser,
-          bookId: this.bookId,
-          rating: formData.rating,
-          reviewText: formData.review,
-          datePosted: new Date(),
-          username: this.username,
-          bookTitle: this.data.book.title,
-          likes: 0
-        };
+        // 3. Save the review using BookReviewService (only if rating or review text exists)
+        const hasReviewContent = formData.rating > 0 || (formData.review && formData.review.trim().length > 0);
+        
+        let savedReview: Review | null = null;
+        if (hasReviewContent) {
+          const reviewData: Omit<Review, 'id'> = {
+            userId: currentUser,
+            bookId: this.bookId,
+            rating: formData.rating || 0,
+            reviewText: formData.review || '',
+            datePosted: new Date(),
+            username: this.username,
+            bookTitle: this.data.book.title,
+            likes: 0
+          };
 
-        let savedReview: Review;
-        if (this.isEditMode && this.existingReview) {
-          savedReview = await firstValueFrom(
-            this.bookReviewService.updateReview(this.existingReview.id, {
-              rating: formData.rating,
-              reviewText: formData.review,
-              lastUpdated: new Date()
-            })
-          );
-        } else {
-          savedReview = await firstValueFrom(this.bookReviewService.addReview(reviewData));
+          if (this.isEditMode && this.existingReview) {
+            savedReview = await firstValueFrom(
+              this.bookReviewService.updateReview(this.existingReview.id, {
+                rating: formData.rating,
+                reviewText: formData.review,
+                lastUpdated: new Date()
+              })
+            );
+          } else {
+            savedReview = await firstValueFrom(this.bookReviewService.addReview(reviewData));
+          }
         }
 
         // 4. Emit events and close dialog
         this.logUpdated.emit();
-        this.reviewUpdated.emit(savedReview);
+        if (savedReview) {
+          this.reviewUpdated.emit(savedReview);
+        }
         this.dialogRef.close(savedReview);
 
         this.snackBar.open('Book log and review saved successfully', 'Close', {
           duration: 3000
         });
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error saving book log:', error);
-        this.snackBar.open('Failed to save book log', 'Close', {
-          duration: 3000
+        const errorMessage = error?.message || 'Failed to save book log';
+        this.snackBar.open(`Error: ${errorMessage}`, 'Close', {
+          duration: 5000
         });
       } finally {
         this.isLoading = false;

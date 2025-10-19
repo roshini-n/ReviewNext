@@ -86,8 +86,8 @@ export class LogBeautyProductPopupComponent implements OnInit {
     this.logForm = this.fb.group({
       dateAdded: [new Date(), Validators.required],
       dateOpened: [''],
-      rating: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
-      review: ['', Validators.required],
+      rating: [0, [Validators.min(0), Validators.max(5)]],
+      review: ['', Validators.maxLength(500)],
       status: ['using', Validators.required],
       purchasePrice: [''],
       purchaseLocation: [''],
@@ -137,59 +137,74 @@ export class LogBeautyProductPopupComponent implements OnInit {
 
       try {
         // 1. Build the log object
-        const logData: Omit<BeautyProductLog, 'id'> = {
+        const logData: any = {
           userId: currentUser,
           productId: this.productId,
-          dateAdded: formData.dateAdded,
-          dateOpened: formData.dateOpened || undefined,
+          dateAdded: formData.dateAdded instanceof Date ? formData.dateAdded : new Date(formData.dateAdded),
           rating: formData.rating,
           review: formData.review,
           status: formData.status,
-          purchasePrice: formData.purchasePrice || undefined,
-          purchaseLocation: formData.purchaseLocation || undefined,
           skinType: formData.skinType
         };
+        
+        // Add optional fields only if they have values
+        if (formData.dateOpened) {
+          logData.dateOpened = formData.dateOpened instanceof Date ? formData.dateOpened : new Date(formData.dateOpened);
+        }
+        if (formData.purchasePrice) {
+          logData.purchasePrice = formData.purchasePrice;
+        }
+        if (formData.purchaseLocation) {
+          logData.purchaseLocation = formData.purchaseLocation;
+        }
 
         // 2. Save the log
         await firstValueFrom(this.productLogService.addProductLog(logData));
 
-        // 3. Save the review using BeautyProductReviewService
-        const reviewData: Omit<Review, 'id'> = {
-          userId: currentUser,
-          productId: this.productId,
-          rating: formData.rating,
-          reviewText: formData.review,
-          datePosted: new Date(),
-          username: this.username,
-          productTitle: this.data.product.name,
-          likes: 0
-        };
+        // 3. Save the review using BeautyProductReviewService (only if rating or review text exists)
+        const hasReviewContent = formData.rating > 0 || (formData.review && formData.review.trim().length > 0);
+        
+        let savedReview: Review | null = null;
+        if (hasReviewContent) {
+          const reviewData: Omit<Review, 'id'> = {
+            userId: currentUser,
+            productId: this.productId,
+            rating: formData.rating || 0,
+            reviewText: formData.review || '',
+            datePosted: new Date(),
+            username: this.username,
+            productTitle: this.data.product.name,
+            likes: 0
+          };
 
-        let savedReview: Review;
-        if (this.isEditMode && this.existingReview) {
-          savedReview = await firstValueFrom(
-            this.productReviewService.updateReview(this.existingReview.id, {
-              rating: formData.rating,
-              reviewText: formData.review,
-              lastUpdated: new Date()
-            })
-          );
-        } else {
-          savedReview = await firstValueFrom(this.productReviewService.addReview(reviewData));
+          if (this.isEditMode && this.existingReview) {
+            savedReview = await firstValueFrom(
+              this.productReviewService.updateReview(this.existingReview.id, {
+                rating: formData.rating,
+                reviewText: formData.review,
+                lastUpdated: new Date()
+              })
+            );
+          } else {
+            savedReview = await firstValueFrom(this.productReviewService.addReview(reviewData));
+          }
         }
 
         // 4. Emit events and close dialog
         this.logUpdated.emit();
-        this.reviewUpdated.emit(savedReview);
+        if (savedReview) {
+          this.reviewUpdated.emit(savedReview);
+        }
         this.dialogRef.close(savedReview);
 
         this.snackBar.open('Product log and review saved successfully', 'Close', {
           duration: 3000
         });
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error saving product log:', error);
-        this.snackBar.open('Failed to save product log', 'Close', {
-          duration: 3000
+        const errorMessage = error?.message || 'Failed to save product log';
+        this.snackBar.open(`Error: ${errorMessage}`, 'Close', {
+          duration: 5000
         });
       } finally {
         this.isLoading = false;

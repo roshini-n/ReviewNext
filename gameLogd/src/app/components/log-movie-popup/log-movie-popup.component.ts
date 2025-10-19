@@ -86,8 +86,8 @@ export class LogMoviePopupComponent implements OnInit {
     this.logForm = this.fb.group({
       dateAdded: [new Date(), Validators.required],
       dateCompleted: [''],
-      rating: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
-      review: ['', Validators.required],
+      rating: [0, [Validators.min(0), Validators.max(5)]],
+      review: ['', Validators.maxLength(500)],
       status: ['watching', Validators.required]
     });
 
@@ -134,56 +134,67 @@ export class LogMoviePopupComponent implements OnInit {
 
       try {
         // 1. Build the log object
-        const logData: Omit<MovieLog, 'id'> = {
+        const logData: any = {
           userId: currentUser,
           movieId: this.movieId,
-          dateAdded: formData.dateAdded,
-          dateCompleted: formData.dateCompleted || undefined,
+          dateAdded: formData.dateAdded instanceof Date ? formData.dateAdded : new Date(formData.dateAdded),
           rating: formData.rating,
           review: formData.review,
           status: formData.status,
         };
+        
+        // Add optional fields only if they have values
+        if (formData.dateCompleted) {
+          logData.dateCompleted = formData.dateCompleted instanceof Date ? formData.dateCompleted : new Date(formData.dateCompleted);
+        }
 
         // 2. Save the log
         await firstValueFrom(this.movieLogService.addMovieLog(logData));
 
-        // 3. Save the review using MovieReviewService
-        const reviewData: Omit<Review, 'id'> = {
-          userId: currentUser,
-          movieId: this.movieId,
-          rating: formData.rating,
-          reviewText: formData.review,
-          datePosted: new Date(),
-          username: this.username,
-          movieTitle: this.data.movie.title,
-          likes: 0
-        };
+        // 3. Save the review using MovieReviewService (only if rating or review text exists)
+        const hasReviewContent = formData.rating > 0 || (formData.review && formData.review.trim().length > 0);
+        
+        let savedReview: Review | null = null;
+        if (hasReviewContent) {
+          const reviewData: Omit<Review, 'id'> = {
+            userId: currentUser,
+            movieId: this.movieId,
+            rating: formData.rating || 0,
+            reviewText: formData.review || '',
+            datePosted: new Date(),
+            username: this.username,
+            movieTitle: this.data.movie.title,
+            likes: 0
+          };
 
-        let savedReview: Review;
-        if (this.isEditMode && this.existingReview) {
-          savedReview = await firstValueFrom(
-            this.movieReviewService.updateReview(this.existingReview.id, {
-              rating: formData.rating,
-              reviewText: formData.review,
-              lastUpdated: new Date()
-            })
-          );
-        } else {
-          savedReview = await firstValueFrom(this.movieReviewService.addReview(reviewData));
+          if (this.isEditMode && this.existingReview) {
+            savedReview = await firstValueFrom(
+              this.movieReviewService.updateReview(this.existingReview.id, {
+                rating: formData.rating,
+                reviewText: formData.review,
+                lastUpdated: new Date()
+              })
+            );
+          } else {
+            savedReview = await firstValueFrom(this.movieReviewService.addReview(reviewData));
+          }
         }
 
         // 4. Emit events and close dialog
         this.logUpdated.emit();
-        this.reviewUpdated.emit(savedReview);
+        if (savedReview) {
+          this.reviewUpdated.emit(savedReview);
+        }
         this.dialogRef.close(savedReview);
 
         this.snackBar.open('Movie log and review saved successfully', 'Close', {
           duration: 3000
         });
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error saving movie log:', error);
-        this.snackBar.open('Failed to save movie log', 'Close', {
-          duration: 3000
+        const errorMessage = error?.message || 'Failed to save movie log';
+        this.snackBar.open(`Error: ${errorMessage}`, 'Close', {
+          duration: 5000
         });
       } finally {
         this.isLoading = false;

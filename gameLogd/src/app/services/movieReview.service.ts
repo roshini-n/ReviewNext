@@ -65,10 +65,10 @@ export class MovieReviewService {
   }
 
   // Get reviews by a user
-  getUserReviews(userId: string): Observable<MovieReview[]> {
+  getUserReviews(userId: string): Observable<Review[]> {
     const q = query(this.reviewsCollection, where('userId', '==', userId));
     return collectionData(q, { idField: 'id' }).pipe(
-      map(reviews => reviews as MovieReview[])
+      map(reviews => reviews as Review[])
     );
   }
 

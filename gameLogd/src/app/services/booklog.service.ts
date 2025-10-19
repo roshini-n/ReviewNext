@@ -11,6 +11,13 @@ export class BookLogService {
   private firestore = inject(Firestore);
   private bookLogCollection = collection(this.firestore, 'bookLogs');
 
+  // Helper to remove undefined values
+  private removeUndefined(obj: any): any {
+    return Object.fromEntries(
+      Object.entries(obj).filter(([_, v]) => v !== undefined)
+    );
+  }
+
   // Get all book logs
   getBookLogs(): Observable<BookLog[]> {
     const bookLogsRef = collection(this.firestore, 'bookLogs');
@@ -38,21 +45,23 @@ export class BookLogService {
   }
 
   // Add a new book log
-  addBookLog(bookLog: Omit<BookLog, 'id'>): Promise<void> {
+  addBookLog(bookLog: Omit<BookLog, 'id'>): Observable<void> {
     const bookLogsRef = collection(this.firestore, 'bookLogs');
-    return addDoc(bookLogsRef, bookLog).then();
+    const cleanLog = this.removeUndefined(bookLog);
+    return from(addDoc(bookLogsRef, cleanLog)).pipe(map(() => void 0));
   }
 
   // Update a book log
-  updateBookLog(id: string, bookLog: Partial<BookLog>): Promise<void> {
+  updateBookLog(id: string, bookLog: Partial<BookLog>): Observable<void> {
     const bookLogDocRef = doc(this.firestore, `bookLogs/${id}`);
-    return updateDoc(bookLogDocRef, bookLog);
+    const cleanLog = this.removeUndefined(bookLog);
+    return from(updateDoc(bookLogDocRef, cleanLog));
   }
 
   // Delete a book log
-  deleteBookLog(id: string): Promise<void> {
+  deleteBookLog(id: string): Observable<void> {
     const bookLogDocRef = doc(this.firestore, `bookLogs/${id}`);
-    return deleteDoc(bookLogDocRef);
+    return from(deleteDoc(bookLogDocRef));
   }
 
   // Get book logs by user ID

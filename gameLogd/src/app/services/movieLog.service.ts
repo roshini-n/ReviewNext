@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, collectionData, addDoc, doc, deleteDoc, query, where } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, addDoc, doc, deleteDoc, query, where, updateDoc } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -21,9 +21,17 @@ export class MovieLogService {
   private firestore = inject(Firestore);
   private movieLogsCollection = collection(this.firestore, 'movieLogs');
 
+  // Helper to remove undefined values
+  private removeUndefined(obj: any): any {
+    return Object.fromEntries(
+      Object.entries(obj).filter(([_, v]) => v !== undefined)
+    );
+  }
+
   // Add a new movie log
   addMovieLog(log: Omit<MovieLog, 'id'>): Observable<void> {
-    return from(addDoc(this.movieLogsCollection, log).then(() => void 0));
+    const cleanLog = this.removeUndefined(log);
+    return from(addDoc(this.movieLogsCollection, cleanLog).then(() => void 0));
   }
 
   // Get movie logs for a user
@@ -39,4 +47,11 @@ export class MovieLogService {
     const docRef = doc(this.firestore, `movieLogs/${id}`);
     return from(deleteDoc(docRef));
   }
-} 
+
+  // Update a movie log
+  updateMovieLog(logId: string, updates: Partial<MovieLog>): Observable<void> {
+    const docRef = doc(this.firestore, `movieLogs/${logId}`);
+    const cleanUpdates = this.removeUndefined(updates);
+    return from(updateDoc(docRef, cleanUpdates));
+  }
+}

@@ -24,9 +24,17 @@ export class BeautyProductLogService {
   private firestore = inject(Firestore);
   private productLogsCollection = collection(this.firestore, 'beautyProductLogs');
 
+  // Helper to remove undefined values
+  private removeUndefined(obj: any): any {
+    return Object.fromEntries(
+      Object.entries(obj).filter(([_, v]) => v !== undefined)
+    );
+  }
+
   // Add a new product log
   addProductLog(log: Omit<BeautyProductLog, 'id'>): Observable<void> {
-    return from(addDoc(this.productLogsCollection, log).then(() => void 0));
+    const cleanLog = this.removeUndefined(log);
+    return from(addDoc(this.productLogsCollection, cleanLog).then(() => void 0));
   }
 
   // Get product logs for a user
@@ -40,7 +48,8 @@ export class BeautyProductLogService {
   // Update a product log
   updateProductLog(logId: string, updates: Partial<BeautyProductLog>): Observable<void> {
     const docRef = doc(this.firestore, `beautyProductLogs/${logId}`);
-    return from(updateDoc(docRef, updates));
+    const cleanUpdates = this.removeUndefined(updates);
+    return from(updateDoc(docRef, cleanUpdates));
   }
 
   // Delete a product log

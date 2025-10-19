@@ -23,9 +23,17 @@ export class WebSeriesLogService {
   private firestore = inject(Firestore);
   private seriesLogsCollection = collection(this.firestore, 'webSeriesLogs');
 
+  // Helper to remove undefined values
+  private removeUndefined(obj: any): any {
+    return Object.fromEntries(
+      Object.entries(obj).filter(([_, v]) => v !== undefined)
+    );
+  }
+
   // Add a new web series log
   addSeriesLog(log: Omit<WebSeriesLog, 'id'>): Observable<void> {
-    return from(addDoc(this.seriesLogsCollection, log).then(() => void 0));
+    const cleanLog = this.removeUndefined(log);
+    return from(addDoc(this.seriesLogsCollection, cleanLog).then(() => void 0));
   }
 
   // Get series logs for a user
@@ -39,7 +47,8 @@ export class WebSeriesLogService {
   // Update a series log
   updateSeriesLog(logId: string, updates: Partial<WebSeriesLog>): Observable<void> {
     const docRef = doc(this.firestore, `webSeriesLogs/${logId}`);
-    return from(updateDoc(docRef, updates));
+    const cleanUpdates = this.removeUndefined(updates);
+    return from(updateDoc(docRef, cleanUpdates));
   }
 
   // Delete a series log
