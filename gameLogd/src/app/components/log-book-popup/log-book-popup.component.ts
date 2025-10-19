@@ -81,12 +81,12 @@ export class LogBookPopupComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<LogBookPopupComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { book: Book, review?: Review },
+    @Inject(MAT_DIALOG_DATA) public data: { book: Book, bookId?: string, review?: Review },
     private snackBar: MatSnackBar
   ) {
     this.logForm = this.fb.group({
-      dateStarted: ['', Validators.required],
-      dateCompleted: ['', Validators.required],
+      dateStarted: [new Date(), Validators.required],
+      dateCompleted: [''],
       rating: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
       review: ['', Validators.required],
       status: ['reading', Validators.required]
@@ -104,7 +104,7 @@ export class LogBookPopupComponent implements OnInit {
       });
     }
 
-    this.bookId = data.book.id;
+    this.bookId = data.bookId || data.book.id || '';
   }
 
   async ngOnInit() {
@@ -139,7 +139,7 @@ export class LogBookPopupComponent implements OnInit {
           userId: currentUser,
           bookId: this.bookId,
           startDate: formData.dateStarted,
-          endDate: formData.dateCompleted,
+          endDate: formData.dateCompleted || undefined,
           rating: formData.rating,
           review: formData.review,
           status: formData.status,
