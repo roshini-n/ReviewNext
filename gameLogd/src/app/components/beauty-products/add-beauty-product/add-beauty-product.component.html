@@ -1,6 +1,85 @@
 <div class="add-beauty-product-container">
   <h1>Add New Beauty Product</h1>
   
+  <!-- Instructions Section -->
+  <div class="instructions-section">
+    <div class="instructions-header" (click)="toggleInstructions()">
+      <mat-icon>{{ showInstructions ? 'expand_less' : 'expand_more' }}</mat-icon>
+      <span>Allowed Brands & Product Types</span>
+    </div>
+    <div class="instructions-content" *ngIf="showInstructions">
+      <p class="instructions-note">Please only add products from the following brands and product types:</p>
+      <div class="brand-list">
+        <div class="brand-item">
+          <strong>maybelline:</strong> foundation, lipstick, mascara, blush, bronzer, eyeshadow, eyeliner, nail_polish
+        </div>
+        <div class="brand-item">
+          <strong>covergirl:</strong> foundation, lipstick, mascara, blush, bronzer, eyeliner, eyeshadow
+        </div>
+        <div class="brand-item">
+          <strong>revlon:</strong> foundation, lipstick, lip_liner, mascara, blush, eyeliner, nail_polish
+        </div>
+        <div class="brand-item">
+          <strong>l'oreal:</strong> foundation, lipstick, mascara, eyeliner, eyeshadow, blush
+        </div>
+        <div class="brand-item">
+          <strong>nyx:</strong> foundation, lipstick, blush, eyeshadow, bronzer, eyeliner
+        </div>
+        <div class="brand-item">
+          <strong>e.l.f.:</strong> foundation, lipstick, blush, bronzer, eyeshadow, eyeliner
+        </div>
+        <div class="brand-item">
+          <strong>wet n wild:</strong> foundation, lipstick, blush, bronzer, eyeshadow, eyeliner, nail_polish
+        </div>
+        <div class="brand-item">
+          <strong>clinique:</strong> foundation, lipstick, blush, eyeshadow
+        </div>
+        <div class="brand-item">
+          <strong>almay:</strong> foundation, lipstick, mascara, eyeliner, eyeshadow
+        </div>
+        <div class="brand-item">
+          <strong>benefit:</strong> bronzer, blush, eyeliner, eyebrow, foundation, mascara
+        </div>
+        <div class="brand-item">
+          <strong>essie:</strong> nail_polish
+        </div>
+        <div class="brand-item">
+          <strong>butter london:</strong> nail_polish, lipstick
+        </div>
+        <div class="brand-item">
+          <strong>milani:</strong> foundation, blush, lipstick, bronzer, eyeshadow
+        </div>
+        <div class="brand-item">
+          <strong>physicians formula:</strong> foundation, blush, bronzer, eyeliner, eyeshadow
+        </div>
+        <div class="brand-item">
+          <strong>smashbox:</strong> foundation, lipstick, eyeshadow, eyeliner
+        </div>
+        <div class="brand-item">
+          <strong>stila:</strong> lipstick, foundation, eyeshadow, eyeliner
+        </div>
+        <div class="brand-item">
+          <strong>colourpop:</strong> lipstick, eyeshadow, lip_liner, foundation, blush
+        </div>
+        <div class="brand-item">
+          <strong>burt's bees:</strong> lipstick, eyeshadow, blush
+        </div>
+        <div class="brand-item">
+          <strong>sally b's skin yummies:</strong> foundation, blush, lipstick
+        </div>
+        <div class="brand-item">
+          <strong>pure anada:</strong> foundation, blush, bronzer, lipstick, eyeshadow, eyeliner
+        </div>
+        <div class="brand-item">
+          <strong>zorah:</strong> foundation, blush
+        </div>
+        <div class="brand-item">
+          <strong>annabelle:</strong> eyeliner, eyeshadow, mascara, lipstick
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <form [formGroup]="beautyProductForm" (ngSubmit)="onSubmit()" class="beauty-product-form">
     <div class="form-row">
       <mat-form-field appearance="outline">

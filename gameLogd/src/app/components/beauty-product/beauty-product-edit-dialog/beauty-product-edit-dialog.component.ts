@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 import { BeautyProduct } from '../../../models/beauty-product.model';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -23,7 +24,8 @@ import { MatChipInputEvent } from '@angular/material/chips';
     MatFormFieldModule,
     MatInputModule,
     MatChipsModule,
-    MatIconModule
+    MatIconModule,
+    MatDividerModule
   ],
   templateUrl: './beauty-product-edit-dialog.component.html',
   styleUrls: ['./beauty-product-edit-dialog.component.css']
@@ -31,6 +33,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 export class BeautyProductEditDialogComponent {
   productForm: FormGroup;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  showInstructions = true;
 
   constructor(
     public dialogRef: MatDialogRef<BeautyProductEditDialogComponent>,
@@ -100,5 +103,9 @@ export class BeautyProductEditDialogComponent {
 
   onCancel(): void {
     this.dialogRef.close();
+  }
+
+  toggleInstructions(): void {
+    this.showInstructions = !this.showInstructions;
   }
 }

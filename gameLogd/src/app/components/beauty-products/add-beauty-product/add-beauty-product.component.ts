@@ -33,6 +33,7 @@ import { of } from 'rxjs';
 export class AddBeautyProductComponent implements OnInit {
   beautyProductForm: FormGroup;
   isSubmitting = false;
+  showInstructions = true;
 
   constructor(
     private fb: FormBuilder,
@@ -144,5 +145,9 @@ export class AddBeautyProductComponent implements OnInit {
 
   onCancel(): void {
     this.router.navigate(['/beauty-products']);
+  }
+
+  toggleInstructions(): void {
+    this.showInstructions = !this.showInstructions;
   }
 }

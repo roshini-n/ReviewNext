@@ -17,3 +17,70 @@ mat-dialog-actions {
 button {
   min-width: 100px;
 }
+
+/* Instructions Section */
+.instructions-section {
+  margin-bottom: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.instructions-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+
+.instructions-header:hover {
+  background-color: #eeeeee;
+}
+
+.instructions-header span {
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+}
+
+.instructions-header mat-icon {
+  color: #666;
+}
+
+.instructions-content {
+  padding: 16px;
+  background-color: #fafafa;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.instructions-note {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  color: #555;
+  font-style: italic;
+}
+
+.brand-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.brand-item {
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 8px;
+  background-color: white;
+  border-radius: 4px;
+  border-left: 3px solid #2196f3;
+}
+
+.brand-item strong {
+  color: #1976d2;
+  text-transform: capitalize;
+}
