@@ -15,6 +15,10 @@ export interface Review {
   bookId?: string;       // reference to the reviewed book
   bookTitle?: string;    // cache the book title for display purposes
   
+  // Movie-related properties (optional)
+  movieId?: string;      // reference to the reviewed movie
+  movieTitle?: string;   // cache the movie title for display purposes
+  
   reviewText: string;   // the actual review content
   rating: number;      // optional numerical rating (if combined with rating, we need to decicde on this)
   
