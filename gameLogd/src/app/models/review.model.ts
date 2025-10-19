@@ -27,6 +27,10 @@ export interface Review {
   gadgetId?: string;     // reference to the reviewed electronic gadget
   gadgetTitle?: string;  // cache the gadget title for display purposes
   
+  // Beauty Product-related properties (optional)
+  productId?: string;    // reference to the reviewed beauty product
+  productTitle?: string; // cache the product title for display purposes
+  
   reviewText: string;   // the actual review content
   rating: number;      // optional numerical rating (if combined with rating, we need to decicde on this)
   

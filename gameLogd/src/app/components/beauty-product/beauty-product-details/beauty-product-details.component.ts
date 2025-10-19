@@ -29,6 +29,8 @@ import { BeautyProductFirebaseService } from '../../../services/beautyProductFir
 import { BeautyProduct } from '../../../models/beauty-product.model';
 import { Firestore, collection, query, where, orderBy, collectionData } from '@angular/fire/firestore';
 import { BeautyProductEditDialogComponent } from '../beauty-product-edit-dialog/beauty-product-edit-dialog.component';
+import { LogBeautyProductPopupComponent } from '../../log-beauty-product-popup/log-beauty-product-popup.component';
+import { BeautyProductReviewService } from '../../../services/beautyProductReview.service';
 
 @Component({
   selector: 'app-beauty-product-details',
@@ -56,7 +58,8 @@ import { BeautyProductEditDialogComponent } from '../beauty-product-edit-dialog/
     MatNativeDateModule,
     MatAutocompleteModule,
     GeneralDeleteButtonComponent,
-    BeautyProductEditDialogComponent
+    BeautyProductEditDialogComponent,
+    LogBeautyProductPopupComponent
   ],
   templateUrl: './beauty-product-details.component.html',
   styleUrls: ['./beauty-product-details.component.css']
@@ -69,6 +72,7 @@ export class BeautyProductDetailsComponent implements OnInit {
   public authService = inject(AuthService);
   private beautyProductFirebaseService = inject(BeautyProductFirebaseService);
   private firestore = inject(Firestore);
+  private productReviewService = inject(BeautyProductReviewService);
 
   product?: BeautyProduct;
   reviews: Review[] = [];
@@ -112,20 +116,43 @@ export class BeautyProductDetailsComponent implements OnInit {
   private getReviews() {
     if (!this.productId) return;
 
-    const reviewsQuery = query(
-      collection(this.firestore, 'reviews'),
-      where('productId', '==', this.productId),
-      orderBy('datePosted', 'desc')
-    );
-    
-    collectionData(reviewsQuery, { idField: 'id' }).subscribe({
-      next: (reviews) => {
-        this.reviews = reviews as Review[];
+    this.productReviewService.getReviewsByProductId(this.productId).subscribe({
+      next: (reviews: Review[]) => {
+        this.reviews = reviews.map(review => ({
+          ...review,
+          datePosted: review.datePosted instanceof Date ? review.datePosted : new Date(review.datePosted)
+        }));
+        this.updateProductRating();
       },
       error: (error: Error) => {
         console.error('Error loading reviews:', error);
+        this.snackBar.open('Failed to load reviews', 'Close', {
+          duration: 3000
+        });
       }
     });
+  }
+
+  private updateProductRating() {
+    if (!this.product || !this.reviews.length) return;
+
+    const totalRating = this.reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalRating / this.reviews.length;
+
+    const updatedProduct = {
+      ...this.product,
+      rating: averageRating,
+      numRatings: this.reviews.length,
+      totalRatingScore: totalRating
+    };
+
+    if (this.productId) {
+      this.beautyProductFirebaseService.updateBeautyProduct(this.productId, updatedProduct).then(() => {
+        this.product = updatedProduct;
+      }).catch((error) => {
+        console.error('Error updating product rating:', error);
+      });
+    }
   }
 
   onEditProduct() {
@@ -168,26 +195,32 @@ export class BeautyProductDetailsComponent implements OnInit {
 
     if (!this.product || !this.productId) return;
 
-    // TODO: Implement collection popup dialog
-    // const dialogRef = this.dialog.open(LogProductPopupComponent, {
-    //   maxWidth: '550px',
-    //   width: '95vw',
-    //   panelClass: ['product-log-dialog', 'minimal-theme-dialog'],
-    //   autoFocus: false,
-    //   backdropClass: 'minimal-backdrop',
-    //   data: {
-    //     product: this.product,
-    //     productId: this.productId
-    //   }
-    // });
+    const dialogRef = this.dialog.open(LogBeautyProductPopupComponent, {
+      maxWidth: '550px',
+      width: '95vw',
+      panelClass: ['product-log-dialog', 'minimal-theme-dialog'],
+      autoFocus: false,
+      backdropClass: 'minimal-backdrop',
+      data: {
+        product: this.product,
+        productId: this.productId
+      }
+    });
 
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     // Handle after adding to collection
-    //     this.snackBar.open('Product added to your collection', 'Close', {
-    //       duration: 3000
-    //     });
-    //   }
-    // });
+    dialogRef.componentInstance.reviewUpdated.subscribe((updatedReview) => {
+      console.log('Review updated:', updatedReview);
+      const index = this.reviews.findIndex(r => r.id === updatedReview.id);
+      if (index !== -1) {
+        this.reviews[index] = updatedReview;
+      } else {
+        this.reviews.unshift(updatedReview);
+      }
+      this.updateProductRating();
+      if (this.productId) {
+        this.loadProductDetails();
+      }
+    });
+
+    dialogRef.afterClosed().subscribe();
   }
 }
