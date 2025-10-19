@@ -21,6 +21,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ElectronicGadgetFirebaseService } from '../../../services/electronicGadgetFirebase.service';
 import { ElectronicGadget } from '../../../models/electronic-gadget.model';
 import { ElectronicGadgetEditDialogComponent } from '../electronic-gadget-edit-dialog/electronic-gadget-edit-dialog.component';
+import { LogElectronicGadgetPopupComponent } from '../../log-electronic-gadget-popup/log-electronic-gadget-popup.component';
+import { ElectronicGadgetReviewService } from '../../../services/electronicGadgetReview.service';
 
 @Component({
   selector: 'app-electronic-gadget-details',
@@ -41,6 +43,7 @@ import { ElectronicGadgetEditDialogComponent } from '../electronic-gadget-edit-d
     ReactiveFormsModule,
     GeneralDeleteButtonComponent,
     ElectronicGadgetEditDialogComponent,
+    LogElectronicGadgetPopupComponent,
   ],
   templateUrl: './electronic-gadget-details.component.html',
   styleUrl: './electronic-gadget-details.component.css',
@@ -54,7 +57,8 @@ export class ElectronicGadgetDetailsComponent implements OnInit {
   private fb = inject(FormBuilder);
   private snackBar = inject(MatSnackBar);
   private electronicGadgetService = inject(ElectronicGadgetFirebaseService);
-  
+  private gadgetReviewService = inject(ElectronicGadgetReviewService);
+
   gadget?: ElectronicGadget;
   rating?: number;
   currentRating: number = 0;
@@ -82,7 +86,7 @@ export class ElectronicGadgetDetailsComponent implements OnInit {
       this.currentUserId = await this.currenUser;
       this.disabled = false;
     }
-    
+
     this.gadgetId = this.route.snapshot.paramMap.get('id');
 
     if (this.gadgetId) {
@@ -99,26 +103,92 @@ export class ElectronicGadgetDetailsComponent implements OnInit {
         }
       });
     }
-    
+
     this.getReviews();
   }
 
   getReviews() {
     if (!this.gadgetId) return;
-    this.reviewService.getReviewsByGadgetId(this.gadgetId).subscribe({
+    this.gadgetReviewService.getReviewsByGadgetId(this.gadgetId).subscribe({
       next: (reviews: Review[]) => {
-        this.reviews = reviews;
+        this.reviews = reviews.map(review => ({
+          ...review,
+          datePosted: review.datePosted instanceof Date ? review.datePosted : new Date(review.datePosted)
+        }));
+        this.updateGadgetRating();
         console.log('Reviews loaded:', reviews);
       },
       error: (error: any) => {
         console.error('Error loading reviews:', error);
         this.error = 'Failed to load reviews. Please try again later.';
+        this.snackBar.open('Failed to load reviews', 'Close', {
+          duration: 3000
+        });
       }
     });
   }
 
+  private updateGadgetRating() {
+    if (!this.gadget || !this.reviews.length) return;
+
+    const totalRating = this.reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalRating / this.reviews.length;
+
+    const updatedGadget = {
+      ...this.gadget,
+      rating: averageRating,
+      numRatings: this.reviews.length,
+      totalRatingScore: totalRating
+    };
+
+    if (this.gadgetId) {
+      this.electronicGadgetService.updateElectronicGadget(this.gadgetId, updatedGadget).then(() => {
+        this.gadget = updatedGadget;
+      }).catch((error) => {
+        console.error('Error updating gadget rating:', error);
+      });
+    }
+  }
+
   openLogGadgetPopup() {
-    // TODO: Implement log gadget popup
+    if (!this.authService.currentUserSig()) {
+      this.snackBar.open('Please log in to add gadgets to your collection', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
+    if (!this.gadget || !this.gadgetId) return;
+
+    const dialogRef = this.dialog.open(LogElectronicGadgetPopupComponent, {
+      maxWidth: '550px',
+      width: '95vw',
+      panelClass: ['gadget-log-dialog', 'minimal-theme-dialog'],
+      autoFocus: false,
+      backdropClass: 'minimal-backdrop',
+      data: {
+        gadget: this.gadget,
+        gadgetId: this.gadgetId
+      }
+    });
+
+    dialogRef.componentInstance.reviewUpdated.subscribe((updatedReview) => {
+      console.log('Review updated:', updatedReview);
+      const index = this.reviews.findIndex(r => r.id === updatedReview.id);
+      if (index !== -1) {
+        this.reviews[index] = updatedReview;
+      } else {
+        this.reviews.unshift(updatedReview);
+      }
+      this.updateGadgetRating();
+      if (this.gadgetId) {
+        this.electronicGadgetService.getElectronicGadgetById(this.gadgetId).subscribe((gadget) => {
+          this.gadget = gadget;
+        });
+      }
+    });
+
+    dialogRef.afterClosed().subscribe();
   }
 
   onEditGadget() {

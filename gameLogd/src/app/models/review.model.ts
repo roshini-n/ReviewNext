@@ -23,6 +23,10 @@ export interface Review {
   seriesId?: string;     // reference to the reviewed web series
   seriesTitle?: string;  // cache the series title for display purposes
   
+  // Electronic Gadget-related properties (optional)
+  gadgetId?: string;     // reference to the reviewed electronic gadget
+  gadgetTitle?: string;  // cache the gadget title for display purposes
+  
   reviewText: string;   // the actual review content
   rating: number;      // optional numerical rating (if combined with rating, we need to decicde on this)
   
