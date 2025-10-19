@@ -55,7 +55,7 @@ export class ProfileComponent implements OnInit{
   userId: string | null = null;
   username: string | undefined;
   bio: string | undefined;
-  image: string = "assets/default-avatar.png"; // Set default avatar
+  image: string = "assets/robot.png"; // Set default avatar to an existing asset
   isUpdatingAvatar = false;
   
 
@@ -82,31 +82,31 @@ export class ProfileComponent implements OnInit{
   loadUser(): void {
     if (!this.userId) return;
     
-    this.userService.getUserById(this.userId).subscribe({
+    // Use observeUserById for live updates
+    this.userService.observeUserById(this.userId).subscribe({
       next: (user: User | undefined) => {
         if (user) {
           console.log('Loaded user data:', user);
           this.bio = user.bio;
           this.username = user.username;
           
-          // Only update the image if we're not in the middle of an avatar update
-          if (!this.isUpdatingAvatar) {
-            const newAvatarUrl = user.avatarUrl?.trim() || 'assets/default-avatar.png';
-            if (this.image !== newAvatarUrl) {
-              console.log('Updating avatar from:', this.image, 'to:', newAvatarUrl);
-              this.image = newAvatarUrl;
-            }
-          }
+          // Update avatar image
+          const newAvatarUrl = user.avatarUrl?.trim() || 'assets/robot.png';
+          console.log('Avatar URL from Firestore:', newAvatarUrl);
+          this.image = newAvatarUrl;
           
           this.cd.markForCheck();
           this.cd.detectChanges();
         } else {
           console.log("User not found");
+          // Set default avatar if user not found
+          this.image = 'assets/robot.png';
         }
       },
       error: (error) => {
         console.error('Error loading user:', error);
-        // Could show an error message to the user here
+        // Set default avatar on error
+        this.image = 'assets/robot.png';
       }
     });
   }
@@ -172,26 +172,35 @@ export class ProfileComponent implements OnInit{
     
     dialogRef.afterClosed().subscribe((newAvatarPath: string) => {
       console.log('Dialog closed with result:', newAvatarPath);
+      console.log('Result type:', typeof newAvatarPath);
+      console.log('Current userId:', this.userId);
+      
       if (newAvatarPath && this.userId) {
         this.isUpdatingAvatar = true;
-        console.log('Updating avatar for user:', this.userId);
+        console.log('Updating avatar for user:', this.userId, 'with path:', newAvatarPath);
         
         this.userService.updateUser(this.userId, { avatarUrl: newAvatarPath })
           .subscribe({
             next: () => {
-              console.log('Avatar updated successfully');
+              console.log('Avatar updated successfully in Firestore');
+              console.log('Setting local image to:', newAvatarPath);
               this.image = newAvatarPath;
               this.isUpdatingAvatar = false;
               this.cd.markForCheck();
               this.cd.detectChanges();
             },
             error: (error) => {
-              console.error('Error updating avatar:', error);
+              console.error('Error updating avatar in Firestore:', error);
+              console.error('Error details:', error.message, error.code);
               this.isUpdatingAvatar = false;
               this.cd.markForCheck();
-              // Could show an error message to the user here
+              alert('Failed to update avatar: ' + (error.message || 'Unknown error'));
             }
           });
+      } else {
+        console.log('Dialog closed without selection or user not authenticated');
+        if (!newAvatarPath) console.log('No avatar path returned');
+        if (!this.userId) console.log('No userId available');
       }
     });
   }

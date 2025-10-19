@@ -52,13 +52,16 @@ export class AvatarDialogComponent {
   }
 
   saveAvatar(): void {
+    console.log('saveAvatar called');
+    console.log('selectedAvatar:', this.selectedAvatar);
+
     if (!this.selectedAvatar) {
       this.error = 'Please select an avatar';
+      console.error('No avatar selected');
       return;
     }
 
-    this.isLoading = true;
-    // Close the dialog with the selected avatar path
+    console.log('Closing dialog with preset avatar:', this.selectedAvatar);
     this.dialogRef.close(this.selectedAvatar);
   }
 }
