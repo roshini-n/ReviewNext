@@ -251,7 +251,18 @@ export class ProfileComponent implements OnInit{
 @Component({
   selector: 'dialog-animations-example-dialog',
   templateUrl: 'dialog-animations-example-dialog.html',
-  imports: [MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormField, MatLabel],
+  styleUrl: 'dialog-animations-example-dialog.css',
+  imports: [
+    MatButtonModule, 
+    MatDialogActions, 
+    MatDialogClose, 
+    MatDialogTitle, 
+    MatDialogContent, 
+    FormsModule, 
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
@@ -277,6 +288,7 @@ export class DialogAnimationsExampleDialog {
 @Component({
   selector: 'username-dialog',
   templateUrl: 'username-dialog.html',
+  styleUrl: 'username-dialog.css',
   imports: [
     MatButtonModule, 
     MatDialogActions, 

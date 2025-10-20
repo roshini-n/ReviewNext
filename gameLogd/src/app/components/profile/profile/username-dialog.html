@@ -1,21 +1,37 @@
-<div class="dialog-container">
-  <h2 mat-dialog-title>Change Username</h2>
+<div class="dialog-container username-dialog">
+  <h2 mat-dialog-title>
+    <mat-icon class="dialog-icon">badge</mat-icon>
+    Change Username
+  </h2>
 
   <mat-dialog-content>
     <div class="dialog-content">
-      <p>Enter your new username</p>
+      <p class="dialog-description">Choose a unique username that represents you. This is how others will identify you.</p>
       <form (ngSubmit)="submitUsername()">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Username</mat-label>
-          <input matInput [(ngModel)]="username" name="username" placeholder="Enter new username" required>
+          <input 
+            matInput 
+            [(ngModel)]="username" 
+            name="username" 
+            placeholder="Enter your username" 
+            required
+            maxlength="30">
           <mat-icon matSuffix>person</mat-icon>
+          <mat-hint align="end">{{username?.length || 0}}/30</mat-hint>
         </mat-form-field>
       </form>
     </div>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button mat-raised-button color="primary" (click)="submitUsername()" [disabled]="!username.trim()">Save Changes</button>
+    <button mat-button mat-dialog-close class="cancel-btn">
+      <mat-icon>close</mat-icon>
+      Cancel
+    </button>
+    <button mat-raised-button color="primary" (click)="submitUsername()" [disabled]="!username.trim()" class="submit-btn">
+      <mat-icon>check</mat-icon>
+      Save Changes
+    </button>
   </mat-dialog-actions>
 </div>
