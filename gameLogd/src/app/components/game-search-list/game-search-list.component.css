@@ -1,7 +1,7 @@
 .game-search-container {
   width: 100%;
-  background-color: #111;
-  color: #eee;
+  background-color: #EADDCA;
+  color: #333;
 }
 
 .loading,
@@ -9,7 +9,7 @@
 .no-results {
   text-align: center;
   margin: 30px 0;
-  color: #ffde59;
+  color: #8B6F47;
   font-weight: 300;
   font-size: 1.1rem;
 }
@@ -17,9 +17,9 @@
 .loader {
   width: 40px;
   height: 40px;
-  border: 4px solid rgba(255, 222, 89, 0.2);
+  border: 4px solid rgba(139, 111, 71, 0.2);
   border-radius: 50%;
-  border-top-color: #ffde59;
+  border-top-color: #8B6F47;
   margin: 0 auto;
   animation: spin 1s linear infinite;
 }
@@ -50,8 +50,8 @@
 }
 
 .game-card {
-  border: 1px solid #222;
-  background-color: #1a1a1a;
+  border: 1px solid #D4A574;
+  background-color: #FFFFFF;
   transition: transform 0.2s, box-shadow 0.2s;
   overflow: hidden;
   border-radius: 4px;
@@ -61,8 +61,8 @@
 
 .game-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(255, 222, 89, 0.2);
-  border-color: #ffde59;
+  box-shadow: 0 5px 15px rgba(139, 111, 71, 0.3);
+  border-color: #8B6F47;
 }
 
 .game-link {
@@ -93,7 +93,7 @@
 
 .game-title {
   margin: 0 0 8px 0;
-  color: #ffde59;
+  color: #8B6F47;
   font-size: 1rem;
   font-weight: 500;
   white-space: nowrap;
@@ -104,15 +104,15 @@
 .game-developer {
   margin: 0 0 5px 0;
   font-size: 0.85rem;
-  color: #bbb;
+  color: #666;
 }
 
 .game-rating {
   display: inline-block;
   margin: 8px 0 0 0;
   padding: 3px 8px;
-  background-color: #ffde59;
-  color: #000;
+  background-color: #8B6F47;
+  color: #fff;
   font-weight: bold;
   font-size: 0.8rem;
   border-radius: 4px;
