@@ -1,65 +1,381 @@
 <div class="diary-container">
-  <h1>My Game Log</h1>
+  <h1>My Log</h1>
+  <p class="subtitle">Track all your games, books, movies, web series, gadgets, and beauty products</p>
 
-  <div class="diary-list">
-    <div class="diary-entry" *ngFor="let log of combinedLogs">
-      <div class="dates-column">
-        <div class="date-block start" *ngIf="log.startDate">
-          <span class="date-label">Started</span>
-          <span class="month">{{ log.startDate | date : "MMM" }}</span>
-          <span class="day">{{ log.startDate | date : "dd" }}</span>
-          <span class="year">{{ log.startDate | date : "yyyy" }}</span>
-        </div>
-        <div class="arrow">→</div>
-        <div class="date-block end" *ngIf="log.endDate">
-          <span class="date-label">Finished</span>
-          <span class="month">{{ log.endDate | date : "MMM" }}</span>
-          <span class="day">{{ log.endDate | date : "dd" }}</span>
-          <span class="year">{{ log.endDate | date : "yyyy" }}</span>
-        </div>
-      </div>
-      
-      <div class="entry-image">
-        <img [src]="log.imageUrl" [alt]="log.title" />
-      </div>
+  <mat-tab-group class="log-tabs" animationDuration="300ms">
+    <!-- ALL LOGS TAB -->
+    <mat-tab label="All ({{ allLogs.length }})">
+      <div class="diary-list">
+        <div class="diary-entry" *ngFor="let log of allLogs">
+          <div class="category-badge" data-category="game">
+            Game
+          </div>
+          
+          <div class="dates-column">
+            <div class="date-block start" *ngIf="log.startDate">
+              <span class="date-label">Started</span>
+              <span class="month">{{ log.startDate | date : "MMM" }}</span>
+              <span class="day">{{ log.startDate | date : "dd" }}</span>
+              <span class="year">{{ log.startDate | date : "yyyy" }}</span>
+            </div>
+            <div class="arrow" *ngIf="log.startDate && log.endDate">→</div>
+            <div class="date-block end" *ngIf="log.endDate">
+              <span class="date-label">Finished</span>
+              <span class="month">{{ log.endDate | date : "MMM" }}</span>
+              <span class="day">{{ log.endDate | date : "dd" }}</span>
+              <span class="year">{{ log.endDate | date : "yyyy" }}</span>
+            </div>
+          </div>
+          
+          <div class="entry-image">
+            <img [src]="log.imageUrl" [alt]="log.title" />
+          </div>
 
-      <div class="entry-details">
-        <h3 class="game-title">{{ log.title }}</h3>
-        <div class="rating">
-          <span
-            class="star"
-            *ngFor="let star of [].constructor(log.rating || 0)"
-            >★</span
-          >
-        </div>
+          <div class="entry-details">
+            <h3 class="item-title">{{ log.title }}</h3>
+            
+            <div class="rating" *ngIf="log.rating">
+              <span class="star" *ngFor="let star of [].constructor(log.rating || 0)">★</span>
+            </div>
 
-        <div class="review-section" *ngIf="log.review">
-          <div class="review-content">
-            <p class="review-text">"{{ log.review }}"</p>
+            <div class="review-section" *ngIf="log.review">
+              <p class="review-text">"{{ log.review }}"</p>
+            </div>
+
+            <div class="meta">
+              <span *ngIf="log.platforms" class="meta-item">{{ log.platforms.join(", ") }}</span>
+              <span *ngIf="log.developer" class="meta-item">{{ log.developer }}</span>
+            </div>
+            
+            <div class="entry-actions">
+              <app-general-delete-button
+                [objectToDelete]="log"
+                (deleteConfirmed)="deleteLog($event)"
+                class="action-button"
+              ></app-general-delete-button>
+            </div>
           </div>
         </div>
 
-        <div class="meta">
-          <span class="platforms">{{ log.platforms.join(", ") }}</span>
-          <span class="developer">{{ log.developer }}</span>
-        </div>
-        
-        <div class="entry-actions">
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="editGameLog(log)"
-            class="action-button edit-button"
-          >
-            Edit Log
-          </button>
-          <app-general-delete-button
-            [objectToDelete]="log"
-            (deleteConfirmed)="deleteLog($event)"
-            class="action-button"
-          ></app-general-delete-button>
+        <div class="empty-state" *ngIf="allLogs.length === 0">
+          <mat-icon>inbox</mat-icon>
+          <p>No logs yet. Start tracking your entertainment!</p>
         </div>
       </div>
-    </div>
-  </div>
+    </mat-tab>
+
+    <!-- GAMES TAB -->
+    <mat-tab label="Games ({{ combinedLogs.length }})">
+      <div class="diary-list">
+        <div class="diary-entry" *ngFor="let log of combinedLogs">
+          <div class="dates-column">
+            <div class="date-block start" *ngIf="log.startDate">
+              <span class="date-label">Started</span>
+              <span class="month">{{ log.startDate | date : "MMM" }}</span>
+              <span class="day">{{ log.startDate | date : "dd" }}</span>
+              <span class="year">{{ log.startDate | date : "yyyy" }}</span>
+            </div>
+            <div class="arrow" *ngIf="log.startDate && log.endDate">→</div>
+            <div class="date-block end" *ngIf="log.endDate">
+              <span class="date-label">Finished</span>
+              <span class="month">{{ log.endDate | date : "MMM" }}</span>
+              <span class="day">{{ log.endDate | date : "dd" }}</span>
+              <span class="year">{{ log.endDate | date : "yyyy" }}</span>
+            </div>
+          </div>
+          
+          <div class="entry-image">
+            <img [src]="log.imageUrl" [alt]="log.title" />
+          </div>
+
+          <div class="entry-details">
+            <h3 class="item-title">{{ log.title }}</h3>
+            <div class="rating" *ngIf="log.rating">
+              <span class="star" *ngFor="let star of [].constructor(log.rating || 0)">★</span>
+            </div>
+            <div class="review-section" *ngIf="log.review">
+              <p class="review-text">"{{ log.review }}"</p>
+            </div>
+            <div class="meta">
+              <span *ngIf="log.platforms" class="meta-item">{{ log.platforms.join(", ") }}</span>
+              <span *ngIf="log.developer" class="meta-item">{{ log.developer }}</span>
+            </div>
+            <div class="entry-actions">
+              <app-general-delete-button
+                [objectToDelete]="log"
+                (deleteConfirmed)="deleteLog($event)"
+                class="action-button"
+              ></app-general-delete-button>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="combinedLogs.length === 0">
+          <mat-icon>sports_esports</mat-icon>
+          <p>No game logs yet</p>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- BOOKS TAB -->
+    <mat-tab label="Books ({{ bookLogs.length }})">
+      <div class="diary-list">
+        <div class="diary-entry" *ngFor="let log of bookLogs">
+          <div class="dates-column">
+            <div class="date-block start" *ngIf="log.startDate">
+              <span class="date-label">Started</span>
+              <span class="month">{{ log.startDate | date : "MMM" }}</span>
+              <span class="day">{{ log.startDate | date : "dd" }}</span>
+              <span class="year">{{ log.startDate | date : "yyyy" }}</span>
+            </div>
+            <div class="arrow" *ngIf="log.startDate && log.endDate">→</div>
+            <div class="date-block end" *ngIf="log.endDate">
+              <span class="date-label">Finished</span>
+              <span class="month">{{ log.endDate | date : "MMM" }}</span>
+              <span class="day">{{ log.endDate | date : "dd" }}</span>
+              <span class="year">{{ log.endDate | date : "yyyy" }}</span>
+            </div>
+          </div>
+          
+          <div class="entry-image">
+            <img [src]="log.imageUrl" [alt]="log.title" />
+          </div>
+
+          <div class="entry-details">
+            <h3 class="item-title">{{ log.title }}</h3>
+            <div class="rating" *ngIf="log.rating">
+              <span class="star" *ngFor="let star of [].constructor(log.rating || 0)">★</span>
+            </div>
+            <div class="review-section" *ngIf="log.review">
+              <p class="review-text">"{{ log.review }}"</p>
+            </div>
+            <div class="meta">
+              <span *ngIf="log.author" class="author">{{ log.author }}</span>
+            </div>
+            <div class="entry-actions">
+              <app-general-delete-button
+                [objectToDelete]="log"
+                (deleteConfirmed)="deleteLog($event)"
+                class="action-button"
+              ></app-general-delete-button>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="bookLogs.length === 0">
+          <mat-icon>menu_book</mat-icon>
+          <p>No book logs yet</p>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- MOVIES TAB -->
+    <mat-tab label="Movies ({{ movieLogs.length }})">
+      <div class="diary-list">
+        <div class="diary-entry" *ngFor="let log of movieLogs">
+          <div class="dates-column">
+            <div class="date-block start" *ngIf="log.startDate">
+              <span class="date-label">Added</span>
+              <span class="month">{{ log.startDate | date : "MMM" }}</span>
+              <span class="day">{{ log.startDate | date : "dd" }}</span>
+              <span class="year">{{ log.startDate | date : "yyyy" }}</span>
+            </div>
+            <div class="arrow" *ngIf="log.startDate && log.endDate">→</div>
+            <div class="date-block end" *ngIf="log.endDate">
+              <span class="date-label">Watched</span>
+              <span class="month">{{ log.endDate | date : "MMM" }}</span>
+              <span class="day">{{ log.endDate | date : "dd" }}</span>
+              <span class="year">{{ log.endDate | date : "yyyy" }}</span>
+            </div>
+          </div>
+          
+          <div class="entry-image">
+            <img [src]="log.imageUrl" [alt]="log.title" />
+          </div>
+
+          <div class="entry-details">
+            <h3 class="item-title">{{ log.title }}</h3>
+            <div class="rating" *ngIf="log.rating">
+              <span class="star" *ngFor="let star of [].constructor(log.rating || 0)">★</span>
+            </div>
+            <div class="review-section" *ngIf="log.review">
+              <p class="review-text">"{{ log.review }}"</p>
+            </div>
+            <div class="meta">
+              <span *ngIf="log.director" class="director">{{ log.director }}</span>
+            </div>
+            <div class="entry-actions">
+              <app-general-delete-button
+                [objectToDelete]="log"
+                (deleteConfirmed)="deleteLog($event)"
+                class="action-button"
+              ></app-general-delete-button>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="movieLogs.length === 0">
+          <mat-icon>movie</mat-icon>
+          <p>No movie logs yet</p>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- WEB SERIES TAB -->
+    <mat-tab label="Web Series ({{ webSeriesLogs.length }})">
+      <div class="diary-list">
+        <div class="diary-entry" *ngFor="let log of webSeriesLogs">
+          <div class="dates-column">
+            <div class="date-block start" *ngIf="log.startDate">
+              <span class="date-label">Started</span>
+              <span class="month">{{ log.startDate | date : "MMM" }}</span>
+              <span class="day">{{ log.startDate | date : "dd" }}</span>
+              <span class="year">{{ log.startDate | date : "yyyy" }}</span>
+            </div>
+            <div class="arrow" *ngIf="log.startDate && log.endDate">→</div>
+            <div class="date-block end" *ngIf="log.endDate">
+              <span class="date-label">Finished</span>
+              <span class="month">{{ log.endDate | date : "MMM" }}</span>
+              <span class="day">{{ log.endDate | date : "dd" }}</span>
+              <span class="year">{{ log.endDate | date : "yyyy" }}</span>
+            </div>
+          </div>
+          
+          <div class="entry-image">
+            <img [src]="log.imageUrl" [alt]="log.title" />
+          </div>
+
+          <div class="entry-details">
+            <h3 class="item-title">{{ log.title }}</h3>
+            <div class="rating" *ngIf="log.rating">
+              <span class="star" *ngFor="let star of [].constructor(log.rating || 0)">★</span>
+            </div>
+            <div class="review-section" *ngIf="log.review">
+              <p class="review-text">"{{ log.review }}"</p>
+            </div>
+            <div class="meta">
+              <span *ngIf="log.network" class="network">{{ log.network }}</span>
+              <span *ngIf="log.creator" class="creator">{{ log.creator }}</span>
+            </div>
+            <div class="entry-actions">
+              <app-general-delete-button
+                [objectToDelete]="log"
+                (deleteConfirmed)="deleteLog($event)"
+                class="action-button"
+              ></app-general-delete-button>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="webSeriesLogs.length === 0">
+          <mat-icon>live_tv</mat-icon>
+          <p>No web series logs yet</p>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- ELECTRONIC GADGETS TAB -->
+    <mat-tab label="Gadgets ({{ electronicGadgetLogs.length }})">
+      <div class="diary-list">
+        <div class="diary-entry" *ngFor="let log of electronicGadgetLogs">
+          <div class="dates-column">
+            <div class="date-block start" *ngIf="log.startDate">
+              <span class="date-label">Added</span>
+              <span class="month">{{ log.startDate | date : "MMM" }}</span>
+              <span class="day">{{ log.startDate | date : "dd" }}</span>
+              <span class="year">{{ log.startDate | date : "yyyy" }}</span>
+            </div>
+            <div class="arrow" *ngIf="log.startDate && log.endDate">→</div>
+            <div class="date-block end" *ngIf="log.endDate">
+              <span class="date-label">Purchased</span>
+              <span class="month">{{ log.endDate | date : "MMM" }}</span>
+              <span class="day">{{ log.endDate | date : "dd" }}</span>
+              <span class="year">{{ log.endDate | date : "yyyy" }}</span>
+            </div>
+          </div>
+          
+          <div class="entry-image">
+            <img [src]="log.imageUrl" [alt]="log.title" />
+          </div>
+
+          <div class="entry-details">
+            <h3 class="item-title">{{ log.title }}</h3>
+            <div class="rating" *ngIf="log.rating">
+              <span class="star" *ngFor="let star of [].constructor(log.rating || 0)">★</span>
+            </div>
+            <div class="review-section" *ngIf="log.review">
+              <p class="review-text">"{{ log.review }}"</p>
+            </div>
+            <div class="meta">
+              <span *ngIf="log.brand" class="brand">{{ log.brand }}</span>
+            </div>
+            <div class="entry-actions">
+              <app-general-delete-button
+                [objectToDelete]="log"
+                (deleteConfirmed)="deleteLog($event)"
+                class="action-button"
+              ></app-general-delete-button>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="electronicGadgetLogs.length === 0">
+          <mat-icon>devices</mat-icon>
+          <p>No gadget logs yet</p>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- BEAUTY PRODUCTS TAB -->
+    <mat-tab label="Beauty ({{ beautyProductLogs.length }})">
+      <div class="diary-list">
+        <div class="diary-entry" *ngFor="let log of beautyProductLogs">
+          <div class="dates-column">
+            <div class="date-block start" *ngIf="log.startDate">
+              <span class="date-label">Added</span>
+              <span class="month">{{ log.startDate | date : "MMM" }}</span>
+              <span class="day">{{ log.startDate | date : "dd" }}</span>
+              <span class="year">{{ log.startDate | date : "yyyy" }}</span>
+            </div>
+            <div class="arrow" *ngIf="log.startDate && log.endDate">→</div>
+            <div class="date-block end" *ngIf="log.endDate">
+              <span class="date-label">Opened</span>
+              <span class="month">{{ log.endDate | date : "MMM" }}</span>
+              <span class="day">{{ log.endDate | date : "dd" }}</span>
+              <span class="year">{{ log.endDate | date : "yyyy" }}</span>
+            </div>
+          </div>
+          
+          <div class="entry-image">
+            <img [src]="log.imageUrl" [alt]="log.title" />
+          </div>
+
+          <div class="entry-details">
+            <h3 class="item-title">{{ log.title }}</h3>
+            <div class="rating" *ngIf="log.rating">
+              <span class="star" *ngFor="let star of [].constructor(log.rating || 0)">★</span>
+            </div>
+            <div class="review-section" *ngIf="log.review">
+              <p class="review-text">"{{ log.review }}"</p>
+            </div>
+            <div class="meta">
+              <span *ngIf="log.brand" class="brand">{{ log.brand }}</span>
+            </div>
+            <div class="entry-actions">
+              <app-general-delete-button
+                [objectToDelete]="log"
+                (deleteConfirmed)="deleteLog($event)"
+                class="action-button"
+              ></app-general-delete-button>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="beautyProductLogs.length === 0">
+          <mat-icon>spa</mat-icon>
+          <p>No beauty product logs yet</p>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>

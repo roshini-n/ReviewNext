@@ -1,16 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { GameLogService } from '../../services/gamelog.service';
+import { BookLogService } from '../../services/booklog.service';
+import { MovieLogService } from '../../services/movieLog.service';
+import { WebSeriesLogService } from '../../services/webSeriesLog.service';
+import { ElectronicGadgetLogService } from '../../services/electronicGadgetLog.service';
+import { BeautyProductLogService } from '../../services/beautyProductLog.service';
 import { GameLog } from '../../models/gameLog.model';
+import { BookLog } from '../../models/bookLog.model';
 import { AuthService } from '../../services/auth.service';
 import { GameFirebaseService } from '../../services/gameFirebase.service';
+import { BookFirebaseService } from '../../services/bookFirebase.service';
+import { MovieFirebaseService } from '../../services/movieFirebase.service';
+import { WebSeriesFirebaseService } from '../../services/webSeriesFirebase.service';
+import { ElectronicGadgetFirebaseService } from '../../services/electronicGadgetFirebase.service';
+import { BeautyProductFirebaseService } from '../../services/beautyProductFirebase.service';
 import { Game } from '../../models/game.model';
+import { Book } from '../../models/book.model';
+import { Movie } from '../../models/movie.model';
+import { WebSeries } from '../../models/web-series.model';
+import { ElectronicGadget } from '../../models/electronic-gadget.model';
+import { BeautyProduct } from '../../models/beauty-product.model';
 import { CombinedLogGame } from '../../models/combinedLogGame.model';
 import { Timestamp } from '@angular/fire/firestore';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { LogGamePopupComponent } from '../log-game-popup/log-game-popup.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
 import { GeneralDeleteButtonComponent } from '../shared/general-delete-button/general-delete-button.component';
 
 @Component({
@@ -18,10 +36,10 @@ import { GeneralDeleteButtonComponent } from '../shared/general-delete-button/ge
   standalone: true,
   imports: [
     CommonModule, 
-    MatDialogModule, 
-    LogGamePopupComponent,
+    MatDialogModule,
     MatButtonModule,
     MatIconModule,
+    MatTabsModule,
     GeneralDeleteButtonComponent
   ],
   templateUrl: './mylog.component.html',
@@ -33,77 +51,50 @@ export class MylogComponent implements OnInit {
   usersGames: Game[] = [];
   combinedLogs: CombinedLogGame[] = [];
 
+  // Placeholder arrays for other categories (to be implemented)
+  allLogs: CombinedLogGame[] = [];
+  bookLogs: any[] = [];
+  movieLogs: any[] = [];
+  webSeriesLogs: any[] = [];
+  electronicGadgetLogs: any[] = [];
+  beautyProductLogs: any[] = [];
+
   constructor(
     private gamelogService: GameLogService,
+    private bookLogService: BookLogService,
+    private movieLogService: MovieLogService,
+    private webSeriesLogService: WebSeriesLogService,
+    private electronicGadgetLogService: ElectronicGadgetLogService,
+    private beautyProductLogService: BeautyProductLogService,
     private authService: AuthService,
     private gameService: GameFirebaseService,
+    private bookService: BookFirebaseService,
+    private movieService: MovieFirebaseService,
+    private webSeriesService: WebSeriesFirebaseService,
+    private electronicGadgetService: ElectronicGadgetFirebaseService,
+    private beautyProductService: BeautyProductFirebaseService,
     private dialog: MatDialog
   ) {}
 
   async ngOnInit(): Promise<void> {
-    await this.getUserIdAndLoadLogs();
-    await this.loadAllGamesFromLogs(this.gameLogs); // await so we know that our users gameLogs have been gotten
-    await this.combineLogsAndGames();
+    await this.getUserIdAndLoadAllLogs();
   }
 
-  async getUserIdAndLoadLogs(): Promise<void> {
+  async getUserIdAndLoadAllLogs(): Promise<void> {
     try {
       this.userId = await this.authService.getUid();
-      await this.loadUserGameLogs();
+      await Promise.all([
+        this.loadGameLogs(),
+        this.loadBookLogs(),
+        this.loadMovieLogs(),
+        this.loadWebSeriesLogs(),
+        this.loadElectronicGadgetLogs(),
+        this.loadBeautyProductLogs()
+      ]);
+      this.combineAllLogs();
     } catch (error) {
       console.error('Error getting user ID:', error);
     }
-  }
-
-  // method to user our GameLogService to get the game logs for the current user
-  async loadUserGameLogs(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.gamelogService.getReviewsByUserId(this.userId).subscribe({
-        next: (gameLogs: GameLog[]) => {
-          this.gameLogs = gameLogs;
-          console.log('Game logs loaded:', this.gameLogs);
-          resolve();
-        },
-        error: (error) => {
-          console.error('Error fetching game logs:', error);
-          reject(error);
-        },
-      });
-    });
-  }
-
-  // method to get all games from gameLogService
-  async loadAllGamesFromLogs(gameLogs: GameLog[]): Promise<void> {
-    let games: string[] = [];
-    console.log('Game logs:', gameLogs);
-    for (let log of gameLogs) {
-      // Check if gameId exists and isn't empty
-      if (log.gameId && log.gameId !== '') {
-        games.push(log.gameId);
-      } else {
-        console.warn('Log missing gameId:', log);
-      }
-    }
-
-    console.log('Fetching games with IDs:', games);
-
-    if (games.length === 0) {
-      console.log('No valid game IDs found in logs');
-      this.usersGames = [];
-      return;
-    }
-
-    this.gameService.getGamesByIds(games).subscribe({
-      next: async (games: Game[]) => {
-        this.usersGames = games;
-        console.log("User's games loaded:", this.usersGames);
-        await this.combineLogsAndGames();
-      },
-      error: (error) => {
-        console.error('Error fetching games:', error);
-        alert('Error fetching games');
-      },
-    });
   }
 
   private convertTimestamp(timestamp: any): Date | undefined {
@@ -111,102 +102,450 @@ export class MylogComponent implements OnInit {
     if (timestamp instanceof Timestamp) {
       return timestamp.toDate();
     }
-    return timestamp;
-  }
-
-  async combineLogsAndGames(): Promise<void> {
-    try {
-      const combinedLogs = this.gameLogs
-        .map((log) => {
-          const game = this.usersGames.find((game) => game.id === log.gameId);
-          if (game) {
-            return {
-              gamelogId: log.id,
-              gameId: log.gameId,
-              review: log.review,
-              rating: log.rating,
-              startDate: this.convertTimestamp(log.dateStarted),
-              endDate: this.convertTimestamp(log.dateCompleted),
-              userId: log.userId,
-              title: game.title,
-              description: game.description,
-              platforms: game.platforms,
-              releaseDate: game.releaseDate,
-              developer: game.developer,
-              publisher: game.publisher,
-              playersPlayed: game.playersPlayed,
-              imageUrl: game.imageUrl,
-            } as CombinedLogGame;
-          }
-          return null;
-        })
-        .filter((log): log is CombinedLogGame => log !== null);
-
-      this.combinedLogs = combinedLogs;
-      console.log('Combined logs created:', this.combinedLogs);
-    } catch (error) {
-      console.error('Error combining logs and games:', error);
+    if (timestamp instanceof Date) {
+      return timestamp;
     }
+    return undefined;
   }
 
-  editGameLog(combinedLog: CombinedLogGame): void {
-    const dialogData = {
-      game: combinedLog,
-      log: {
-        id: combinedLog.gamelogId,
-        dateStarted: combinedLog.startDate,
-        dateCompleted: combinedLog.endDate,
-        review: combinedLog.review,
-        rating: combinedLog.rating,
-        isReplay: combinedLog.isReplay,
-        containsSpoilers: false,
-        gameId: combinedLog.gameId,
-        userId: combinedLog.userId
-      },
-      isEdit: true // indicates that this is an edit operation
-    };
+  // ==================== GAME LOGS ====================
+  async loadGameLogs(): Promise<void> {
+    return new Promise((resolve) => {
+      this.gamelogService.getReviewsByUserId(this.userId).subscribe({
+        next: (logs: GameLog[]) => {
+          if (logs.length === 0) {
+            this.combinedLogs = [];
+            resolve();
+            return;
+          }
 
-    const dialogRef = this.dialog.open(LogGamePopupComponent, {
-      data: dialogData,
-      panelClass: ['custom-dialog-container', 'fade-in-dialog'],
-      width: '500px',
-      autoFocus: false,
-      disableClose: false,
-      backdropClass: 'dialog-backdrop'
-    });
+          const gameIds = logs.map(log => log.gameId).filter(id => id);
+          if (gameIds.length === 0) {
+            this.combinedLogs = [];
+            resolve();
+            return;
+          }
 
-    dialogRef.afterClosed().subscribe(async (result) => {
-  
-      console.log('Dialog closed, refreshing data...');
-      
-      try {
-        await this.loadUserGameLogs();
-        await this.loadAllGamesFromLogs(this.gameLogs);
-        await this.combineLogsAndGames();
-        
-        if (result) {
-          console.log('Dialog result:', result);
-        } else {
-          console.log('Dialog was closed without returning result');
+          this.gameService.getGamesByIds(gameIds).subscribe({
+            next: (games: Game[]) => {
+              this.combinedLogs = logs.map(log => {
+                const game = games.find(g => g.id === log.gameId);
+                if (game) {
+                  return {
+                    gamelogId: log.id,
+                    gameId: log.gameId,
+                    review: log.review,
+                    rating: log.rating,
+                    startDate: this.convertTimestamp(log.dateStarted),
+                    endDate: this.convertTimestamp(log.dateCompleted),
+                    userId: log.userId,
+                    title: game.title,
+                    description: game.description,
+                    platforms: game.platforms,
+                    releaseDate: game.releaseDate,
+                    developer: game.developer,
+                    publisher: game.publisher,
+                    playersPlayed: game.playersPlayed,
+                    imageUrl: game.imageUrl,
+                  } as CombinedLogGame;
+                }
+                return null;
+              }).filter((log): log is CombinedLogGame => log !== null);
+              
+              console.log('Game logs loaded:', this.combinedLogs.length);
+              resolve();
+            },
+            error: (error) => {
+              console.error('Error loading games:', error);
+              this.combinedLogs = [];
+              resolve();
+            }
+          });
+        },
+        error: (error) => {
+          console.error('Error loading game logs:', error);
+          this.combinedLogs = [];
+          resolve();
         }
-      } catch (error) {
-        console.error('Error refreshing data after log edit:', error);
-      }
+      });
     });
   }
 
-  deleteLog(combinedLog: CombinedLogGame): void {
-    this.gamelogService.deleteLog(combinedLog.gamelogId).subscribe({
+  // ==================== BOOK LOGS ====================
+  async loadBookLogs(): Promise<void> {
+    return new Promise((resolve) => {
+      this.bookLogService.getBookLogsByUserId(this.userId).subscribe({
+        next: (logs: BookLog[]) => {
+          if (logs.length === 0) {
+            this.bookLogs = [];
+            resolve();
+            return;
+          }
+
+          const bookIds = logs.map(log => log.bookId).filter(id => id);
+          if (bookIds.length === 0) {
+            this.bookLogs = [];
+            resolve();
+            return;
+          }
+
+          // Fetch books one by one using forkJoin
+          const bookObservables = bookIds.map(id => 
+            this.bookService.getBookById(id).pipe(catchError(() => of(null)))
+          );
+
+          forkJoin(bookObservables).subscribe({
+            next: (books: (Book | null | undefined)[]) => {
+              this.bookLogs = logs.map(log => {
+                const book = books.find(b => b && b.id === log.bookId);
+                if (book) {
+                  return {
+                    gamelogId: log.id,
+                    gameId: log.bookId,
+                    review: log.review,
+                    rating: log.rating,
+                    startDate: this.convertTimestamp(log.startDate),
+                    endDate: this.convertTimestamp(log.endDate),
+                    userId: log.userId,
+                    title: book.title,
+                    imageUrl: book.imageUrl,
+                    developer: book.author,
+                  };
+                }
+                return null;
+              }).filter(log => log !== null);
+              
+              console.log('Book logs loaded:', this.bookLogs.length);
+              resolve();
+            },
+            error: (error) => {
+              console.error('Error loading books:', error);
+              this.bookLogs = [];
+              resolve();
+            }
+          });
+        },
+        error: (error) => {
+          console.error('Error loading book logs:', error);
+          this.bookLogs = [];
+          resolve();
+        }
+      });
+    });
+  }
+
+  // ==================== MOVIE LOGS ====================
+  async loadMovieLogs(): Promise<void> {
+    return new Promise((resolve) => {
+      this.movieLogService.getMovieLogs(this.userId).subscribe({
+        next: (logs: any[]) => {
+          if (logs.length === 0) {
+            this.movieLogs = [];
+            resolve();
+            return;
+          }
+
+          const movieIds = logs.map(log => log.movieId).filter(id => id);
+          if (movieIds.length === 0) {
+            this.movieLogs = [];
+            resolve();
+            return;
+          }
+
+          // Fetch movies one by one using forkJoin
+          const movieObservables = movieIds.map(id => 
+            this.movieService.getMovieById(id).pipe(catchError(() => of(null)))
+          );
+
+          forkJoin(movieObservables).subscribe({
+            next: (movies: (Movie | null)[]) => {
+              this.movieLogs = logs.map(log => {
+                const movie = movies.find(m => m && m.id === log.movieId);
+                if (movie) {
+                  return {
+                    gamelogId: log.id,
+                    gameId: log.movieId,
+                    review: log.review,
+                    rating: log.rating,
+                    startDate: this.convertTimestamp(log.dateAdded),
+                    endDate: this.convertTimestamp(log.dateCompleted),
+                    userId: log.userId,
+                    title: movie.title,
+                    imageUrl: movie.imageUrl,
+                    developer: movie.director,
+                  };
+                }
+                return null;
+              }).filter(log => log !== null);
+              
+              console.log('Movie logs loaded:', this.movieLogs.length);
+              resolve();
+            },
+            error: (error) => {
+              console.error('Error loading movies:', error);
+              this.movieLogs = [];
+              resolve();
+            }
+          });
+        },
+        error: (error) => {
+          console.error('Error loading movie logs:', error);
+          this.movieLogs = [];
+          resolve();
+        }
+      });
+    });
+  }
+
+  // ==================== WEB SERIES LOGS ====================
+  async loadWebSeriesLogs(): Promise<void> {
+    return new Promise((resolve) => {
+      this.webSeriesLogService.getSeriesLogs(this.userId).subscribe({
+        next: (logs: any[]) => {
+          if (logs.length === 0) {
+            this.webSeriesLogs = [];
+            resolve();
+            return;
+          }
+
+          const seriesIds = logs.map(log => log.seriesId).filter(id => id);
+          if (seriesIds.length === 0) {
+            this.webSeriesLogs = [];
+            resolve();
+            return;
+          }
+
+          // Fetch web series one by one using forkJoin
+          const seriesObservables = seriesIds.map(id => 
+            this.webSeriesService.getWebSeriesById(id).pipe(catchError(() => of(null)))
+          );
+
+          forkJoin(seriesObservables).subscribe({
+            next: (series: (WebSeries | null)[]) => {
+              this.webSeriesLogs = logs.map(log => {
+                const webSeries = series.find(s => s && s.id === log.seriesId);
+                if (webSeries) {
+                  return {
+                    gamelogId: log.id,
+                    gameId: log.seriesId,
+                    review: log.review,
+                    rating: log.rating,
+                    startDate: this.convertTimestamp(log.dateAdded),
+                    endDate: this.convertTimestamp(log.dateCompleted),
+                    userId: log.userId,
+                    title: webSeries.title,
+                    imageUrl: webSeries.imageUrl,
+                    developer: webSeries.creator,
+                  };
+                }
+                return null;
+              }).filter(log => log !== null);
+              
+              console.log('Web series logs loaded:', this.webSeriesLogs.length);
+              resolve();
+            },
+            error: (error) => {
+              console.error('Error loading web series:', error);
+              this.webSeriesLogs = [];
+              resolve();
+            }
+          });
+        },
+        error: (error) => {
+          console.error('Error loading web series logs:', error);
+          this.webSeriesLogs = [];
+          resolve();
+        }
+      });
+    });
+  }
+
+  // ==================== ELECTRONIC GADGET LOGS ====================
+  async loadElectronicGadgetLogs(): Promise<void> {
+    return new Promise((resolve) => {
+      this.electronicGadgetLogService.getGadgetLogs(this.userId).subscribe({
+        next: (logs: any[]) => {
+          if (logs.length === 0) {
+            this.electronicGadgetLogs = [];
+            resolve();
+            return;
+          }
+
+          const gadgetIds = logs.map(log => log.gadgetId).filter(id => id);
+          if (gadgetIds.length === 0) {
+            this.electronicGadgetLogs = [];
+            resolve();
+            return;
+          }
+
+          // Fetch gadgets one by one using forkJoin
+          const gadgetObservables = gadgetIds.map(id => 
+            this.electronicGadgetService.getElectronicGadgetById(id).pipe(catchError(() => of(null)))
+          );
+
+          forkJoin(gadgetObservables).subscribe({
+            next: (gadgets: (ElectronicGadget | null)[]) => {
+              this.electronicGadgetLogs = logs.map(log => {
+                const gadget = gadgets.find(g => g && g.id === log.gadgetId);
+                if (gadget) {
+                  return {
+                    gamelogId: log.id,
+                    gameId: log.gadgetId,
+                    review: log.review,
+                    rating: log.rating,
+                    startDate: this.convertTimestamp(log.dateAdded),
+                    endDate: this.convertTimestamp(log.datePurchased),
+                    userId: log.userId,
+                    title: gadget.name,
+                    imageUrl: gadget.imageUrl,
+                    developer: gadget.brand,
+                  };
+                }
+                return null;
+              }).filter(log => log !== null);
+              
+              console.log('Electronic gadget logs loaded:', this.electronicGadgetLogs.length);
+              resolve();
+            },
+            error: (error) => {
+              console.error('Error loading electronic gadgets:', error);
+              this.electronicGadgetLogs = [];
+              resolve();
+            }
+          });
+        },
+        error: (error) => {
+          console.error('Error loading electronic gadget logs:', error);
+          this.electronicGadgetLogs = [];
+          resolve();
+        }
+      });
+    });
+  }
+
+  // ==================== BEAUTY PRODUCT LOGS ====================
+  async loadBeautyProductLogs(): Promise<void> {
+    return new Promise((resolve) => {
+      this.beautyProductLogService.getProductLogs(this.userId).subscribe({
+        next: (logs: any[]) => {
+          if (logs.length === 0) {
+            this.beautyProductLogs = [];
+            resolve();
+            return;
+          }
+
+          const productIds = logs.map(log => log.productId).filter(id => id);
+          if (productIds.length === 0) {
+            this.beautyProductLogs = [];
+            resolve();
+            return;
+          }
+
+          // Fetch products one by one using forkJoin
+          const productObservables = productIds.map(id => 
+            this.beautyProductService.getBeautyProductById(id).pipe(catchError(() => of(null)))
+          );
+
+          forkJoin(productObservables).subscribe({
+            next: (products: (BeautyProduct | null)[]) => {
+              this.beautyProductLogs = logs.map(log => {
+                const product = products.find(p => p && p.id === log.productId);
+                if (product) {
+                  return {
+                    gamelogId: log.id,
+                    gameId: log.productId,
+                    review: log.review,
+                    rating: log.rating,
+                    startDate: this.convertTimestamp(log.dateAdded),
+                    endDate: this.convertTimestamp(log.dateOpened),
+                    userId: log.userId,
+                    title: product.name,
+                    imageUrl: product.imageUrl,
+                    developer: product.brand,
+                  };
+                }
+                return null;
+              }).filter(log => log !== null);
+              
+              console.log('Beauty product logs loaded:', this.beautyProductLogs.length);
+              resolve();
+            },
+            error: (error) => {
+              console.error('Error loading beauty products:', error);
+              this.beautyProductLogs = [];
+              resolve();
+            }
+          });
+        },
+        error: (error) => {
+          console.error('Error loading beauty product logs:', error);
+          this.beautyProductLogs = [];
+          resolve();
+        }
+      });
+    });
+  }
+
+  // ==================== COMBINE ALL LOGS ====================
+  combineAllLogs(): void {
+    this.allLogs = [
+      ...this.combinedLogs,
+      ...this.bookLogs,
+      ...this.movieLogs,
+      ...this.webSeriesLogs,
+      ...this.electronicGadgetLogs,
+      ...this.beautyProductLogs
+    ];
+    console.log('Total logs loaded:', this.allLogs.length);
+  }
+
+  deleteLog(combinedLog: any): void {
+    console.log('Deleting log:', combinedLog);
+    
+    // Determine which service to use based on which array the log came from
+    // Check if it's in each category array
+    let deleteObservable;
+    
+    if (this.combinedLogs.find(log => log.gamelogId === combinedLog.gamelogId)) {
+      deleteObservable = this.gamelogService.deleteLog(combinedLog.gamelogId);
+    } else if (this.bookLogs.find((log: any) => log.gamelogId === combinedLog.gamelogId)) {
+      deleteObservable = this.bookLogService.deleteBookLog(combinedLog.gamelogId);
+    } else if (this.movieLogs.find((log: any) => log.gamelogId === combinedLog.gamelogId)) {
+      deleteObservable = this.movieLogService.deleteMovieLog(combinedLog.gamelogId);
+    } else if (this.webSeriesLogs.find((log: any) => log.gamelogId === combinedLog.gamelogId)) {
+      deleteObservable = this.webSeriesLogService.deleteSeriesLog(combinedLog.gamelogId);
+    } else if (this.electronicGadgetLogs.find((log: any) => log.gamelogId === combinedLog.gamelogId)) {
+      deleteObservable = this.electronicGadgetLogService.deleteGadgetLog(combinedLog.gamelogId);
+    } else if (this.beautyProductLogs.find((log: any) => log.gamelogId === combinedLog.gamelogId)) {
+      deleteObservable = this.beautyProductLogService.deleteProductLog(combinedLog.gamelogId);
+    } else {
+      console.error('Could not determine log category');
+      alert('Failed to delete the log. Please try again.');
+      return;
+    }
+
+    deleteObservable.subscribe({
       next: async () => {
         console.log(`Log for "${combinedLog.title}" deleted successfully.`);
-        await this.loadUserGameLogs();
-        await this.loadAllGamesFromLogs(this.gameLogs);
-        await this.combineLogsAndGames();
+        // Reload all logs
+        await this.getUserIdAndLoadAllLogs();
       },
       error: (error) => {
         console.error('Error deleting log:', error);
         alert('Failed to delete the log. Please try again.');
       },
     });
+  }
+
+  getCategoryDisplayName(category: string): string {
+    const names: { [key: string]: string } = {
+      'game': 'Game',
+      'book': 'Book',
+      'movie': 'Movie',
+      'webSeries': 'Web Series',
+      'electronicGadget': 'Electronic Gadget',
+      'beautyProduct': 'Beauty Product'
+    };
+    return names[category] || category;
   }
 }

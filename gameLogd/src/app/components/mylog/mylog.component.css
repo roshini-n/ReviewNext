@@ -5,10 +5,94 @@
 }
 
 h1 {
-  margin-bottom: 40px;
+  margin-bottom: 10px;
   color: #333;
   text-align: center;
   font-size: 2rem;
+}
+
+.subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 30px;
+  font-size: 1rem;
+}
+
+/* Tabs styling */
+.log-tabs {
+  margin-bottom: 20px;
+}
+
+::ng-deep .log-tabs .mat-mdc-tab-labels {
+  justify-content: center;
+}
+
+::ng-deep .log-tabs .mat-mdc-tab {
+  min-width: 120px;
+}
+
+/* Category badge */
+.category-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 10;
+}
+
+.category-badge[data-category="game"] {
+  background: #4CAF50;
+  color: white;
+}
+
+.category-badge[data-category="book"] {
+  background: #2196F3;
+  color: white;
+}
+
+.category-badge[data-category="movie"] {
+  background: #FF9800;
+  color: white;
+}
+
+.category-badge[data-category="webSeries"] {
+  background: #9C27B0;
+  color: white;
+}
+
+.category-badge[data-category="electronicGadget"] {
+  background: #607D8B;
+  color: white;
+}
+
+.category-badge[data-category="beautyProduct"] {
+  background: #E91E63;
+  color: white;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.empty-state mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #ccc;
+  margin-bottom: 16px;
+}
+
+.empty-state p {
+  font-size: 1.1rem;
+  margin: 0;
 }
 
 .game-grid {
@@ -115,6 +199,7 @@ body {
 }
 
 .diary-entry {
+  position: relative;
   display: grid;
   grid-template-columns: 160px 120px 1fr;
   gap: 20px;
@@ -126,6 +211,12 @@ body {
   box-sizing: border-box;
   border-radius: 8px;
   margin-bottom: 10px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.diary-entry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .entry-actions {
@@ -202,11 +293,19 @@ body {
   gap: 8px;
 }
 
-.game-title {
+.game-title,
+.item-title {
   font-size: 1.2em;
   margin: 0;
   color: #333;
   font-weight: 600;
+}
+
+.meta-item {
+  display: block;
+  color: #666;
+  font-size: 0.9em;
+  margin: 2px 0;
 }
 
 .review-section {
