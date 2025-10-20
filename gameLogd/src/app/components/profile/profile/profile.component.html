@@ -1,8 +1,13 @@
 <body>
 <div class="profile-container">
   <div class="profile-header">
-    <div class="profile-image-container" (click)="openAvatarDialog()">
-      <img [src]="image" alt="Profile Picture" class="profile-image">
+    <div class="profile-image-container" (click)="openAvatarDialog()" [title]="'Current avatar: ' + image">
+      <img [src]="image + '?t=' + imageTimestamp" 
+           [attr.data-src]="image"
+           alt="Profile Picture" 
+           class="profile-image"
+           (error)="onImageError($event)"
+           loading="eager">
       <div class="image-overlay">
         <mat-icon>photo_camera</mat-icon>
         <span>Change Avatar</span>

@@ -56,7 +56,10 @@ export class ProfileComponent implements OnInit{
   username: string | undefined;
   bio: string | undefined;
   image: string = "assets/robot.png"; // Set default avatar to an existing asset
+  imageTimestamp: number = Date.now(); // Force image refresh
   isUpdatingAvatar = false;
+  defaultAvatar = "assets/robot.png";
+  console = console; // Expose console to template for debugging
   
 
   // Logout
@@ -86,29 +89,50 @@ export class ProfileComponent implements OnInit{
     this.userService.observeUserById(this.userId).subscribe({
       next: (user: User | undefined) => {
         if (user) {
-          console.log('Loaded user data:', user);
+          console.log('✅ Profile: Loaded user data:', user);
+          console.log('✅ Profile: Avatar URL from Firestore:', user.avatarUrl);
+          
           this.bio = user.bio;
           this.username = user.username;
           
-          // Update avatar image
-          const newAvatarUrl = user.avatarUrl?.trim() || 'assets/robot.png';
-          console.log('Avatar URL from Firestore:', newAvatarUrl);
-          this.image = newAvatarUrl;
+          // Update avatar image with proper fallback
+          const newAvatarUrl = user.avatarUrl?.trim();
+          if (newAvatarUrl && newAvatarUrl !== '') {
+            console.log('✅ Profile: Setting avatar to:', newAvatarUrl);
+            console.log('✅ Profile: Previous image was:', this.image);
+            this.image = newAvatarUrl;
+            this.imageTimestamp = Date.now(); // Force image refresh
+            console.log('✅ Profile: New image is now:', this.image);
+          } else {
+            console.log('⚠️ Profile: No avatar URL, using default');
+            this.image = this.defaultAvatar;
+            this.imageTimestamp = Date.now();
+          }
           
-          this.cd.markForCheck();
-          this.cd.detectChanges();
+          // Force change detection to update the view immediately
+          setTimeout(() => {
+            this.cd.markForCheck();
+            this.cd.detectChanges();
+            console.log('✅ Profile: Change detection triggered');
+          }, 0);
         } else {
-          console.log("User not found");
-          // Set default avatar if user not found
-          this.image = 'assets/robot.png';
+          console.log("❌ Profile: User not found");
+          this.image = this.defaultAvatar;
+          this.cd.detectChanges();
         }
       },
       error: (error) => {
-        console.error('Error loading user:', error);
-        // Set default avatar on error
-        this.image = 'assets/robot.png';
+        console.error('❌ Profile: Error loading user:', error);
+        this.image = this.defaultAvatar;
+        this.cd.detectChanges();
       }
     });
+  }
+
+  onImageError(event: any): void {
+    console.error('Image failed to load:', this.image);
+    // Fallback to default avatar if image fails to load
+    event.target.src = this.defaultAvatar;
   }
 
   //==================================Open dialogs==========================================
@@ -162,45 +186,60 @@ export class ProfileComponent implements OnInit{
       return; // Prevent multiple dialogs
     }
 
-    console.log('Opening avatar dialog with current image:', this.image);
+    console.log('🔵 Profile: Opening avatar dialog with current image:', this.image);
     const dialogRef = this.dialog.open(AvatarDialogComponent, {
       width: '500px',
       panelClass: 'avatar-dialog',
       data: { currentAvatar: this.image },
-      disableClose: true // Prevent clicking outside to close while updating
+      disableClose: false // Allow closing
     });
     
     dialogRef.afterClosed().subscribe((newAvatarPath: string) => {
-      console.log('Dialog closed with result:', newAvatarPath);
-      console.log('Result type:', typeof newAvatarPath);
-      console.log('Current userId:', this.userId);
+      console.log('🔵 Profile: Dialog closed with result:', newAvatarPath);
+      console.log('🔵 Profile: Result type:', typeof newAvatarPath);
+      console.log('🔵 Profile: Current userId:', this.userId);
       
       if (newAvatarPath && this.userId) {
         this.isUpdatingAvatar = true;
-        console.log('Updating avatar for user:', this.userId, 'with path:', newAvatarPath);
+        console.log('🔵 Profile: Updating avatar for user:', this.userId, 'with path:', newAvatarPath);
+        console.log('🔵 Profile: Old image:', this.image);
+        
+        // Immediately update the local image for instant feedback
+        this.image = newAvatarPath;
+        this.imageTimestamp = Date.now(); // Force image refresh
+        console.log('🔵 Profile: New image set to:', this.image);
+        console.log('🔵 Profile: Timestamp updated to:', this.imageTimestamp);
+        
+        // Force immediate UI update
+        this.cd.detectChanges();
+        console.log('🔵 Profile: First detectChanges() called');
         
         this.userService.updateUser(this.userId, { avatarUrl: newAvatarPath })
           .subscribe({
             next: () => {
-              console.log('Avatar updated successfully in Firestore');
-              console.log('Setting local image to:', newAvatarPath);
-              this.image = newAvatarPath;
+              console.log('✅ Profile: Avatar updated successfully in Firestore');
               this.isUpdatingAvatar = false;
-              this.cd.markForCheck();
-              this.cd.detectChanges();
+              // Force another change detection
+              setTimeout(() => {
+                this.cd.markForCheck();
+                this.cd.detectChanges();
+                console.log('✅ Profile: Final detectChanges() called');
+              }, 100);
             },
             error: (error) => {
-              console.error('Error updating avatar in Firestore:', error);
-              console.error('Error details:', error.message, error.code);
+              console.error('❌ Profile: Error updating avatar in Firestore:', error);
+              console.error('❌ Profile: Error details:', error.message, error.code);
+              // Revert to previous image on error
+              this.loadUser();
               this.isUpdatingAvatar = false;
               this.cd.markForCheck();
               alert('Failed to update avatar: ' + (error.message || 'Unknown error'));
             }
           });
       } else {
-        console.log('Dialog closed without selection or user not authenticated');
-        if (!newAvatarPath) console.log('No avatar path returned');
-        if (!this.userId) console.log('No userId available');
+        console.log('⚠️ Profile: Dialog closed without selection or user not authenticated');
+        if (!newAvatarPath) console.log('⚠️ Profile: No avatar path returned');
+        if (!this.userId) console.log('⚠️ Profile: No userId available');
       }
     });
   }

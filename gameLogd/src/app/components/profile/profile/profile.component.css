@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    background: #FAEDCD;
+    background: #F9F5F0;
     min-height: 100vh;
 }
 
@@ -103,23 +103,25 @@ body {
     border-radius: 50%;
     overflow: hidden;
     cursor: pointer;
-    border: 3px solid transparent;
-    background: linear-gradient(45deg, #D4A373, #967259) border-box;
-    -webkit-mask: 
-        linear-gradient(#fff 0 0) padding-box,
-        linear-gradient(#fff 0 0);
-    mask: 
-        linear-gradient(#fff 0 0) padding-box,
-        linear-gradient(#fff 0 0);
-    -webkit-mask-composite: destination-out;
-    mask-composite: exclude;
+    border: 3px solid #D4A373;
+    background: #f0f0f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.profile-image-container:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(212, 163, 115, 0.3);
+    border-color: #967259;
 }
 
 .profile-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     transition: transform 0.3s ease;
+    display: block;
 }
 
 .image-overlay {
