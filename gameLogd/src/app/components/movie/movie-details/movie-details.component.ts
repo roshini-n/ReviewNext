@@ -196,6 +196,78 @@ export class MovieDetailsComponent implements OnInit {
     // Implement add review functionality
   }
 
+  editReview(review: Review) {
+    if (!this.authService.currentUserSig()) {
+      this.snackBar.open('Please log in to edit reviews', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
+    if (!review || !review.id || review.userId !== this.currentUserId) {
+      this.snackBar.open('You can only edit your own reviews', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
+    // Open edit dialog with review data
+    const dialogRef = this.dialog.open(LogMoviePopupComponent, {
+      maxWidth: '550px',
+      width: '95vw',
+      panelClass: ['movie-log-dialog', 'minimal-theme-dialog'],
+      autoFocus: false,
+      backdropClass: 'minimal-backdrop',
+      data: {
+        movie: this.movie,
+        movieId: this.movieId,
+        existingReview: review
+      }
+    });
+
+    dialogRef.componentInstance.reviewUpdated.subscribe((updatedReview) => {
+      const index = this.reviews.findIndex(r => r.id === updatedReview.id);
+      if (index !== -1) {
+        this.reviews[index] = updatedReview;
+      }
+      this.updateMovieRating();
+    });
+  }
+
+  deleteReview(review: Review) {
+    if (!this.authService.currentUserSig()) {
+      this.snackBar.open('Please log in to delete reviews', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
+    if (!review || !review.id || review.userId !== this.currentUserId) {
+      this.snackBar.open('You can only delete your own reviews', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
+    if (confirm('Are you sure you want to delete this review?')) {
+      this.movieReviewService.deleteReview(review.id).subscribe({
+        next: () => {
+          this.reviews = this.reviews.filter(r => r.id !== review.id);
+          this.updateMovieRating();
+          this.snackBar.open('Review deleted successfully', 'Close', {
+            duration: 3000
+          });
+        },
+        error: (error: Error) => {
+          console.error('Error deleting review:', error);
+          this.snackBar.open('Failed to delete review', 'Close', {
+            duration: 3000
+          });
+        }
+      });
+    }
+  }
+
   onEditMovie() {
     if (!this.authService.currentUserSig()) {
       this.snackBar.open('Please log in to edit movies', 'Close', {

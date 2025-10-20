@@ -621,19 +621,19 @@ mat-tab-group ::ng-deep .mdc-tab__text-label {
 
 /* Active Tab Styles */
 mat-tab-group ::ng-deep .mat-mdc-tab.mdc-tab--active {
-  color: #FEE715;
+  color: #8B4513;
 }
 
 mat-tab-group ::ng-deep .mat-mdc-tab.mdc-tab--active .mat-mdc-tab-label-content {
-  color: #FEE715;
+  color: #8B4513;
 }
 
 mat-tab-group ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
-  color: #FEE715;
+  color: #8B4513;
 }
 
 mat-tab-group ::ng-deep .mdc-tab-indicator__content--underline {
-  border-color: #FEE715 !important;
+  border-color: #8B4513 !important;
 }
 
 mat-tab-group ::ng-deep .mat-mdc-tab-header-pagination-chevron {

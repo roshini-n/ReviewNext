@@ -42,13 +42,6 @@
         <p>{{gadget?.description}}</p>
       </div>
     </mat-tab>
-    <mat-tab label="Specifications">
-      <div class="tab-content">
-        <ul class="specifications">
-          <li *ngFor="let spec of gadget?.specifications">{{spec}}</li>
-        </ul>
-      </div>
-    </mat-tab>
     <mat-tab label="Reviews">
       <div class="tab-content">
         <div *ngIf="reviews.length === 0" class="no-reviews">

@@ -54,6 +54,7 @@ export class LogGamePopupComponent {
   private route = inject(ActivatedRoute);
 
   @Output() logUpdated: EventEmitter<void> = new EventEmitter<void>();
+  @Output() reviewUpdated: EventEmitter<any> = new EventEmitter<any>();
 
   logForm: FormGroup;
   rating: number = 0;
@@ -131,11 +132,62 @@ export class LogGamePopupComponent {
 
       if (this.data.log.id) {
         this.gameLogSevice.updateGameLog(this.data.log.id, updatedLog).subscribe(() => {
-          this.dialogRef.close();
-          this.snackBar.open('Game log updated successfully', 'Close', {
-            duration: 2000,
-          });
-          this.logUpdated.emit(); // Emit the event
+          // Update or create review if rating or review text is provided
+          if ((this.rating > 0 || this.logForm.value.review) && this.data.log?.gameId) {
+            const reviewData = {
+              gameId: this.data.log.gameId,
+              userId: currentUser,
+              rating: this.rating || 0,
+              reviewText: this.logForm.value.review || '',
+              username: this.username,
+              datePosted: new Date()
+            };
+
+            // Check if review already exists for this user and game
+            this.reviewService.hasUserReviewedGame(this.data.log.gameId).subscribe({
+              next: (hasReviewed) => {
+                if (hasReviewed && this.data.log?.gameId) {
+                  // Find and update existing review
+                  this.reviewService.getReviewsByGameId(this.data.log.gameId).subscribe({
+                    next: (reviews) => {
+                      const userReview = reviews.find(r => r.userId === currentUser);
+                      if (userReview && userReview.id) {
+                        this.reviewService.updateReview(userReview.id, reviewData).subscribe({
+                          next: () => {
+                            const updatedReview = { ...userReview, ...reviewData };
+                            this.reviewUpdated.emit(updatedReview);
+                            this.dialogRef.close();
+                            this.snackBar.open('Game log and review updated successfully', 'Close', {
+                              duration: 2000,
+                            });
+                            this.logUpdated.emit();
+                          }
+                        });
+                      }
+                    }
+                  });
+                } else {
+                  // Create new review
+                  this.reviewService.addReview(reviewData).subscribe({
+                    next: (createdReview) => {
+                      this.reviewUpdated.emit(createdReview);
+                      this.dialogRef.close();
+                      this.snackBar.open('Game log updated and review added', 'Close', {
+                        duration: 2000,
+                      });
+                      this.logUpdated.emit();
+                    }
+                  });
+                }
+              }
+            });
+          } else {
+            this.dialogRef.close();
+            this.snackBar.open('Game log updated successfully', 'Close', {
+              duration: 2000,
+            });
+            this.logUpdated.emit();
+          }
         });
       } else {
         console.error('Game log ID is missing.');
@@ -159,11 +211,44 @@ export class LogGamePopupComponent {
         rating: this.rating,
       }).subscribe({
         next: () => {
-          this.dialogRef.close();
-          this.snackBar.open('Game logged successfully', 'Close', {
-            duration: 2000,
-          });
-          this.logUpdated.emit();
+          // Create a review if rating or review text is provided
+          if (this.rating > 0 || this.logForm.value.review) {
+            const reviewData = {
+              gameId: this.gameId,
+              userId: currentUser,
+              rating: this.rating || 0,
+              reviewText: this.logForm.value.review || '',
+              username: this.username,
+              datePosted: new Date()
+            };
+
+            this.reviewService.addReview(reviewData).subscribe({
+              next: (createdReview) => {
+                console.log('Review created:', createdReview);
+                this.reviewUpdated.emit(createdReview);
+                this.dialogRef.close();
+                this.snackBar.open('Game logged and reviewed successfully', 'Close', {
+                  duration: 2000,
+                });
+                this.logUpdated.emit();
+              },
+              error: (reviewError: any) => {
+                console.error('Error creating review:', reviewError);
+                // Still close dialog as game log was successful
+                this.dialogRef.close();
+                this.snackBar.open('Game logged, but review failed to save', 'Close', {
+                  duration: 3000,
+                });
+                this.logUpdated.emit();
+              }
+            });
+          } else {
+            this.dialogRef.close();
+            this.snackBar.open('Game logged successfully', 'Close', {
+              duration: 2000,
+            });
+            this.logUpdated.emit();
+          }
         },
         error: (error: any) => {
           console.error('Error saving game log:', error);

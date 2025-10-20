@@ -212,4 +212,76 @@ export class WebSeriesDetailsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe();
   }
+
+  editReview(review: Review) {
+    if (!this.authService.currentUserSig()) {
+      this.snackBar.open('Please log in to edit reviews', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
+    if (!review || !review.id || review.userId !== this.currentUserId) {
+      this.snackBar.open('You can only edit your own reviews', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
+    // Open edit dialog with review data
+    const dialogRef = this.dialog.open(LogWebSeriesPopupComponent, {
+      maxWidth: '550px',
+      width: '95vw',
+      panelClass: ['series-log-dialog', 'minimal-theme-dialog'],
+      autoFocus: false,
+      backdropClass: 'minimal-backdrop',
+      data: {
+        series: this.webSeries,
+        seriesId: this.seriesId,
+        existingReview: review
+      }
+    });
+
+    dialogRef.componentInstance.reviewUpdated.subscribe((updatedReview) => {
+      const index = this.reviews.findIndex(r => r.id === updatedReview.id);
+      if (index !== -1) {
+        this.reviews[index] = updatedReview;
+      }
+      this.updateSeriesRating();
+    });
+  }
+
+  deleteReview(review: Review) {
+    if (!this.authService.currentUserSig()) {
+      this.snackBar.open('Please log in to delete reviews', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
+    if (!review || !review.id || review.userId !== this.currentUserId) {
+      this.snackBar.open('You can only delete your own reviews', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
+    if (confirm('Are you sure you want to delete this review?')) {
+      this.seriesReviewService.deleteReview(review.id).subscribe({
+        next: () => {
+          this.reviews = this.reviews.filter(r => r.id !== review.id);
+          this.updateSeriesRating();
+          this.snackBar.open('Review deleted successfully', 'Close', {
+            duration: 3000
+          });
+        },
+        error: (error: Error) => {
+          console.error('Error deleting review:', error);
+          this.snackBar.open('Failed to delete review', 'Close', {
+            duration: 3000
+          });
+        }
+      });
+    }
+  }
 }
