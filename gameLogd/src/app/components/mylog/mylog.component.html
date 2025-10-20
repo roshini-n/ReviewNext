@@ -7,8 +7,8 @@
     <mat-tab label="All ({{ allLogs.length }})">
       <div class="diary-list">
         <div class="diary-entry" *ngFor="let log of allLogs">
-          <div class="category-badge" data-category="game">
-            Game
+          <div class="category-badge" [attr.data-category]="log.category">
+            {{ getCategoryDisplayName(log.category) }}
           </div>
           
           <div class="dates-column">

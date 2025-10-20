@@ -49,10 +49,10 @@ export class MylogComponent implements OnInit {
   gameLogs: GameLog[] = [];
   userId: string = '';
   usersGames: Game[] = [];
-  combinedLogs: CombinedLogGame[] = [];
+  combinedLogs: any[] = [];
 
-  // Placeholder arrays for other categories (to be implemented)
-  allLogs: CombinedLogGame[] = [];
+  // All category logs
+  allLogs: any[] = [];
   bookLogs: any[] = [];
   movieLogs: any[] = [];
   webSeriesLogs: any[] = [];
@@ -83,6 +83,8 @@ export class MylogComponent implements OnInit {
   async getUserIdAndLoadAllLogs(): Promise<void> {
     try {
       this.userId = await this.authService.getUid();
+      console.log('Loading logs for user:', this.userId);
+      
       await Promise.all([
         this.loadGameLogs(),
         this.loadBookLogs(),
@@ -91,7 +93,18 @@ export class MylogComponent implements OnInit {
         this.loadElectronicGadgetLogs(),
         this.loadBeautyProductLogs()
       ]);
+      
+      console.log('All categories loaded. Combining...');
       this.combineAllLogs();
+      console.log('Final counts:', {
+        games: this.combinedLogs.length,
+        books: this.bookLogs.length,
+        movies: this.movieLogs.length,
+        webSeries: this.webSeriesLogs.length,
+        gadgets: this.electronicGadgetLogs.length,
+        beauty: this.beautyProductLogs.length,
+        total: this.allLogs.length
+      });
     } catch (error) {
       console.error('Error getting user ID:', error);
     }
@@ -147,10 +160,11 @@ export class MylogComponent implements OnInit {
                     publisher: game.publisher,
                     playersPlayed: game.playersPlayed,
                     imageUrl: game.imageUrl,
-                  } as CombinedLogGame;
+                    category: 'game' as const,
+                  } as any;
                 }
                 return null;
-              }).filter((log): log is CombinedLogGame => log !== null);
+              }).filter(log => log !== null);
               
               console.log('Game logs loaded:', this.combinedLogs.length);
               resolve();
@@ -194,6 +208,12 @@ export class MylogComponent implements OnInit {
             this.bookService.getBookById(id).pipe(catchError(() => of(null)))
           );
 
+          if (bookObservables.length === 0) {
+            this.bookLogs = [];
+            resolve();
+            return;
+          }
+
           forkJoin(bookObservables).subscribe({
             next: (books: (Book | null | undefined)[]) => {
               this.bookLogs = logs.map(log => {
@@ -210,6 +230,7 @@ export class MylogComponent implements OnInit {
                     title: book.title,
                     imageUrl: book.imageUrl,
                     developer: book.author,
+                    category: 'book' as const,
                   };
                 }
                 return null;
@@ -257,6 +278,12 @@ export class MylogComponent implements OnInit {
             this.movieService.getMovieById(id).pipe(catchError(() => of(null)))
           );
 
+          if (movieObservables.length === 0) {
+            this.movieLogs = [];
+            resolve();
+            return;
+          }
+
           forkJoin(movieObservables).subscribe({
             next: (movies: (Movie | null)[]) => {
               this.movieLogs = logs.map(log => {
@@ -273,6 +300,7 @@ export class MylogComponent implements OnInit {
                     title: movie.title,
                     imageUrl: movie.imageUrl,
                     developer: movie.director,
+                    category: 'movie' as const,
                   };
                 }
                 return null;
@@ -320,6 +348,12 @@ export class MylogComponent implements OnInit {
             this.webSeriesService.getWebSeriesById(id).pipe(catchError(() => of(null)))
           );
 
+          if (seriesObservables.length === 0) {
+            this.webSeriesLogs = [];
+            resolve();
+            return;
+          }
+
           forkJoin(seriesObservables).subscribe({
             next: (series: (WebSeries | null)[]) => {
               this.webSeriesLogs = logs.map(log => {
@@ -336,6 +370,7 @@ export class MylogComponent implements OnInit {
                     title: webSeries.title,
                     imageUrl: webSeries.imageUrl,
                     developer: webSeries.creator,
+                    category: 'webSeries' as const,
                   };
                 }
                 return null;
@@ -383,6 +418,12 @@ export class MylogComponent implements OnInit {
             this.electronicGadgetService.getElectronicGadgetById(id).pipe(catchError(() => of(null)))
           );
 
+          if (gadgetObservables.length === 0) {
+            this.electronicGadgetLogs = [];
+            resolve();
+            return;
+          }
+
           forkJoin(gadgetObservables).subscribe({
             next: (gadgets: (ElectronicGadget | null)[]) => {
               this.electronicGadgetLogs = logs.map(log => {
@@ -399,6 +440,7 @@ export class MylogComponent implements OnInit {
                     title: gadget.name,
                     imageUrl: gadget.imageUrl,
                     developer: gadget.brand,
+                    category: 'electronicGadget' as const,
                   };
                 }
                 return null;
@@ -446,6 +488,12 @@ export class MylogComponent implements OnInit {
             this.beautyProductService.getBeautyProductById(id).pipe(catchError(() => of(null)))
           );
 
+          if (productObservables.length === 0) {
+            this.beautyProductLogs = [];
+            resolve();
+            return;
+          }
+
           forkJoin(productObservables).subscribe({
             next: (products: (BeautyProduct | null)[]) => {
               this.beautyProductLogs = logs.map(log => {
@@ -462,6 +510,7 @@ export class MylogComponent implements OnInit {
                     title: product.name,
                     imageUrl: product.imageUrl,
                     developer: product.brand,
+                    category: 'beautyProduct' as const,
                   };
                 }
                 return null;
@@ -502,32 +551,38 @@ export class MylogComponent implements OnInit {
   deleteLog(combinedLog: any): void {
     console.log('Deleting log:', combinedLog);
     
-    // Determine which service to use based on which array the log came from
-    // Check if it's in each category array
     let deleteObservable;
     
-    if (this.combinedLogs.find(log => log.gamelogId === combinedLog.gamelogId)) {
-      deleteObservable = this.gamelogService.deleteLog(combinedLog.gamelogId);
-    } else if (this.bookLogs.find((log: any) => log.gamelogId === combinedLog.gamelogId)) {
-      deleteObservable = this.bookLogService.deleteBookLog(combinedLog.gamelogId);
-    } else if (this.movieLogs.find((log: any) => log.gamelogId === combinedLog.gamelogId)) {
-      deleteObservable = this.movieLogService.deleteMovieLog(combinedLog.gamelogId);
-    } else if (this.webSeriesLogs.find((log: any) => log.gamelogId === combinedLog.gamelogId)) {
-      deleteObservable = this.webSeriesLogService.deleteSeriesLog(combinedLog.gamelogId);
-    } else if (this.electronicGadgetLogs.find((log: any) => log.gamelogId === combinedLog.gamelogId)) {
-      deleteObservable = this.electronicGadgetLogService.deleteGadgetLog(combinedLog.gamelogId);
-    } else if (this.beautyProductLogs.find((log: any) => log.gamelogId === combinedLog.gamelogId)) {
-      deleteObservable = this.beautyProductLogService.deleteProductLog(combinedLog.gamelogId);
-    } else {
-      console.error('Could not determine log category');
-      alert('Failed to delete the log. Please try again.');
-      return;
+    // Use the appropriate service based on category
+    switch (combinedLog.category) {
+      case 'game':
+        deleteObservable = this.gamelogService.deleteLog(combinedLog.gamelogId);
+        break;
+      case 'book':
+        deleteObservable = this.bookLogService.deleteBookLog(combinedLog.gamelogId);
+        break;
+      case 'movie':
+        deleteObservable = this.movieLogService.deleteMovieLog(combinedLog.gamelogId);
+        break;
+      case 'webSeries':
+        deleteObservable = this.webSeriesLogService.deleteSeriesLog(combinedLog.gamelogId);
+        break;
+      case 'electronicGadget':
+        deleteObservable = this.electronicGadgetLogService.deleteGadgetLog(combinedLog.gamelogId);
+        break;
+      case 'beautyProduct':
+        deleteObservable = this.beautyProductLogService.deleteProductLog(combinedLog.gamelogId);
+        break;
+      default:
+        console.error('Unknown category:', combinedLog.category);
+        alert('Unable to delete log: unknown category');
+        return;
     }
-
+    
     deleteObservable.subscribe({
       next: async () => {
-        console.log(`Log for "${combinedLog.title}" deleted successfully.`);
-        // Reload all logs
+        console.log(`Log for "${combinedLog.title}" (${combinedLog.category}) deleted successfully.`);
+        // Reload all logs to reflect the deletion
         await this.getUserIdAndLoadAllLogs();
       },
       error: (error) => {
