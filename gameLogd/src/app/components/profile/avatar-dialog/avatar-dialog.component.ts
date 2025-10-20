@@ -27,9 +27,18 @@ export class AvatarDialogComponent {
   error: string | null = null;
 
   avatars: AvatarOption[] = [
+    { name: 'Angel', path: 'assets/angel.png' },
     { name: 'Cat', path: 'assets/cat.png' },
     { name: 'Chicken', path: 'assets/chicken.png' },
     { name: 'Dinosaur', path: 'assets/dinosaur.png' },
+    { name: 'Harry', path: 'assets/harry.png' },
+    { name: 'Fox', path: 'assets/fox.jpg' },
+    { name: 'Kitsune', path: 'assets/kitsune.jpg' },
+    { name: 'Mandrill', path: 'assets/mandrill.jpg' },
+    { name: 'Ninja', path: 'assets/ninja.jpg' },
+    { name: 'Sloth', path: 'assets/sloth.jpg' },
+    { name: 'Witch', path: 'assets/witch.png' },
+    { name: 'Zebra', path: 'assets/zebra.jpg' },
     { name: 'Kitty', path: 'assets/kitty.png' },
     { name: 'Man', path: 'assets/man.png' },
     { name: 'Panda', path: 'assets/panda.png' },
