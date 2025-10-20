@@ -63,8 +63,9 @@ body {
 
 .profile-header {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
     margin-bottom: 2rem;
     padding: 2rem;
     background: rgba(255, 255, 255, 0.05);
@@ -98,14 +99,14 @@ body {
 
 .profile-image-container {
     position: relative;
-    width: 150px;
-    height: 150px;
+    width: 250px;
+    height: 250px;
     border-radius: 50%;
     overflow: hidden;
     cursor: pointer;
-    border: 3px solid #D4A373;
+    border: 4px solid #D4A373;
     background: #f0f0f0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
 }
 
@@ -164,7 +165,8 @@ body {
 }
 
 .profile-info {
-    flex: 1;
+    text-align: center;
+    width: 100%;
 }
 
 .username {
@@ -173,6 +175,7 @@ body {
     color: #4A3728;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     cursor: pointer;
 }
@@ -192,6 +195,7 @@ body {
     margin: 0.5rem 0;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     cursor: pointer;
 }

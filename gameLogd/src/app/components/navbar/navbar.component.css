@@ -289,8 +289,8 @@
 
 /* PROFILE BUTTON & IMAGE FIXES */
 .profile-button {
-  width: 40px !important;
-  height: 40px !important;
+  width: 50px !important;
+  height: 50px !important;
   min-width: 40px !important;
   min-height: 40px !important;
   aspect-ratio: 1 / 1;
