@@ -9,6 +9,7 @@ import { MovieFirebaseService } from '../../../services/movieFirebase.service';
 import { Movie } from '../../../models/movie.model';
 import { MovieLogService } from '../../../services/movieLog.service';
 import { MovieReviewService } from '../../../services/movieReview.service';
+import { ReviewEventService } from '../../../services/review-event.service';
 import { AuthService } from '../../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
@@ -69,6 +70,7 @@ export class MovieDetailsComponent implements OnInit {
   private movieService = inject(MovieFirebaseService);
   private movieLogService = inject(MovieLogService);
   private movieReviewService = inject(MovieReviewService);
+  private reviewEventService = inject(ReviewEventService);
   public authService = inject(AuthService);
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
@@ -254,6 +256,8 @@ export class MovieDetailsComponent implements OnInit {
         next: () => {
           this.reviews = this.reviews.filter(r => r.id !== review.id);
           this.updateMovieRating();
+          // Notify dashboard that a review was deleted
+          this.reviewEventService.notifyReviewChanged();
           this.snackBar.open('Review deleted successfully', 'Close', {
             duration: 3000
           });

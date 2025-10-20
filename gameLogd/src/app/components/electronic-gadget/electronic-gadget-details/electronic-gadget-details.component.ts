@@ -14,6 +14,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { AuthService } from '../../../services/auth.service';
 import { ReviewService } from '../../../services/review.service';
+import { ReviewEventService } from '../../../services/review-event.service';
 import { Review } from '../../../models/review.model';
 import { GeneralDeleteButtonComponent } from '../../shared/general-delete-button/general-delete-button.component';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -54,6 +55,7 @@ export class ElectronicGadgetDetailsComponent implements OnInit {
   private dialog = inject(MatDialog);
   public authService = inject(AuthService);
   private reviewService = inject(ReviewService);
+  private reviewEventService = inject(ReviewEventService);
   private fb = inject(FormBuilder);
   private snackBar = inject(MatSnackBar);
   private electronicGadgetService = inject(ElectronicGadgetFirebaseService);
@@ -282,6 +284,8 @@ export class ElectronicGadgetDetailsComponent implements OnInit {
         next: () => {
           this.reviews = this.reviews.filter(r => r.id !== review.id);
           this.updateGadgetRating();
+          // Notify dashboard that a review was deleted
+          this.reviewEventService.notifyReviewChanged();
           this.snackBar.open('Review deleted successfully', 'Close', {
             duration: 3000
           });

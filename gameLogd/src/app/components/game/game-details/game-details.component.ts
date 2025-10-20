@@ -18,6 +18,7 @@ import { LogGamePopupComponent } from '../../log-game-popup/log-game-popup.compo
 import { AuthService } from '../../../services/auth.service';
 import { GameLogService } from '../../../services/gamelog.service';
 import { ReviewService } from '../../../services/review.service';
+import { ReviewEventService } from '../../../services/review-event.service';
 import { Review } from '../../../models/review.model';
 import { GeneralDeleteButtonComponent } from '../../shared/general-delete-button/general-delete-button.component';
 import { GameReviewEditComponent } from '../game-review-edit/game-review-edit.component';
@@ -56,6 +57,7 @@ export class GameDetailsComponent implements OnInit {
   public authService = inject(AuthService);
   private gameLogService = inject(GameLogService);
   private reviewService = inject(ReviewService);
+  private reviewEventService = inject(ReviewEventService);
   private fb = inject(FormBuilder);
   gameFirebaseService = inject(GameFirebaseService);
   private snackBar = inject(MatSnackBar);
@@ -180,6 +182,8 @@ export class GameDetailsComponent implements OnInit {
     this.reviewService.deleteReview(review.id).subscribe({
       next: () => {
         this.reviews = this.reviews.filter(r => r.id !== review.id);
+        // Notify dashboard that a review was deleted
+        this.reviewEventService.notifyReviewChanged();
       },
       error: (error) => {
         console.error('Error deleting review:', error);

@@ -25,6 +25,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { GeneralDeleteButtonComponent } from '../../shared/general-delete-button/general-delete-button.component';
 import { AuthService } from '../../../services/auth.service';
+import { ReviewEventService } from '../../../services/review-event.service';
 import { Review } from '../../../models/review.model';
 import { WebSeriesFirebaseService } from '../../../services/webSeriesFirebase.service';
 import { WebSeries } from '../../../models/web-series.model';
@@ -73,6 +74,7 @@ export class WebSeriesDetailsComponent implements OnInit {
   private webSeriesFirebaseService = inject(WebSeriesFirebaseService);
   private firestore = inject(Firestore);
   private seriesReviewService = inject(WebSeriesReviewService);
+  private reviewEventService = inject(ReviewEventService);
 
   webSeries?: WebSeries;
   reviews: Review[] = [];
@@ -271,6 +273,8 @@ export class WebSeriesDetailsComponent implements OnInit {
         next: () => {
           this.reviews = this.reviews.filter(r => r.id !== review.id);
           this.updateSeriesRating();
+          // Notify dashboard that a review was deleted
+          this.reviewEventService.notifyReviewChanged();
           this.snackBar.open('Review deleted successfully', 'Close', {
             duration: 3000
           });

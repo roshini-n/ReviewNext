@@ -9,6 +9,7 @@ import { BookFirebaseService } from '../../../services/bookFirebase.service';
 import { Book } from '../../../models/book.model';
 import { BookLogService } from '../../../services/booklog.service';
 import { BookReviewService } from '../../../services/bookreview.service';
+import { ReviewEventService } from '../../../services/review-event.service';
 import { AuthService } from '../../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
@@ -75,6 +76,7 @@ export class BookDetailsComponent implements OnInit {
   private bookFirebaseService = inject(BookFirebaseService);
   private bookLogService = inject(BookLogService);
   private bookReviewService = inject(BookReviewService);
+  private reviewEventService = inject(ReviewEventService);
   public authService = inject(AuthService);
   private snackBar = inject(MatSnackBar);
 
@@ -226,6 +228,8 @@ export class BookDetailsComponent implements OnInit {
       next: () => {
         // Remove the review from the array
         this.reviews = this.reviews.filter(r => r.id !== review.id);
+        // Notify dashboard that a review was deleted
+        this.reviewEventService.notifyReviewChanged();
       },
       error: (error) => {
         console.error('Error deleting review:', error);
