@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, collectionData, addDoc, doc, deleteDoc, query, where, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, addDoc, doc, deleteDoc, query, where, updateDoc, Timestamp } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -23,11 +23,20 @@ export class ElectronicGadgetLogService {
   private firestore = inject(Firestore);
   private gadgetLogsCollection = collection(this.firestore, 'electronicGadgetLogs');
 
-  // Helper to remove undefined values
+  // Helper to remove undefined values and convert Dates to Timestamps
   private removeUndefined(obj: any): any {
-    return Object.fromEntries(
-      Object.entries(obj).filter(([_, v]) => v !== undefined)
-    );
+    const cleaned: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      if (value !== undefined) {
+        // Convert Date objects to Firestore Timestamps
+        if (value instanceof Date) {
+          cleaned[key] = Timestamp.fromDate(value);
+        } else {
+          cleaned[key] = value;
+        }
+      }
+    }
+    return cleaned;
   }
 
   // Add a new gadget log

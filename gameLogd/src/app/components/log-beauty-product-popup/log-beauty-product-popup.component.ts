@@ -32,6 +32,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { BeautyProductReviewService } from '../../services/beautyProductReview.service';
 import { Review } from '../../models/review.model';
 import { firstValueFrom } from 'rxjs';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-log-beauty-product-popup',
@@ -112,6 +113,14 @@ export class LogBeautyProductPopupComponent implements OnInit {
   async ngOnInit() {
     this.userId = await this.authService.getUid();
     this.username = this.authService.getUsername() || 'Anonymous';
+    
+    // Debug logging
+    console.log('Product popup initialized with data:', {
+      product: this.data.product,
+      productId: this.productId,
+      productTitle: (this.data.product as any)?.title,
+      productName: this.data.product?.name
+    });
   }
 
   setRating(rating: number) {
@@ -166,23 +175,31 @@ export class LogBeautyProductPopupComponent implements OnInit {
         
         let savedReview: Review | null = null;
         if (hasReviewContent) {
-          const reviewData: Omit<Review, 'id'> = {
+          // Build review data with only defined values
+          const reviewData: any = {
             userId: currentUser,
             productId: this.productId,
             rating: formData.rating || 0,
             reviewText: formData.review || '',
-            datePosted: new Date(),
+            datePosted: Timestamp.now(),
             username: this.username,
-            productTitle: this.data.product.name,
             likes: 0
           };
+          
+          // Only add productTitle if we have the product data (try title first, then name)
+          const productTitle = (this.data.product as any)?.title || this.data.product?.name;
+          if (productTitle) {
+            reviewData.productTitle = productTitle;
+          }
+          
+          console.log('Saving review with data:', reviewData);
 
           if (this.isEditMode && this.existingReview) {
             savedReview = await firstValueFrom(
               this.productReviewService.updateReview(this.existingReview.id, {
                 rating: formData.rating,
                 reviewText: formData.review,
-                lastUpdated: new Date()
+                lastUpdated: Timestamp.now() as any
               })
             );
           } else {

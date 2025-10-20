@@ -1,10 +1,10 @@
 <div class="book-details-container" *ngIf="!isLoading">
   <div class="book-header">
     <div class="book-image">
-      <img [src]="product?.imageUrl" [alt]="product?.name" class="book-cover">
+      <img [src]="product?.imageUrl" [alt]="product?.title || product?.name" class="book-cover">
     </div>
     <div class="book-info">
-      <h1>{{product?.name}}</h1>
+      <h1>{{product?.title || product?.name}}</h1>
       <div class="book-meta">
         <p><strong>Brand:</strong> {{product?.brand}}</p>
         <p><strong>Category:</strong> {{product?.category}}</p>

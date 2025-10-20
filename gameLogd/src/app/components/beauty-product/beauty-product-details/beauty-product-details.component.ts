@@ -101,6 +101,9 @@ export class BeautyProductDetailsComponent implements OnInit {
       next: (product) => {
         if (product) {
           this.product = product;
+          console.log('Product loaded:', product);
+          console.log('Product name:', product?.name);
+          console.log('All product keys:', Object.keys(product || {}));
           this.isLoading = false;
         } else {
           this.error = 'Product not found.';
@@ -218,6 +221,8 @@ export class BeautyProductDetailsComponent implements OnInit {
         this.reviews.unshift(updatedReview);
       }
       this.updateProductRating();
+      // Notify dashboard that a review was added/updated
+      this.reviewEventService.notifyReviewChanged();
       if (this.productId) {
         this.loadProductDetails();
       }
@@ -251,7 +256,7 @@ export class BeautyProductDetailsComponent implements OnInit {
       data: {
         product: this.product,
         productId: this.productId,
-        existingReview: review
+        review: review
       }
     });
 
@@ -261,6 +266,8 @@ export class BeautyProductDetailsComponent implements OnInit {
         this.reviews[index] = updatedReview;
       }
       this.updateProductRating();
+      // Notify dashboard that a review was updated
+      this.reviewEventService.notifyReviewChanged();
     });
   }
 

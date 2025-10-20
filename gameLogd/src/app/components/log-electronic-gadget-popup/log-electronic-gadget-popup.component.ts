@@ -32,6 +32,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ElectronicGadgetReviewService } from '../../services/electronicGadgetReview.service';
 import { Review } from '../../models/review.model';
 import { firstValueFrom } from 'rxjs';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-log-electronic-gadget-popup',
@@ -111,6 +112,14 @@ export class LogElectronicGadgetPopupComponent implements OnInit {
   async ngOnInit() {
     this.userId = await this.authService.getUid();
     this.username = this.authService.getUsername() || 'Anonymous';
+    
+    // Debug logging
+    console.log('Gadget popup initialized with data:', {
+      gadget: this.data.gadget,
+      gadgetId: this.gadgetId,
+      gadgetTitle: (this.data.gadget as any)?.title,
+      gadgetName: this.data.gadget?.name
+    });
   }
 
   setRating(rating: number) {
@@ -162,23 +171,31 @@ export class LogElectronicGadgetPopupComponent implements OnInit {
         
         let savedReview: Review | null = null;
         if (hasReviewContent) {
-          const reviewData: Omit<Review, 'id'> = {
+          // Build review data with only defined values
+          const reviewData: any = {
             userId: currentUser,
             gadgetId: this.gadgetId,
             rating: formData.rating || 0,
             reviewText: formData.review || '',
-            datePosted: new Date(),
+            datePosted: Timestamp.now(),
             username: this.username,
-            gadgetTitle: this.data.gadget.name,
             likes: 0
           };
+          
+          // Only add gadgetTitle if we have the gadget data (try title first, then name)
+          const gadgetTitle = (this.data.gadget as any)?.title || this.data.gadget?.name;
+          if (gadgetTitle) {
+            reviewData.gadgetTitle = gadgetTitle;
+          }
+          
+          console.log('Saving review with data:', reviewData);
 
           if (this.isEditMode && this.existingReview) {
             savedReview = await firstValueFrom(
               this.gadgetReviewService.updateReview(this.existingReview.id, {
                 rating: formData.rating,
                 reviewText: formData.review,
-                lastUpdated: new Date()
+                lastUpdated: Timestamp.now() as any
               })
             );
           } else {

@@ -96,6 +96,9 @@ export class ElectronicGadgetDetailsComponent implements OnInit {
       this.electronicGadgetService.getElectronicGadgetById(this.gadgetId).subscribe({
         next: (gadget) => {
           this.gadget = gadget;
+          console.log('Gadget loaded:', gadget);
+          console.log('Gadget name:', gadget?.name);
+          console.log('All gadget keys:', Object.keys(gadget || {}));
           this.isLoading = false;
         },
         error: (err) => {
@@ -183,6 +186,8 @@ export class ElectronicGadgetDetailsComponent implements OnInit {
         this.reviews.unshift(updatedReview);
       }
       this.updateGadgetRating();
+      // Notify dashboard that a review was added/updated
+      this.reviewEventService.notifyReviewChanged();
       if (this.gadgetId) {
         this.electronicGadgetService.getElectronicGadgetById(this.gadgetId).subscribe((gadget) => {
           this.gadget = gadget;
@@ -251,7 +256,7 @@ export class ElectronicGadgetDetailsComponent implements OnInit {
       data: {
         gadget: this.gadget,
         gadgetId: this.gadgetId,
-        existingReview: review
+        review: review
       }
     });
 
@@ -261,6 +266,8 @@ export class ElectronicGadgetDetailsComponent implements OnInit {
         this.reviews[index] = updatedReview;
       }
       this.updateGadgetRating();
+      // Notify dashboard that a review was updated
+      this.reviewEventService.notifyReviewChanged();
     });
   }
 
