@@ -2,7 +2,7 @@
   max-width: 1200px;
   margin: 2rem auto;
   padding: 2rem;
-  background: #F5F5DC !important;
+  background: #FFFFFF !important;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -60,7 +60,7 @@
 }
 
 h1 {
-  color: #800020;
+  color: #006747;
   margin-bottom: 2rem;
   font-size: 2rem;
   font-weight: 700;
@@ -91,20 +91,22 @@ mat-form-field {
 }
 
 button[type="submit"] {
-  background-color: #C18857 !important;
-  color: #fff !important;
+  background-color: #FFFFFF !important;
+  color: #006747 !important;
   font-weight: 600;
   padding: 10px 24px;
   border-radius: 8px;
+  border: 2px solid #006747 !important;
   transition: all 0.3s ease;
   font-family: 'Poppins', sans-serif;
-  box-shadow: 0 2px 8px rgba(193, 136, 87, 0.2) !important;
+  box-shadow: 0 2px 8px rgba(0, 103, 71, 0.1) !important;
 }
 
 button[type="submit"]:hover {
-  background-color: #DDA15E !important;
+  background-color: #E2F0E9 !important;
+  color: #006747 !important;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(193, 136, 87, 0.35) !important;
+  box-shadow: 0 4px 12px rgba(0, 103, 71, 0.2) !important;
 }
 
 button[type="submit"]:disabled {
@@ -114,20 +116,22 @@ button[type="submit"]:disabled {
 }
 
 button[type="button"] {
-  background-color: #C18857 !important;
-  color: #fff !important;
+  background-color: #FFFFFF !important;
+  color: #006747 !important;
   font-weight: 600;
   padding: 10px 24px;
   border-radius: 8px;
+  border: 2px solid #006747 !important;
   transition: all 0.3s ease;
   font-family: 'Poppins', sans-serif;
-  box-shadow: 0 2px 8px rgba(193, 136, 87, 0.2) !important;
+  box-shadow: 0 2px 8px rgba(0, 103, 71, 0.1) !important;
 }
 
 button[type="button"]:hover {
-  background-color: #DDA15E !important;
+  background-color: #E2F0E9 !important;
+  color: #006747 !important;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(193, 136, 87, 0.35) !important;
+  box-shadow: 0 4px 12px rgba(0, 103, 71, 0.2) !important;
 }
 
 /* Cancel button - no color */
@@ -195,8 +199,8 @@ input, textarea, select {
 }
 
 .mat-form-field-appearance-outline .mat-form-field-outline-thick {
-  color: #C18857 !important;
-  border-color: #C18857 !important;
+  color: #006747 !important;
+  border-color: #006747 !important;
 }
 
 .mat-select-arrow {
@@ -214,7 +218,7 @@ input, textarea, select {
 }
 
 .mat-chip {
-  background-color: #C18857 !important;
+  background-color: #006747 !important;
   color: #fff !important;
 }
 
@@ -235,9 +239,10 @@ input, textarea, select {
 
 /* Raised button styling (submit buttons) */
 button[mat-raised-button] {
-  background: #C18857 !important;
-  color: #fff !important;
-  box-shadow: 0 2px 8px rgba(193, 136, 87, 0.2) !important;
+  background: #FFFFFF !important;
+  color: #006747 !important;
+  border: 2px solid #006747 !important;
+  box-shadow: 0 2px 8px rgba(0, 103, 71, 0.1) !important;
   font-weight: 600;
   border-radius: 8px;
   transition: all 0.3s ease;
@@ -246,15 +251,15 @@ button[mat-raised-button] {
 }
 
 button[mat-raised-button]:hover {
-  background: #DDA15E !important;
-  color: #fff !important;
-  box-shadow: 0 4px 12px rgba(193, 136, 87, 0.35) !important;
+  background: #E2F0E9 !important;
+  color: #006747 !important;
+  box-shadow: 0 4px 12px rgba(0, 103, 71, 0.2) !important;
   transform: translateY(-2px);
 }
 
 button[mat-icon-button] {
   background: transparent !important;
-  color: #C18857 !important;
+  color: #006747 !important;
 }
 
 /* Instructions Section */
@@ -317,11 +322,11 @@ button[mat-icon-button] {
   padding: 8px;
   background-color: white;
   border-radius: 4px;
-  border-left: 3px solid #C18857;
+  border-left: 3px solid #006747;
 }
 
 .brand-item strong {
-  color: #C18857;
+  color: #006747;
   text-transform: capitalize;
 }
 

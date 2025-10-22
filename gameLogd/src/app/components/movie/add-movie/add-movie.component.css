@@ -4,13 +4,13 @@
   max-width: 1200px;
   margin: 2rem auto;
   padding: 2rem;
-  background-color: #F5F5DC;
+  background-color: #FFFFFF;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
-  color: #800020;
+  color: #006747;
   margin-bottom: 2rem;
   font-size: 1.8rem;
   font-weight: 700;
@@ -61,20 +61,20 @@ h2 {
 }
 
 button[type="submit"] {
-  background-color: #C18857 !important;
+  background-color: #006747 !important;
   color: #fff !important;
   font-weight: 600;
   padding: 10px 24px;
   border-radius: 8px;
   transition: all 0.3s ease;
   font-family: 'Poppins', sans-serif;
-  box-shadow: 0 2px 8px rgba(193, 136, 87, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 103, 71, 0.2);
 }
 
 button[type="submit"]:hover {
-  background-color: #DDA15E !important;
+  background-color: #3BAA80 !important;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(193, 136, 87, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 103, 71, 0.35);
 }
 
 button[type="submit"]:disabled {
@@ -111,11 +111,11 @@ button[mat-button]:hover {
 }
 
 ::ng-deep .mat-mdc-text-field-wrapper {
-  background-color: #F5F5DC !important;
+  background-color: #FFFFFF !important;
 }
 
 ::ng-deep .mat-mdc-form-field-flex {
-  background-color: #F5F5DC !important;
+  background-color: #FFFFFF !important;
 }
 
 ::ng-deep .mat-mdc-input-element {

@@ -5,7 +5,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: #F9F5F0;
+    background: linear-gradient(135deg, #F5F9F7 0%, #E2F0E9 40%, #8FD1B3 100%);
     overflow: hidden;
     z-index: 0;
     pointer-events: none;
@@ -27,10 +27,10 @@
 .float-icon {
     position: absolute;
     font-size: 32px;
-    color: #DDA15E;
-    opacity: 0.4;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+    color: #006747;
+    opacity: 0.3;
+    text-shadow: 0 2px 8px rgba(0, 103, 71, 0.1);
+    filter: drop-shadow(0 2px 4px rgba(0, 103, 71, 0.15));
     z-index: 5;
     display: block;
     width: 32px;
@@ -102,7 +102,7 @@
 .orb-1 {
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(193, 136, 87, 0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(0, 103, 71, 0.2) 0%, transparent 70%);
     top: -10%;
     left: -10%;
     animation-delay: 0s;
@@ -111,7 +111,7 @@
 .orb-2 {
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(234, 210, 184, 0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(143, 209, 179, 0.2) 0%, transparent 70%);
     bottom: -5%;
     right: -5%;
     animation-delay: -5s;
@@ -121,7 +121,7 @@
 .orb-3 {
     width: 350px;
     height: 350px;
-    background: radial-gradient(circle, rgba(221, 161, 94, 0.25) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(59, 170, 128, 0.2) 0%, transparent 70%);
     top: 40%;
     left: 50%;
     animation-delay: -10s;
@@ -140,102 +140,20 @@
     }
 }
 
-/* Wave Container */
-.wave-container {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    pointer-events: none;
-}
-
-/* Wave Styles */
-.waves {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 200%;
-    height: 40%;
-    min-height: 200px;
-    animation: wave-horizontal 6s linear infinite;
-}
-
-.waves-2 {
-    bottom: -5%;
-    opacity: 0.8;
-    animation: wave-horizontal 8s linear infinite reverse;
-}
-
-.waves-3 {
-    bottom: -10%;
-    opacity: 0.6;
-    animation: wave-horizontal 10s linear infinite;
-}
-
-.waves-4 {
-    bottom: -15%;
-    opacity: 0.7;
-    animation: wave-horizontal 7s linear infinite reverse;
-}
-
-/* Wave Path Animations */
-.wave-path {
-    animation: wave-vertical 2s ease-in-out infinite;
-}
-
-.wave-1 {
-    animation: wave-vertical 2.5s ease-in-out infinite;
-}
-
-.wave-2 {
-    animation: wave-vertical 3s ease-in-out infinite;
-    animation-delay: -0.5s;
-}
-
-.wave-3 {
-    animation: wave-vertical 3.5s ease-in-out infinite;
-    animation-delay: -1s;
-}
-
-.wave-4 {
-    animation: wave-vertical 2.8s ease-in-out infinite;
-    animation-delay: -1.5s;
-}
-
-/* Horizontal wave movement */
-@keyframes wave-horizontal {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
-}
-
-/* Vertical wave motion */
-@keyframes wave-vertical {
-    0%, 100% {
-        transform: translateY(0) scaleY(1);
-    }
-    50% {
-        transform: translateY(-15px) scaleY(1.05);
-    }
-}
+/* Wave styles removed */
 
 .big-text {
     font-family: 'Poppins', sans-serif;
     font-size: 2rem;
     font-weight: 600;
-    color: #4E342E;
+    color: #004D35;
     text-shadow: none;
 }
 
 .medium-text {
     font-family: 'Inter', sans-serif;
     font-size: 1.2rem;
-    color: #3E2723;
+    color: #2C2C2C;
 }
 
 /* Removed body styling - not needed in component */
@@ -268,14 +186,14 @@
     text-align: center;
     font-size: 1rem;
     margin: 1rem 0;
-    color: #3E2723;
+    color: #7A8C83;
     font-weight: 400;
     text-shadow: none;
     transition: color 0.25s ease;
 }
 
 .small-text:hover {
-    color: #C18857;
+    color: #006747;
 }
 
 .main-container {
@@ -349,7 +267,7 @@
 
 .title, .title-yellow {
     display: inline-block;
-    color: #1a1a1a;
+    color: #004D35;
     font-weight: bold;
     position: relative;
     text-shadow: none;
@@ -358,7 +276,7 @@
 }
 
 .title:hover, .title-yellow:hover {
-    color: #1b2a4a;
+    color: #3BAA80;
 }
 
 .title::after, .title-yellow::after {
@@ -455,18 +373,18 @@ hr {
     gap: 1rem;
     max-width: 400px;
     margin: 0 auto;
-    background: rgba(0, 229, 255, 0.05);
+    background: rgba(255, 255, 255, 0.8);
     padding: 0.5rem;
     border-radius: 16px;
     backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px rgba(0, 229, 255, 0.15);
-    border: 1px solid rgba(0, 229, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 103, 71, 0.15);
+    border: 1px solid rgba(0, 103, 71, 0.2);
     transition: all 0.3s ease;
 }
 
 .search-form:hover {
-    background: rgba(0, 229, 255, 0.08);
-    box-shadow: 0 8px 32px rgba(0, 229, 255, 0.25);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 8px 32px rgba(0, 103, 71, 0.25);
     transform: translateY(-2px);
 }
 
@@ -474,37 +392,38 @@ hr {
     flex: 1;
     padding: 8px 12px;
     font-size: 1rem;
-    border: 1px solid rgba(0, 229, 255, 0.2);
+    border: 1px solid rgba(0, 103, 71, 0.2);
     border-radius: 4px;
     outline: none;
     transition: all 0.3s ease;
     min-width: 250px;
     width: 100%;
     max-width: 600px;
-    background: rgba(255, 255, 255, 0.9);
-    color: #333333;
+    background: #FFFFFF;
+    color: #2C2C2C;
+    font-family: 'Inter', sans-serif;
     height: 36px;
 }
 
 .search-input:focus {
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+    border-color: #006747;
+    box-shadow: 0 0 0 3px rgba(0, 103, 71, 0.1);
 }
 
 .search-input::placeholder {
-    color: rgba(0, 0, 0, 0.5);
+    color: #7A8C83;
 }
 
 .search-button {
     padding: 8px 16px;
     border-radius: 8px;
-    border: 1px solid rgba(222, 184, 135, 0.3);
-    background: rgba(222, 184, 135, 0.2);
-    color: #8B7355;
+    border: none;
+    background: #006747;
+    color: #FFFFFF;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 1rem;
-    backdrop-filter: blur(5px);
+    font-family: 'Inter', sans-serif;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -527,10 +446,9 @@ hr {
 }
 
 .search-button:hover {
-    background: rgba(222, 184, 135, 0.3);
+    background: #3BAA80;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(222, 184, 135, 0.2);
-    border-color: rgba(222, 184, 135, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 103, 71, 0.3);
 }
 
 @keyframes searchFadeIn {
@@ -557,7 +475,7 @@ hr {
     text-align: center;
     font-size: 1.6rem;
     margin-bottom: 2rem;
-    color: #5D4037;
+    color: #004D35;
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     text-shadow: none;
@@ -565,7 +483,7 @@ hr {
 }
 
 .categories-section h3:hover {
-    color: #4E342E;
+    color: #3BAA80;
 }
 
 .categories-grid {
@@ -589,12 +507,12 @@ hr {
     align-items: center;
     justify-content: center;
     padding: 1rem;
-    background: #F2E6DA;
+    background: #E2F0E9;
     border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 103, 71, 0.08);
     text-decoration: none;
     transition: all 0.3s ease;
-    border: 1px solid rgba(193, 136, 87, 0.1);
+    border: 1px solid rgba(0, 103, 71, 0.1);
     position: relative;
 }
 
@@ -605,7 +523,7 @@ hr {
     border-radius: 20px;
     background: linear-gradient(
         135deg,
-        rgba(92, 64, 51, 0.2),
+        rgba(0, 103, 71, 0.1),
         rgba(255, 255, 255, 0.1)
     );
     opacity: 0;
@@ -614,7 +532,8 @@ hr {
 
 .category-card:hover {
     transform: translateY(-10px) scale(1.05) rotateX(10deg);
-    box-shadow: 0 20px 40px rgba(92, 64, 51, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 103, 71, 0.2);
+    background: #8FD1B3;
 }
 
 .category-card:hover::before {
@@ -626,13 +545,13 @@ hr {
     height: 1.75rem;
     width: 1.75rem;
     margin-bottom: 0.5rem;
-    color: #C18857;
+    color: #006747;
     transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .category-card:hover mat-icon {
     transform: scale(1.1);
-    color: #DDA15E;
+    color: #FFFFFF;
 }
 
 .category-card span {
@@ -641,14 +560,14 @@ hr {
     font-family: 'Poppins', sans-serif;
     text-align: center;
     transition: color 0.3s ease;
-    color: #7B3F00 !important;
+    color: #2C2C2C !important;
     text-shadow: none;
     margin-top: 0.25rem;
 }
 
 
 .category-card:hover span {
-    color: #4E342E;
+    color: #FFFFFF !important;
 }
 
 @keyframes autoScroll {
@@ -691,15 +610,15 @@ hr {
 /* Light theme - Matching dashboard colors */
 :root,
 [data-theme="light"] {
-    --text-color: #8B7355;
-    --accent-color: #DEB887;
-    --background-color: #F5E6D3;
-    --card-background: rgba(222, 184, 135, 0.1);
-    --input-background: rgba(255, 255, 255, 0.1);
-    --input-border: rgba(222, 184, 135, 0.2);
-    --input-focus-border: #D2B48C;
-    --input-focus-shadow: rgba(222, 184, 135, 0.2);
-    --placeholder-color: #A0815C;
+    --text-color: #2C2C2C;
+    --accent-color: #FFD166;
+    --background-color: #F5F9F7;
+    --card-background: #E2F0E9;
+    --input-background: #FFFFFF;
+    --input-border: rgba(0, 103, 71, 0.2);
+    --input-focus-border: #006747;
+    --input-focus-shadow: rgba(0, 103, 71, 0.1);
+    --placeholder-color: #7A8C83;
 }
 
 .big-text {
@@ -708,13 +627,13 @@ hr {
 }
 
 .title {
-    color: #4E342E;
+    color: #004D35;
     font-family: 'Poppins', sans-serif;
     font-weight: 700;
 }
 
 .title-yellow {
-    color: #C18857;
+    color: #3BAA80;
     font-family: 'Poppins', sans-serif;
     font-weight: 700;
 }
@@ -797,23 +716,23 @@ hr {
 .hero-title {
     font-size: 3rem;
     font-weight: 700;
-    color: #4E342E;
+    color: #004D35;
     font-family: 'Poppins', sans-serif;
     margin-bottom: 1rem;
     line-height: 1.2;
 }
 
 .brand-name {
-    color: #4E342E;
+    color: #004D35;
 }
 
 .brand-accent {
-    color: #C18857;
+    color: #3BAA80;
 }
 
 .hero-subtitle {
     font-size: 1.5rem;
-    color: #5D4037;
+    color: #006747;
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     margin-bottom: 1rem;
@@ -821,7 +740,7 @@ hr {
 
 .hero-description {
     font-size: 1.1rem;
-    color: #3E2723;
+    color: #7A8C83;
     font-family: 'Inter', sans-serif;
     max-width: 700px;
     margin: 0 auto 2rem auto;
@@ -852,28 +771,28 @@ hr {
 }
 
 .btn-primary {
-    background: #C18857;
+    background: #006747;
     color: #fff;
-    box-shadow: 0 4px 12px rgba(193, 136, 87, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 103, 71, 0.3);
 }
 
 .btn-primary:hover {
-    background: #DDA15E;
+    background: #3BAA80;
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(193, 136, 87, 0.4);
+    box-shadow: 0 6px 16px rgba(0, 103, 71, 0.4);
 }
 
 .btn-secondary {
     background: transparent;
-    color: #C18857;
-    border: 2px solid #C18857;
+    color: #006747;
+    border: 2px solid #006747;
 }
 
 .btn-secondary:hover {
-    background: #C18857;
+    background: #006747;
     color: #fff;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(193, 136, 87, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 103, 71, 0.3);
 }
 
 /* Feature Cards */
@@ -885,25 +804,25 @@ hr {
 }
 
 .feature-card {
-    background: #F2E6DA;
+    background: #E2F0E9;
     padding: 2rem;
     border-radius: 16px;
     text-align: center;
     transition: all 0.3s ease;
-    border: 1px solid rgba(193, 136, 87, 0.2);
+    border: 1px solid rgba(0, 103, 71, 0.2);
 }
 
 .feature-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(193, 136, 87, 0.2);
-    background: #D8BFA5;
+    box-shadow: 0 12px 24px rgba(0, 103, 71, 0.2);
+    background: #8FD1B3;
 }
 
 .feature-icon {
     width: 64px;
     height: 64px;
     margin: 0 auto 1rem auto;
-    background: #C18857;
+    background: #006747;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -919,7 +838,7 @@ hr {
 
 .feature-card h3 {
     font-size: 1.3rem;
-    color: #4E342E;
+    color: #004D35;
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     margin-bottom: 0.5rem;
@@ -927,7 +846,7 @@ hr {
 
 .feature-card p {
     font-size: 1rem;
-    color: #3E2723;
+    color: #2C2C2C;
     font-family: 'Inter', sans-serif;
     line-height: 1.5;
 }
@@ -949,14 +868,14 @@ hr {
 .section-title {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #4E342E;
+    color: #004D35;
     font-family: 'Poppins', sans-serif;
     margin-bottom: 0.5rem;
 }
 
 .section-subtitle {
     font-size: 1.2rem;
-    color: #5D4037;
+    color: #7A8C83;
     font-family: 'Inter', sans-serif;
 }
 
@@ -981,12 +900,12 @@ hr {
 }
 
 .category-card {
-    background: #F2E6DA;
+    background: #E2F0E9;
     padding: 1.25rem;
     border-radius: 12px;
     text-align: center;
     transition: all 0.3s ease;
-    border: 1px solid rgba(193, 136, 87, 0.2);
+    border: 1px solid rgba(0, 103, 71, 0.2);
     text-decoration: none;
     display: flex;
     flex-direction: column;
@@ -998,15 +917,15 @@ hr {
 
 .category-card:hover {
     transform: translateY(-8px) scale(1.05);
-    box-shadow: 0 12px 24px rgba(193, 136, 87, 0.2);
-    background: #D8BFA5;
+    box-shadow: 0 12px 24px rgba(0, 103, 71, 0.2);
+    background: #8FD1B3;
 }
 
 .category-icon {
     width: 48px;
     height: 48px;
     margin-bottom: 0.75rem;
-    background: #C18857;
+    background: #006747;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1022,7 +941,7 @@ hr {
 
 .category-name {
     font-size: 1rem;
-    color: #7B3F00 !important;
+    color: #2C2C2C !important;
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     margin-bottom: 0.25rem;
@@ -1030,7 +949,7 @@ hr {
 
 .category-desc {
     font-size: 0.75rem;
-    color: #3E2723;
+    color: #7A8C83;
     font-family: 'Inter', sans-serif;
     line-height: 1.2;
 }
@@ -1050,23 +969,23 @@ hr {
 }
 
 .benefit-item {
-    background: #F2E6DA;
+    background: #E2F0E9;
     padding: 2rem;
     border-radius: 16px;
     transition: all 0.3s ease;
-    border: 1px solid rgba(193, 136, 87, 0.2);
+    border: 1px solid rgba(0, 103, 71, 0.2);
 }
 
 .benefit-item:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(193, 136, 87, 0.2);
-    background: #D8BFA5;
+    box-shadow: 0 12px 24px rgba(0, 103, 71, 0.2);
+    background: #8FD1B3;
 }
 
 .benefit-number {
     font-size: 3rem;
     font-weight: 700;
-    color: #800000;
+    color: #006747;
     font-family: 'Poppins', sans-serif;
     margin-bottom: 1rem;
     opacity: 0.3;
@@ -1074,7 +993,7 @@ hr {
 
 .benefit-item h3 {
     font-size: 1.3rem;
-    color: #4E342E;
+    color: #004D35;
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     margin-bottom: 0.5rem;
@@ -1082,7 +1001,7 @@ hr {
 
 .benefit-item p {
     font-size: 1rem;
-    color: #3E2723;
+    color: #2C2C2C;
     font-family: 'Inter', sans-serif;
     line-height: 1.5;
 }

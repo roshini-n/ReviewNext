@@ -2,12 +2,12 @@
 :host {
     display: block;
     min-height: 100vh;
-    background: #F9F5F0;
+    background: linear-gradient(135deg, #F5F9F7 0%, #E2F0E9 40%, #8FD1B3 100%);
 }
 
 .page-container {
     min-height: 100vh;
-    background: #F9F5F0;
+    background: linear-gradient(135deg, #F5F9F7 0%, #E2F0E9 40%, #8FD1B3 100%);
 }
 
 .scrollable {

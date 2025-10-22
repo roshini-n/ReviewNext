@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    background: #F9F5F0;
+    background: linear-gradient(135deg, #F5F9F7 0%, #E2F0E9 40%, #8FD1B3 100%);
     min-height: 100vh;
 }
 
@@ -20,14 +20,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: 
-        linear-gradient(45deg,
-        rgba(212, 163, 115, 0.15) 0%,
-        rgba(150, 114, 89, 0.15) 33%,
-        rgba(74, 55, 40, 0.15) 66%,
-        rgba(212, 163, 115, 0.15) 100%);
-    background-size: 400% 400%;
-    animation: gradientFlow 20s ease infinite;
+    background: transparent;
     pointer-events: none;
     z-index: 0;
 }
@@ -39,13 +32,9 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: 
-        radial-gradient(circle at 50% 50%,
-        rgba(212, 163, 115, 0.1) 0%,
-        transparent 50%);
+    background: transparent;
     opacity: 0.5;
     pointer-events: none;
-    animation: pulseGlow 8s ease-in-out infinite;
     z-index: 0;
 }
 
@@ -112,7 +101,7 @@ body {
 
 .profile-image-container:hover {
     transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(212, 163, 115, 0.3);
+    box-shadow: 0 6px 20px rgba(101, 92, 83, 0.3);
     border-color: #967259;
 }
 

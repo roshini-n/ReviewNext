@@ -1,3 +1,6 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
 /* Import shared background styles */
 @import './app/styles/shared-background.css';
 
@@ -17,10 +20,11 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: var(--font-body);
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.6;
   min-height: auto;
+  color: var(--body-text);
 }
 
 /* Main content wrapper for all pages */
@@ -45,10 +49,15 @@ router-outlet + * {
   margin: 0; /* Remove margins */
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--heading-text);
+  font-weight: 700;
+}
+
 h1 {
   margin-top: 0;
-  font-size: 1.5rem;
-  font-weight: 500;
+  font-size: 2rem;
 }
 
 /* Global font sizes */
@@ -70,30 +79,45 @@ button, input, select, textarea {
     font-size: large;
 }
 
-/* Global variables */
+/* Global variables - Deep Green Theme */
 :root {
-  --primary-color: #b67c52;
-  --secondary-color: #d6a77a;
-  --background-color: #f7efe6;
-  --card-bg: #f3e2d1;
-  --heading-text: #4b2e17;
-  --body-text: #5c4033;
-  --highlight: #c08a60;
-  --link-color: #a97444;
+  /* Primary Colors */
+  --primary-color: #006747;        /* Deep Green */
+  --secondary-color: #8FD1B3;      /* Mint Green */
+  --hover-color: #3BAA80;          /* Medium Teal Green */
+  
+  /* Background Colors */
+  --background-color: #F5F9F7;     /* Soft Off-White */
+  --card-bg: #E2F0E9;              /* Pale Green Tint */
+  
+  /* Text Colors */
+  --heading-text: #004D35;         /* Forest Green */
+  --body-text: #2C2C2C;            /* Dark Charcoal */
+  --muted-text: #7A8C83;           /* Muted Sage */
+  
+  /* Accent Colors */
+  --accent-color: #FFD166;         /* Light Gold */
+  --error-color: #e74c3c;
+  --success-color: #006747;
+  
+  /* Legacy mappings for compatibility */
   --primary-bg: var(--background-color);
   --secondary-bg: var(--card-bg);
   --primary-text: var(--body-text);
   --secondary-text: var(--heading-text);
-  --accent-color: var(--primary-color);
-  --border-color: rgba(182, 124, 82, 0.2);
-  --input-bg: rgba(255, 255, 255, 0.9);
-  --input-border: rgba(182, 124, 82, 0.3);
-  --error-color: #e74c3c;
-  --success-color: #85A67C;
-  --shadow-color: rgba(182, 124, 82, 0.1);
+  --highlight: var(--hover-color);
+  --link-color: var(--primary-color);
+  --border-color: rgba(0, 103, 71, 0.2);
+  --input-bg: #FFFFFF;
+  --input-border: rgba(0, 103, 71, 0.3);
+  --shadow-color: rgba(0, 103, 71, 0.1);
   --navbar-text: var(--heading-text);
-  --navbar-button-hover: rgba(182, 124, 82, 0.1);
-  --navbar-height: 64px; /* Add navbar height variable */
+  --navbar-button-hover: rgba(0, 103, 71, 0.1);
+  --navbar-height: 64px;
+  
+  /* Typography */
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
 }
 
 /* Global styles */
@@ -103,7 +127,7 @@ html {
 }
 body {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--font-body);
   background-color: var(--background-color);
   color: var(--body-text);
   transition: background-color 0.3s ease, color 0.3s ease;

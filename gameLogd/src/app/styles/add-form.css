@@ -247,12 +247,12 @@ input, textarea, select {
 }
 
 .mat-chip {
- background-color: #954535;
+ background-color: #006747;
 color: #fff;
 }
 
 .mat-chip:hover, .mat-chip:focus, .mat-chip:active {
-  background-color: #954535;
+  background-color: #006747;
 color: #fff;
 }
 
@@ -262,18 +262,18 @@ color: #fff;
 
 /* Remove hover/focus/active for all buttons */
 button, button:active, button:focus, button:hover {
- background-color: #954535;
+ background-color: #006747;
 color: #fff;
   box-shadow: none !important;
 }
 
 button[mat-button], button[mat-raised-button], button[mat-icon-button] {
- background-color: #954535;
+ background-color: #006747;
 color: #fff;
 }
 
 button[mat-button]:hover, button[mat-raised-button]:hover, button[mat-icon-button]:hover {
-  background-color: #954535;
+  background-color: #3BAA80;
 color: #fff;
 }
 

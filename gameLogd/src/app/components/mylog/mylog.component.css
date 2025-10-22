@@ -165,14 +165,14 @@ mat-card img {
 body {
   margin: 0;
   padding: 0;
-  background-color: #F9F5F0;
+  background: linear-gradient(135deg, #F5F9F7 0%, #E2F0E9 40%, #8FD1B3 100%);
 }
 
 :host {
   display: block;
   width: 100%;
   min-height: 100vh;
-  background-color: #F9F5F0;
+  background: linear-gradient(135deg, #F5F9F7 0%, #E2F0E9 40%, #8FD1B3 100%);
 }
 
 /* Diary container styles - removed duplicates */

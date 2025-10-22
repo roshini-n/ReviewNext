@@ -3,11 +3,11 @@
     height: 100vh;
     position: relative;
     overflow: hidden;
-    background: #F9F5F0;
+    background: linear-gradient(135deg, #F5F9F7 0%, #E2F0E9 40%, #8FD1B3 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 /* Main Content Layout */
@@ -36,10 +36,10 @@
 
 /* Branding Section */
 .branding-section {
-    color: #2c3e50;
+    color: #004D35;
     text-align: center;
     padding: 2rem;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 .brand-logo {
@@ -53,23 +53,23 @@
     font-size: 3rem;
     font-weight: 700;
     margin: 0;
-    background: linear-gradient(45deg, #9A2A2A, #A52A2A, #800020);
+    background: linear-gradient(45deg, #006747, #3BAA80, #8FD1B3);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    font-family: 'Roboto', sans-serif;
-    text-shadow: 2px 2px 4px rgba(74, 55, 40, 0.3);
+    font-family: 'Poppins', sans-serif;
+    text-shadow: none;
 }
 
 .brand-subtitle {
     font-size: 1.4rem;
     margin-bottom: 3rem;
     opacity: 1;
-    font-weight: 600;           /* Make it bolder */
-    font-style: italic;         /* Make it italic */
-    color: #181818;             /* Darker black color */
-    font-family: 'Georgia', 'Times New Roman', serif; /* Different style */
-    text-shadow: none;          /* Remove previous shadow for clarity */
+    font-weight: 300;
+    font-style: normal;
+    color: #7A8C83;
+    font-family: 'Inter', sans-serif;
+    text-shadow: none;
 }
 
 .feature-highlights {
@@ -83,23 +83,24 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.6);
     border-radius: 12px;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 215, 0, 0.4);
-    transition: transform 0.3s ease;
-    font-family: 'Roboto', sans-serif;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 103, 71, 0.2);
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 2px 8px rgba(0, 103, 71, 0.1);
 }
 
 .feature-item:hover {
     transform: translateX(10px);
-    background: rgba(255, 215, 0, 0.1);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background: rgba(59, 170, 128, 0.1);
+    border-color: #3BAA80;
+    box-shadow: 0 4px 12px rgba(0, 103, 71, 0.2);
 }
 
 .feature-item mat-icon {
-    color: #000000;
+    color: #006747;
     font-size: 24px;
     width: 24px;
     height: 24px;
@@ -108,9 +109,9 @@
 .feature-item span {
     font-weight: 500;
     font-size: 1.1rem;
-    font-family: 'Roboto', sans-serif;
-    color: #2c3e50;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif;
+    color: #2C2C2C;
+    text-shadow: none;
 }
 
 /* Form Section */
@@ -121,22 +122,22 @@
 }
 
 .form-container {
-    background: rgba(255, 255, 255, 0.18);           /* More transparent */
-    backdrop-filter: blur(18px);                     /* Stronger blur */
-    -webkit-backdrop-filter: blur(18px);             /* Safari support */
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-radius: 24px;
     padding: 2.5rem;
     width: 100%;
     max-width: 400px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
-    border: 1.5px solid rgba(255, 255, 255, 0.35);   /* Lighter border */
+    box-shadow: 0 10px 40px rgba(0, 103, 71, 0.15);
+    border: 1.5px solid rgba(0, 103, 71, 0.1);
     transition: all 0.3s ease;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 .form-container:hover {
     transform: translateY(-5px);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 15px 50px rgba(0, 103, 71, 0.2);
 }
 
 .form-header {
@@ -147,17 +148,18 @@
 .form-header h2 {
     font-size: 2.2rem;
     font-weight: 700;
-    color: #2c3e50;
+    color: #004D35;
     margin: 0 0 0.5rem 0;
-    font-family: 'Roboto', sans-serif;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+    text-shadow: none;
 }
 
 .form-header p {
-    color: #666;
+    color: #7A8C83;
     font-size: 1.1rem;
     margin: 0;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
 }
 
 /* Form Styles */
@@ -182,7 +184,7 @@
 .input-icon {
     position: absolute;
     left: 16px;
-    color: #999;
+    color: #7A8C83;
     font-size: 20px;
     width: 20px;
     height: 20px;
@@ -192,19 +194,19 @@
 .input-wrapper input {
     width: 100%;
     padding: 14px 16px 14px 50px;
-    border: 2px solid #e1e5e9;
+    border: 2px solid rgba(0, 103, 71, 0.2);
     border-radius: 12px;
     font-size: 1rem;
-    background: #fff;
-    color: #333;
+    background: #FFFFFF;
+    color: #2C2C2C;
     transition: all 0.3s ease;
     outline: none;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 .input-wrapper input:focus {
-    border-color: #FFD700;
-    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+    border-color: #006747;
+    box-shadow: 0 0 0 3px rgba(0, 103, 71, 0.1);
 }
 
 .input-wrapper input.error {
@@ -216,7 +218,7 @@
     color: #e74c3c;
     font-size: 0.875rem;
     margin-top: 0.25rem;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 .toggle-password {
@@ -224,7 +226,7 @@
     right: 16px;
     background: none;
     border: none;
-    color: #E5E4E2;
+    color: #7A8C83;
     cursor: pointer;
     padding: 4px;
     border-radius: 50%;
@@ -237,8 +239,8 @@
 }
 
 .toggle-password:hover {
-    background: #CD7F32;
-    color: #DAA06D;
+    background: rgba(0, 103, 71, 0.1);
+    color: #006747;
 }
 
 .toggle-password mat-icon {
@@ -261,8 +263,8 @@
     gap: 0.5rem;
     cursor: pointer;
     font-size: 0.9rem;
-    color: #666;
-    font-family: 'Roboto', sans-serif;
+    color: #7A8C83;
+    font-family: 'Inter', sans-serif;
 }
 
 .remember-me input[type="checkbox"] {
@@ -272,15 +274,15 @@
 .checkmark {
     width: 18px;
     height: 18px;
-    border: 2px solid #e1e5e9;
+    border: 2px solid rgba(0, 103, 71, 0.3);
     border-radius: 4px;
     position: relative;
     transition: all 0.3s ease;
 }
 
 .remember-me input[type="checkbox"]:checked + .checkmark {
-    background: #FFD700;
-    border-color: #FFD700;
+    background: #006747;
+    border-color: #006747;
 }
 
 .remember-me input[type="checkbox"]:checked + .checkmark::after {
@@ -295,22 +297,22 @@
 }
 
 .forgot-password {
-    color: #FFD700;
+    color: #006747;
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
-    transition: color 0.3s ease;
-    font-family: 'Roboto', sans-serif;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
 }
 
 .forgot-password:hover {
-    color: #FFA500;
+    color: #3BAA80;
 }
 
 /* Login Button */
 .login-button {
-   background: linear-gradient(135deg, #D4A373 0%, #C89B7B 100%);
-    color: #FEFAE0;
+    background: #006747;
+    color: #FFFFFF;
     border: none;
     border-radius: 12px;
     padding: 14px 24px;
@@ -323,14 +325,14 @@
     justify-content: center;
     gap: 0.5rem;
     margin-top: 1rem;
-    font-family: 'Roboto', sans-serif;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif;
+    text-shadow: none;
 }
 
 .login-button:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(212, 163, 115, 0.3);
-    background: linear-gradient(135deg, #C89B7B 0%, #D4A373 100%);
+    box-shadow: 0 8px 20px rgba(0, 103, 71, 0.3);
+    background: #3BAA80;
 }
 
 .login-button:active:not(:disabled) {
@@ -356,21 +358,21 @@
 }
 
 .register-link {
-    color: #666;
+    color: #7A8C83;
     font-size: 1rem;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 .register-link a {
-    color: #D27D2D;
+    color: #006747;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s ease;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 .register-link a:hover {
-   color: #4A3728
+    color: #3BAA80;
 }
 
 /* Error Messages */
@@ -385,7 +387,7 @@
     border-radius: 12px;
     color: #e74c3c;
     font-size: 0.9rem;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 .error-messages mat-icon {
