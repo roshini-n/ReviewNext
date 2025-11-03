@@ -1,3 +1,9 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+/* Import shared background styles */
+@import './app/styles/shared-background.css';
+
 .center {
   text-align: center;
 }
@@ -7,23 +13,187 @@
 }
 
 .blue {
-  color: #1870e4;
+  color: var(--primary-color);
 }
 
+/* Global page layout styles */
 body {
   margin: 0;
   padding: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: auto;
+  color: var(--body-text);
+}
+
+/* Main content wrapper for all pages */
+app-root {
+  display: block;
+  min-height: auto;
+}
+
+/* Global content container styles */
+.content-container {
+  padding-top: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ensure all main content areas have proper spacing */
+router-outlet + * {
+  display: block;
+  padding-top: 0;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0; /* Remove margins */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--heading-text);
+  font-weight: 700;
 }
 
 h1 {
   margin-top: 0;
+  font-size: 2rem;
+}
+
+/* Global font sizes */
+button, input, select, textarea {
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.mat-button, .mat-raised-button, .mat-icon-button {
+  font-size: 1rem !important;
+  font-weight: 500 !important;
 }
 /* You can add global styles to this file, and also import other style files */
 
 
 
 .navbar_button {
-    color: #FEE715;
+    color: var(--primary-color);
     font-size: large;
 }
+
+/* Global variables - Deep Green Theme */
+:root {
+  /* Primary Colors */
+  --primary-color: #006747;        /* Deep Green */
+  --secondary-color: #8FD1B3;      /* Mint Green */
+  --hover-color: #3BAA80;          /* Medium Teal Green */
+  
+  /* Background Colors */
+  --background-color: #F5F9F7;     /* Soft Off-White */
+  --card-bg: #E2F0E9;              /* Pale Green Tint */
+  
+  /* Text Colors */
+  --heading-text: #004D35;         /* Forest Green */
+  --body-text: #2C2C2C;            /* Dark Charcoal */
+  --muted-text: #7A8C83;           /* Muted Sage */
+  
+  /* Accent Colors */
+  --accent-color: #FFD166;         /* Light Gold */
+  --error-color: #e74c3c;
+  --success-color: #006747;
+  
+  /* Legacy mappings for compatibility */
+  --primary-bg: var(--background-color);
+  --secondary-bg: var(--card-bg);
+  --primary-text: var(--body-text);
+  --secondary-text: var(--heading-text);
+  --highlight: var(--hover-color);
+  --link-color: var(--primary-color);
+  --border-color: rgba(0, 103, 71, 0.2);
+  --input-bg: #FFFFFF;
+  --input-border: rgba(0, 103, 71, 0.3);
+  --shadow-color: rgba(0, 103, 71, 0.1);
+  --navbar-text: var(--heading-text);
+  --navbar-button-hover: rgba(0, 103, 71, 0.1);
+  --navbar-height: 64px;
+  
+  /* Typography */
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+/* Global styles */
+html {
+  min-height: 100%;
+  background: var(--background-color);
+}
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background-color: var(--background-color);
+  color: var(--body-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Common form styles */
+.form-container {
+  background-color: var(--secondary-bg);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px var(--shadow-color);
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  margin: 2rem auto;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  color: var(--primary-text);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(254, 231, 21, 0.2);
+}
+
+
+.error-messages {
+  color: var(--error-color);
+  font-size: 0.875rem;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+/* Material Overrides */
+.mat-mdc-button {
+  min-width: 80px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  padding: 0 16px !important;
+}
+
+.mat-mdc-raised-button {
+  min-width: 80px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  padding: 0 16px !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .form-container {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

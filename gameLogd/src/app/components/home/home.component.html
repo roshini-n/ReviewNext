@@ -1,23 +1,215 @@
-<html>
-    <body>
-        <div class="main-container">
-            <div class = "title-container">
-                <div class="big-text">Welcome to <span class="title">NEXT</span><span class="title-yellow">UP</span></div>
-            </div>
-            <div class = "container">
-                <div class="big-text" >All Your Favorite Games --- All In One Place</div>
-                <div class="small-text">
-                    <br>
-                    Create your free account today and have the ability to log and review your favorite games!
-                    <br>
-                    Explore our catagory of games and find more games that you would be interested in playing!
-                </div>
-            </div>
-            <div class = "sign-up">
-                <div class="medium-text">Sign Up Now!</div>
-                <div class="small-text"><br></div>
-                <span routerLink="register" class="button">Register</span>
+<!-- Animated Background with Waves and Floating Icons -->
+<div class="animated-background">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+    
+    <!-- Floating Icons -->
+    <div class="floating-icons">
+        <mat-icon class="float-icon" style="left: 12%; top: 18%; animation-delay: 0s;">sports_esports</mat-icon>
+        <mat-icon class="float-icon" style="left: 82%; top: 22%; animation-delay: 2s;">star</mat-icon>
+        <mat-icon class="float-icon" style="left: 28%; top: 68%; animation-delay: 4s;">thumb_up</mat-icon>
+        <mat-icon class="float-icon" style="left: 68%; top: 62%; animation-delay: 1s;">favorite</mat-icon>
+        <mat-icon class="float-icon" style="left: 50%; top: 12%; animation-delay: 3s;">spa</mat-icon>
+        <mat-icon class="float-icon" style="left: 18%; top: 75%; animation-delay: 5s;">devices</mat-icon>
+        <mat-icon class="float-icon" style="left: 78%; top: 72%; animation-delay: 2.5s;">movie</mat-icon>
+        <mat-icon class="float-icon" style="left: 42%; top: 80%; animation-delay: 1.5s;">eco</mat-icon>
+        <mat-icon class="float-icon" style="left: 85%; top: 45%; animation-delay: 3.5s;">menu_book</mat-icon>
+        <mat-icon class="float-icon" style="left: 58%; top: 28%; animation-delay: 4.5s;">star</mat-icon>
+        <mat-icon class="float-icon" style="left: 32%; top: 42%; animation-delay: 0.5s;">favorite</mat-icon>
+        <mat-icon class="float-icon" style="left: 72%; top: 15%; animation-delay: 2.8s;">thumb_up</mat-icon>
+        <mat-icon class="float-icon" style="left: 8%; top: 48%; animation-delay: 3.8s;">sports_esports</mat-icon>
+        <mat-icon class="float-icon" style="left: 45%; top: 58%; animation-delay: 1.2s;">movie</mat-icon>
+        <mat-icon class="float-icon" style="left: 88%; top: 82%; animation-delay: 4.2s;">menu_book</mat-icon>
+    </div>
+    
+    <!-- Wave Container -->
+    <!-- <div class="wave-container">
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path class="wave-path wave-1" fill="rgba(193, 136, 87, 0.15)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,144C960,149,1056,139,1152,122.7C1248,107,1344,85,1392,74.7L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+        <svg class="waves waves-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path class="wave-path wave-2" fill="rgba(234, 210, 184, 0.12)" d="M0,192L48,197.3C96,203,192,213,288,192C384,171,480,117,576,112C672,107,768,149,864,165.3C960,181,1056,171,1152,154.7C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+        <svg class="waves waves-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path class="wave-path wave-3" fill="rgba(221, 161, 94, 0.1)" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,213.3C672,224,768,224,864,213.3C960,203,1056,181,1152,165.3C1248,149,1344,139,1392,133.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+        <svg class="waves waves-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+            <path class="wave-path wave-4" fill="rgba(216, 191, 165, 0.18)" d="M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,149.3C672,139,768,149,864,170.7C960,192,1056,224,1152,213.3C1248,203,1344,149,1392,122.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div> -->
+</div>
+
+<!-- Main Content -->
+<div class="home-container">
+    
+    <!-- Search Section - Only visible to non-registered users -->
+    <!-- @if (!authService.currentUserSig()) {
+    <div class="search-section">
+        <form class="search-form">
+            <input 
+                class="search-input" 
+                type="search" 
+                placeholder="Search for products, reviews, and more..."
+                [(ngModel)]="searchQuery"
+                name="search"
+            />
+            <button class="search-button" type="submit" (click)="onSearch()">
+                Search
+            </button>
+        </form>
+    </div>
+    } -->
+
+    <!-- Hero Section - Only visible to non-registered users -->
+    @if (!authService.currentUserSig()) {
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                Welcome to <span class="brand-name">Review<span class="brand-accent">Next</span></span>
+            </h1>
+            <p class="hero-subtitle">
+                Your Trusted Platform for Authentic Reviews and Ratings
+            </p>
+            <p class="hero-description">
+                Discover, review, and share your experiences with games, books, movies, gadgets, and more. 
+                Join our community of trusted reviewers today.
+            </p>
+            
+            <!-- CTA Buttons -->
+            <div class="cta-buttons">
+                <button class="btn-primary" routerLink="/register">
+                    <mat-icon>person_add</mat-icon>
+                    Get Started Free
+                </button>
+                <button class="btn-secondary" routerLink="/login">
+                    <mat-icon>login</mat-icon>
+                    Sign In
+                </button>
             </div>
         </div>
-    </body>
-</html>
+        
+        <!-- Feature Cards -->
+        <div class="feature-cards">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <mat-icon>verified</mat-icon>
+                </div>
+                <h3>Trusted Reviews</h3>
+                <p>Authentic ratings from real users you can trust</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <mat-icon>dashboard</mat-icon>
+                </div>
+                <h3>Easy Tracking</h3>
+                <p>Organize and manage all your reviews in one place</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <mat-icon>groups</mat-icon>
+                </div>
+                <h3>Community</h3>
+                <p>Connect with others who share your interests</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <div class="categories-section">
+            <h3>Browse Categories</h3>
+            <div class="categories-grid">
+                <!-- Original Set -->
+                <a routerLink="games" class="category-card">
+                    <mat-icon>sports_esports</mat-icon>
+                    <span>Games</span>
+                </a>
+                <a routerLink="books" class="category-card">
+                    <mat-icon>menu_book</mat-icon>
+                    <span>Books</span>
+                </a>
+                <a routerLink="movies" class="category-card">
+                    <mat-icon>movie</mat-icon>
+                    <span>Movies</span>
+                </a>
+                <a routerLink="electronic-gadgets" class="category-card">
+                    <mat-icon>devices</mat-icon>
+                    <span>Gadgets</span>
+                </a>
+                <a routerLink="apps" class="category-card">
+                    <mat-icon>apps</mat-icon>
+                    <span>Apps</span>
+                </a>
+                <a routerLink="web-series" class="category-card">
+                    <mat-icon>live_tv</mat-icon>
+                    <span>Web Series</span>
+                </a>
+                <a routerLink="beauty-products" class="category-card">
+                    <mat-icon>spa</mat-icon>
+                    <span>Beauty</span>
+                </a>
+                
+                <!-- Duplicate Set for Seamless Scrolling -->
+                <a routerLink="games" class="category-card">
+                    <mat-icon>sports_esports</mat-icon>
+                    <span>Games</span>
+                </a>
+                <a routerLink="books" class="category-card">
+                    <mat-icon>menu_book</mat-icon>
+                    <span>Books</span>
+                </a>
+                <a routerLink="movies" class="category-card">
+                    <mat-icon>movie</mat-icon>
+                    <span>Movies</span>
+                </a>
+                <a routerLink="electronic-gadgets" class="category-card">
+                    <mat-icon>devices</mat-icon>
+                    <span>Gadgets</span>
+                </a>
+                <a routerLink="apps" class="category-card">
+                    <mat-icon>apps</mat-icon>
+                    <span>Apps</span>
+                </a>
+                <a routerLink="web-series" class="category-card">
+                    <mat-icon>live_tv</mat-icon>
+                    <span>Web Series</span>
+                </a>
+                <a routerLink="beauty-products" class="category-card">
+                    <mat-icon>spa</mat-icon>
+                    <span>Beauty</span>
+                </a>
+            </div>
+        </div>
+
+    <!-- Why Choose Us Section -->
+    <section class="why-section">
+        <div class="section-header">
+            <h2 class="section-title">Why ReviewNext?</h2>
+            <p class="section-subtitle">The smart way to discover and share reviews</p>
+        </div>
+        
+        <div class="benefits-grid">
+            <div class="benefit-item">
+                <div class="benefit-number">01</div>
+                <h3>Comprehensive Database</h3>
+                <p>Access thousands of reviews across multiple categories</p>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-number">02</div>
+                <h3>User-Friendly Interface</h3>
+                <p>Clean, intuitive design that makes reviewing effortless</p>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-number">03</div>
+                <h3>Secure & Private</h3>
+                <p>Your data is protected with industry-standard security</p>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-number">04</div>
+                <h3>Always Free</h3>
+                <p>Core features remain free forever, no hidden costs</p>
+            </div>
+        </div>
+    </section>
+    }
+</div>

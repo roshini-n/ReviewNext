@@ -1,0 +1,240 @@
+/* Material Dialog Container Override */
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
+  width: 500px !important;
+  height: 500px !important;
+  max-width: 90vw !important;
+  max-height: 90vh !important;
+  overflow: hidden !important;
+  border-radius: 24px !important;
+}
+
+/* Username Dialog Styles */
+.dialog-container.username-dialog {
+  padding: 0;
+  width: 500px;
+  height: 500px;
+  max-width: 90vw;
+  max-height: 90vh;
+  background: linear-gradient(135deg, #A0826D 0%, #8B6F47 100%);
+  border-radius: 24px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-container.username-dialog::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #D4A574 0%, #B8956A 100%);
+}
+
+h2[mat-dialog-title] {
+  margin: 0;
+  padding: 32px 40px;
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  background: rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.dialog-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  color: #FFD700;
+}
+
+mat-dialog-content {
+  padding: 0;
+  margin: 0;
+  background: white;
+  flex: 1;
+  overflow: hidden !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-content {
+  padding: 40px;
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-description {
+  margin: 0 0 28px 0;
+  color: #666;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.full-width {
+  width: 100%;
+}
+
+::ng-deep .username-dialog .mat-mdc-form-field {
+  width: 100%;
+}
+
+::ng-deep .username-dialog .mat-mdc-text-field-wrapper {
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+::ng-deep .username-dialog .mat-mdc-form-field-focus-overlay {
+  background-color: transparent;
+}
+
+::ng-deep .username-dialog .mdc-notched-outline__leading,
+::ng-deep .username-dialog .mdc-notched-outline__notch,
+::ng-deep .username-dialog .mdc-notched-outline__trailing {
+  border-color: rgba(160, 130, 109, 0.3) !important;
+}
+
+::ng-deep .username-dialog .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+::ng-deep .username-dialog .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+::ng-deep .username-dialog .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: #A0826D !important;
+  border-width: 2px !important;
+}
+
+::ng-deep .username-dialog .mat-mdc-floating-label {
+  color: #A0826D !important;
+}
+
+::ng-deep .username-dialog input {
+  color: #333;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+::ng-deep .username-dialog .mat-mdc-form-field-hint {
+  color: #999;
+  font-size: 12px;
+}
+
+mat-dialog-actions {
+  padding: 24px 40px 32px;
+  margin: 0;
+  background: white;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.cancel-btn {
+  color: #666;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 0 28px;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cancel-btn:hover {
+  background: #f5f5f5;
+  border-color: #999;
+  color: #333;
+}
+
+.cancel-btn mat-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #A0826D 0%, #8B6F47 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0 32px;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(160, 130, 109, 0.3);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.submit-btn:hover:not([disabled]) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(160, 130, 109, 0.4);
+  background: linear-gradient(135deg, #B89378 0%, #9A7D52 100%);
+}
+
+.submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.submit-btn mat-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+
+/* Animation */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dialog-container.username-dialog {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .dialog-container.username-dialog {
+    min-width: 90vw;
+    max-width: 90vw;
+  }
+  
+  h2[mat-dialog-title] {
+    padding: 20px 24px;
+    font-size: 24px;
+  }
+  
+  .dialog-content {
+    padding: 24px;
+  }
+  
+  mat-dialog-actions {
+    padding: 16px 24px 20px;
+  }
+}
+
+button[mat-raised-button] {
+  margin-left: 8px;
+}
+
+p {
+  margin-bottom: 16px;
+  color: rgba(0, 0, 0, 0.6);
+} 

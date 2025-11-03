@@ -1,91 +1,97 @@
-<div class="game-details-container">
-  <div class="main-content">
-    <div class="game-info-section">
-      <!-- title and game image, need to find higher quality or reformat this -->
-      <div class="game-header">
-        <h1>{{ game?.title }}</h1>
-        <img [src]="game?.imageUrl" [alt]="game?.title" class="game-image" />
-      </div>
-
-      <div class="logging-buttons">
-        <div class="logging-buttons-container">
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="openLogGamePopup()"
-            [disabled]="disabled"
-          >
-            Log Game
-          </button>
-          <button mat-raised-button color="primary">Add to Wishlist</button>
-        </div>
-      </div>
-      <div class="logging-buttons">
-        <h2 id="rating">Rating: {{ game?.rating }}/5</h2>
-      </div>
-      <!-- all of our game details, data can be added on -->
-      <div class="game-details">
-        <div class="details-content">
-          <p>Release Date: {{ game?.releaseDate | date }}</p>
-          <p>Developer: {{ game?.developer }}</p>
-          <p>Available On:</p>
-          <mat-chip-listbox *ngIf="game">
-            <mat-chip *ngFor="let platform of game.platforms">
-              {{ platform }}
-            </mat-chip>
-          </mat-chip-listbox>
-          <p>Description: {{ game?.description }}</p>
-        </div>
-      </div>
+<div class="book-details-container" *ngIf="!isLoading">
+  <div class="book-header">
+    <div class="book-image">
+      <img [src]="game?.imageUrl" [alt]="game?.title" class="book-cover">
     </div>
-
-    <div class="sidebar">
-      <h2>Similar Games, Trending</h2>
-      <!-- similar game logic/or trending games here-->
+    <div class="book-info">
+      <h1>{{game?.title}}</h1>
+      <div class="book-meta">
+        <p><strong>Developer:</strong> {{game?.developer}}</p>
+        <p><strong>Publisher:</strong> {{game?.publisher}}</p>
+        <p><strong>Release Date:</strong> {{game?.releaseDate | date}}</p>
+        <p><strong>Rating:</strong> {{game?.rating | number:'1.1-1'}} ({{game?.numRatings}} ratings)</p>
+      </div>
+      <div class="book-genres">
+        <mat-chip-listbox>
+          <mat-chip *ngFor="let platform of game?.platforms">{{platform}}</mat-chip>
+        </mat-chip-listbox>
+      </div>
+      @if (authService.currentUserSig()) {
+      <div class="book-actions" *ngIf="!disabled">
+        <button mat-raised-button color="primary" (click)="openLogGamePopup()">
+          <mat-icon>add</mat-icon>
+          Log Game
+        </button>
+        <button mat-raised-button color="warn" (click)="onEditGame()">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+      </div>
+      }
     </div>
   </div>
 
-  <!-- reviews -->
-  <div class="reviews-section">
-    <h2 class="section-title">Reviews</h2>
+  <mat-tab-group (selectedTabChange)="onTabChange($event.index)">
+    <mat-tab label="Description">
+      <div class="tab-content">
+        <p>{{game?.description}}</p>
+      </div>
+    </mat-tab>
+    <mat-tab label="Reviews">
+      <div class="tab-content">
+        <div *ngIf="reviews.length === 0" class="no-reviews">
+          No reviews yet. Be the first to review this game!
+        </div>
 
-    <div *ngIf="reviews.length === 0" class="no-reviews">
-      No reviews yet. Be the first to review this game!
-    </div>
+        <div class="reviews-list">
+          <mat-card *ngFor="let review of reviews" class="review-card">
+            <mat-card-header>
+              <div mat-card-avatar class="user-avatar">
+                <mat-icon>person</mat-icon>
+              </div>
+              <mat-card-title>{{ review.username }}</mat-card-title>
+              <mat-card-subtitle *ngIf="review.rating">
+                <div class="rating">
+                  <mat-icon
+                    *ngFor="let star of [1, 2, 3, 4, 5]"
+                    [class.filled]="star <= review.rating"
+                    [class.empty]="star > review.rating"
+                  >
+                    star
+                  </mat-icon>
+                </div>
+              </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p class="review-text">{{ review.reviewText }}</p>
+              @if (authService.currentUserSig() && review.userId === currentUserId) {
+              <div class="action-buttons">
+                <button mat-raised-button color="blue" (click)="editReview(review)" class="action-button">
+                  Edit
+                </button>
+                <app-general-delete-button
+                  [objectToDelete]="review"
+                  (deleteConfirmed)="deleteReview($event)"
+                  class="action-button"
+                ></app-general-delete-button>
+              </div>
+              }
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
 
-    <div class="reviews-list">
-      <mat-card *ngFor="let review of reviews" class="review-card">
-        <mat-card-header>
-          <div mat-card-avatar class="user-avatar">
-            <mat-icon>person</mat-icon>
-          </div>
-          <mat-card-title>{{ review.username }}</mat-card-title>
-          <mat-card-subtitle *ngIf="review.rating">
-            <div class="rating">
-              <mat-icon
-                *ngFor="let star of [1, 2, 3, 4, 5]"
-                [class.filled]="star <= review.rating"
-                [class.empty]="star > review.rating"
-              >
-                star
-              </mat-icon>
-            </div>
-          </mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <p class="review-text">{{ review.reviewText }}</p>
-          <div class="action-buttons" *ngIf="review.userId === currentUserId">
-            <button mat-raised-button color="blue" (click)="editReview(review)" class="action-button">
-            Edit
-          </button>
-            <app-general-delete-button
-              [objectToDelete]="review"
-              (deleteConfirmed)="deleteReview($event)"
-              class="action-button"
-            ></app-general-delete-button>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
+<div class="loading-container" *ngIf="isLoading">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  <p>Loading game details...</p>
+</div>
+
+<div class="error-container" *ngIf="error">
+  <p class="error-message">{{error}}</p>
+  <button mat-raised-button color="primary" (click)="router.navigate(['/games'])">
+    Back to Games
+  </button>
 </div>

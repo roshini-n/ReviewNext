@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>Choose Avatar</h2>
+
+<mat-dialog-content>
+  <!-- Preset Avatars Section -->
+  <div class="preset-section">
+    <div class="avatar-grid">
+      <div 
+        *ngFor="let avatar of avatars" 
+        class="avatar-option" 
+        [class.selected]="selectedAvatar === avatar.path"
+        (click)="selectAvatar(avatar.path)"
+      >
+        <img [src]="avatar.path" [alt]="avatar.name" />
+      </div>
+    </div>
+  </div>
+  
+  <div class="error-message" *ngIf="error">
+    {{ error }}
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="isLoading">Cancel</button>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    [disabled]="!selectedAvatar || isLoading" 
+    (click)="saveAvatar()"
+  >
+    <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+    <span *ngIf="!isLoading">Update Avatar</span>
+  </button>
+</mat-dialog-actions>

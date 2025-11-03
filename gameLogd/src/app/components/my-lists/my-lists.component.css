@@ -1,3 +1,15 @@
+/* Page background matching user-dashboard */
+:host {
+    display: block;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #F5F9F7 0%, #E2F0E9 40%, #8FD1B3 100%);
+}
+
+.page-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #F5F9F7 0%, #E2F0E9 40%, #8FD1B3 100%);
+}
+
 .scrollable {
     overflow-y:scroll;
 }

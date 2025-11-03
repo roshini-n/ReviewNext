@@ -3,6 +3,10 @@ import { provideRouter } from '@angular/router';
 import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideStorage, getStorage } from '@angular/fire/storage';
+import { provideHttpClient } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -20,18 +24,25 @@ const firebaseConfig = {
   measurementId: "G-84SCQEN0M4"
 };
 
-export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }),
 
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    ([
+    provideHttpClient(),
+    provideAnimations(),
+    provideNativeDateAdapter(),
+    [
       provideFirebaseApp(() => initializeApp(firebaseConfig)),
       provideFirestore(() => getFirestore()),
-      provideAuth(() => getAuth())
-    ]), provideAnimationsAsync(), providePrimeNG({
+      provideAuth(() => getAuth()),
+      provideStorage(() => getStorage())
+    ],
+    provideAnimationsAsync(),
+    providePrimeNG({
       theme: {
-          preset: Aura
+        preset: Aura
       }
-    }),
+    }), provideAnimationsAsync()
   ],
 };

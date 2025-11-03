@@ -54,6 +54,7 @@ export class LogGamePopupComponent {
   private route = inject(ActivatedRoute);
 
   @Output() logUpdated: EventEmitter<void> = new EventEmitter<void>();
+  @Output() reviewUpdated: EventEmitter<any> = new EventEmitter<any>();
 
   logForm: FormGroup;
   rating: number = 0;
@@ -80,7 +81,6 @@ export class LogGamePopupComponent {
       dateStarted: new FormControl(data.log?.dateStarted || null),
       dateCompleted: new FormControl(data.log?.dateCompleted || null),
       review: new FormControl(data.log?.review || '', [
-        Validators.minLength(10),
         Validators.maxLength(500),
       ]),
       isReplay: new FormControl(data.log?.isReplay || false),
@@ -100,6 +100,12 @@ export class LogGamePopupComponent {
   async onSubmitClick(): Promise<void> {
     const currentUser = await this.authService.getUid();
 
+    console.log('=== GAME LOG DEBUG ===');
+    console.log('Current User ID:', currentUser);
+    console.log('Game ID:', this.gameId);
+    console.log('Rating:', this.rating);
+    console.log('Form Data:', this.logForm.value);
+
     if (!currentUser) {
       console.error('User ID is not available.');
       alert('Please log in to review a game!');
@@ -115,7 +121,6 @@ export class LogGamePopupComponent {
       this.username = this.authService.getUsername() || '';
     }
     if (this.data.log?.gameId){
-
       const updatedLog = {
         id: this.data.log.id,
         dateStarted: this.logForm.value.dateStarted,
@@ -127,11 +132,62 @@ export class LogGamePopupComponent {
 
       if (this.data.log.id) {
         this.gameLogSevice.updateGameLog(this.data.log.id, updatedLog).subscribe(() => {
-          this.dialogRef.close();
-          this.snackBar.open('Game log updated successfully', 'Close', {
-            duration: 2000,
-          });
-          this.logUpdated.emit(); // Emit the event
+          // Update or create review if rating or review text is provided
+          if ((this.rating > 0 || this.logForm.value.review) && this.data.log?.gameId) {
+            const reviewData = {
+              gameId: this.data.log.gameId,
+              userId: currentUser,
+              rating: this.rating || 0,
+              reviewText: this.logForm.value.review || '',
+              username: this.username,
+              datePosted: new Date()
+            };
+
+            // Check if review already exists for this user and game
+            this.reviewService.hasUserReviewedGame(this.data.log.gameId).subscribe({
+              next: (hasReviewed) => {
+                if (hasReviewed && this.data.log?.gameId) {
+                  // Find and update existing review
+                  this.reviewService.getReviewsByGameId(this.data.log.gameId).subscribe({
+                    next: (reviews) => {
+                      const userReview = reviews.find(r => r.userId === currentUser);
+                      if (userReview && userReview.id) {
+                        this.reviewService.updateReview(userReview.id, reviewData).subscribe({
+                          next: () => {
+                            const updatedReview = { ...userReview, ...reviewData };
+                            this.reviewUpdated.emit(updatedReview);
+                            this.dialogRef.close();
+                            this.snackBar.open('Game log and review updated successfully', 'Close', {
+                              duration: 2000,
+                            });
+                            this.logUpdated.emit();
+                          }
+                        });
+                      }
+                    }
+                  });
+                } else {
+                  // Create new review
+                  this.reviewService.addReview(reviewData).subscribe({
+                    next: (createdReview) => {
+                      this.reviewUpdated.emit(createdReview);
+                      this.dialogRef.close();
+                      this.snackBar.open('Game log updated and review added', 'Close', {
+                        duration: 2000,
+                      });
+                      this.logUpdated.emit();
+                    }
+                  });
+                }
+              }
+            });
+          } else {
+            this.dialogRef.close();
+            this.snackBar.open('Game log updated successfully', 'Close', {
+              duration: 2000,
+            });
+            this.logUpdated.emit();
+          }
         });
       } else {
         console.error('Game log ID is missing.');
@@ -140,7 +196,12 @@ export class LogGamePopupComponent {
         });
       }
     }
-    else{
+    else {
+      if (!this.logForm.valid) {
+        this.snackBar.open('Please fill in all required fields', 'Close', { duration: 2000 });
+        return;
+      }
+
       this.gameLogSevice.addGameLog({
         ...this.logForm.value,
         gameId: this.gameId,
@@ -148,29 +209,55 @@ export class LogGamePopupComponent {
         startDate: this.logForm.value.dateStarted,
         userId: currentUser,
         rating: this.rating,
+      }).subscribe({
+        next: () => {
+          // Create a review if rating or review text is provided
+          if (this.rating > 0 || this.logForm.value.review) {
+            const reviewData = {
+              gameId: this.gameId,
+              userId: currentUser,
+              rating: this.rating || 0,
+              reviewText: this.logForm.value.review || '',
+              username: this.username,
+              datePosted: new Date()
+            };
+
+            this.reviewService.addReview(reviewData).subscribe({
+              next: (createdReview) => {
+                console.log('Review created:', createdReview);
+                this.reviewUpdated.emit(createdReview);
+                this.dialogRef.close();
+                this.snackBar.open('Game logged and reviewed successfully', 'Close', {
+                  duration: 2000,
+                });
+                this.logUpdated.emit();
+              },
+              error: (reviewError: any) => {
+                console.error('Error creating review:', reviewError);
+                // Still close dialog as game log was successful
+                this.dialogRef.close();
+                this.snackBar.open('Game logged, but review failed to save', 'Close', {
+                  duration: 3000,
+                });
+                this.logUpdated.emit();
+              }
+            });
+          } else {
+            this.dialogRef.close();
+            this.snackBar.open('Game logged successfully', 'Close', {
+              duration: 2000,
+            });
+            this.logUpdated.emit();
+          }
+        },
+        error: (error: any) => {
+          console.error('Error saving game log:', error);
+          const errorMessage = error?.message || 'Failed to add log';
+          this.snackBar.open(`Error: ${errorMessage}`, 'Close', { 
+            duration: 5000 
+          });
+        }
       });
-
-      this.reviewService.addReview({
-        gameId: this.gameId,
-        username: this.username,
-        userId: currentUser,
-        reviewText: this.logForm.value.review,
-        datePosted: new Date(),
-        gameTitle: this.data.game?.title || '',
-        rating: this.rating,
-      });
-
-      if (this.logForm.valid) {
-        this.dialogRef.close({
-          ...this.logForm.value,
-          gameId: this.gameId,
-          rating: this.rating,
-        });
-
-        this.snackBar.open('Game logged successfully', 'Close', {
-          duration: 2000,
-        });
-      }
     }
   }
 

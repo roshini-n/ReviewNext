@@ -1,0 +1,83 @@
+/* Preset Avatars Section */
+.preset-section {
+  padding: 8px 0;
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.avatar-option {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 3px solid transparent;
+}
+
+.avatar-option:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+}
+
+.avatar-option.selected {
+  border-color: #00e5ff;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+}
+
+.avatar-option img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.avatar-option:hover img {
+  transform: scale(1.1);
+}
+
+/* Error Message */
+.error-message {
+  color: #ff4444;
+  text-align: center;
+  margin-top: 16px;
+  padding: 12px;
+  background: rgba(255, 68, 68, 0.1);
+  border-radius: 8px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Dialog Actions */
+mat-dialog-actions {
+  padding-top: 16px;
+  gap: 8px;
+}
+
+.mat-mdc-dialog-title {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+button[mat-raised-button] {
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+mat-spinner {
+  margin-right: 8px;
+}

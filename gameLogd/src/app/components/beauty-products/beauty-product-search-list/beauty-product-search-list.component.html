@@ -1,0 +1,39 @@
+<div class="game-container">
+  <div *ngIf="loading" class="loading">
+    <div class="loader"></div>
+  </div>
+
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error && products.length === 0" class="no-results">
+    <p>{{ emptyMessage }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error && products.length > 0" class="game-grid">
+    <div *ngFor="let p of products" class="game-card">
+      <a [routerLink]="['/beauty-products']" class="game-link">
+        <div class="game-image-container">
+          <img
+            *ngIf="p.imageUrl"
+            [src]="p.imageUrl"
+            [alt]="p.name"
+            class="game-image"
+          />
+          <img
+            *ngIf="!p.imageUrl"
+            src="assets/images/placeholder.png"
+            alt="No image available"
+            class="game-image"
+          />
+        </div>
+        <div class="game-details">
+          <h3 class="game-title">{{ p.name }}</h3>
+          <p *ngIf="p.brand" class="game-developer">{{ p.brand }}</p>
+          <p *ngIf="p.rating" class="game-rating">{{ p.rating }}/5</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>

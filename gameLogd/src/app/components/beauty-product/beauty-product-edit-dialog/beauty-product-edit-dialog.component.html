@@ -1,0 +1,163 @@
+<h2 mat-dialog-title>Edit Beauty Product</h2>
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <!-- Instructions Section -->
+    <div class="instructions-section">
+      <div class="instructions-header" (click)="toggleInstructions()">
+        <mat-icon>{{ showInstructions ? 'expand_less' : 'expand_more' }}</mat-icon>
+        <span>Allowed Brands & Product Types</span>
+      </div>
+      <div class="instructions-content" *ngIf="showInstructions">
+        <p class="instructions-note">Please only add products from the following brands and product types:</p>
+        <div class="brand-list">
+          <div class="brand-item">
+            <strong>maybelline:</strong> foundation, lipstick, mascara, blush, bronzer, eyeshadow, eyeliner, nail_polish
+          </div>
+          <div class="brand-item">
+            <strong>covergirl:</strong> foundation, lipstick, mascara, blush, bronzer, eyeliner, eyeshadow
+          </div>
+          <div class="brand-item">
+            <strong>revlon:</strong> foundation, lipstick, lip_liner, mascara, blush, eyeliner, nail_polish
+          </div>
+          <div class="brand-item">
+            <strong>l'oreal:</strong> foundation, lipstick, mascara, eyeliner, eyeshadow, blush
+          </div>
+          <div class="brand-item">
+            <strong>nyx:</strong> foundation, lipstick, blush, eyeshadow, bronzer, eyeliner
+          </div>
+          <div class="brand-item">
+            <strong>e.l.f.:</strong> foundation, lipstick, blush, bronzer, eyeshadow, eyeliner
+          </div>
+          <div class="brand-item">
+            <strong>wet n wild:</strong> foundation, lipstick, blush, bronzer, eyeshadow, eyeliner, nail_polish
+          </div>
+          <div class="brand-item">
+            <strong>clinique:</strong> foundation, lipstick, blush, eyeshadow
+          </div>
+          <div class="brand-item">
+            <strong>almay:</strong> foundation, lipstick, mascara, eyeliner, eyeshadow
+          </div>
+          <div class="brand-item">
+            <strong>benefit:</strong> bronzer, blush, eyeliner, eyebrow, foundation, mascara
+          </div>
+          <div class="brand-item">
+            <strong>essie:</strong> nail_polish
+          </div>
+          <div class="brand-item">
+            <strong>butter london:</strong> nail_polish, lipstick
+          </div>
+          <div class="brand-item">
+            <strong>milani:</strong> foundation, blush, lipstick, bronzer, eyeshadow
+          </div>
+          <div class="brand-item">
+            <strong>physicians formula:</strong> foundation, blush, bronzer, eyeliner, eyeshadow
+          </div>
+          <div class="brand-item">
+            <strong>smashbox:</strong> foundation, lipstick, eyeshadow, eyeliner
+          </div>
+          <div class="brand-item">
+            <strong>stila:</strong> lipstick, foundation, eyeshadow, eyeliner
+          </div>
+          <div class="brand-item">
+            <strong>colourpop:</strong> lipstick, eyeshadow, lip_liner, foundation, blush
+          </div>
+          <div class="brand-item">
+            <strong>burt's bees:</strong> lipstick, eyeshadow, blush
+          </div>
+          <div class="brand-item">
+            <strong>sally b's skin yummies:</strong> foundation, blush, lipstick
+          </div>
+          <div class="brand-item">
+            <strong>pure anada:</strong> foundation, blush, bronzer, lipstick, eyeshadow, eyeliner
+          </div>
+          <div class="brand-item">
+            <strong>zorah:</strong> foundation, blush
+          </div>
+          <div class="brand-item">
+            <strong>annabelle:</strong> eyeliner, eyeshadow, mascara, lipstick
+          </div>
+        </div>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <br>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Brand</mat-label>
+      <input matInput formControlName="brand" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Category</mat-label>
+      <input matInput formControlName="category" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Price</mat-label>
+      <input matInput type="number" formControlName="price" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="4"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Image URL</mat-label>
+      <input matInput formControlName="imageUrl">
+    </mat-form-field>
+
+    <!-- <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Skin Concerns</mat-label>
+      <mat-chip-grid #skinConcernChipGrid>
+        <mat-chip-row *ngFor="let concern of productForm.get('skinConcerns')?.value"
+                   (removed)="removeSkinConcern(concern)">
+          {{concern}}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+      </mat-chip-grid>
+      <input placeholder="New skin concern..."
+             [matChipInputFor]="skinConcernChipGrid"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             (matChipInputTokenEnd)="addSkinConcern($event)">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Benefits</mat-label>
+      <mat-chip-grid #benefitChipGrid>
+        <mat-chip-row *ngFor="let benefit of productForm.get('benefits')?.value"
+                   (removed)="removeBenefit(benefit)">
+          {{benefit}}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+      </mat-chip-grid>
+      <input placeholder="New benefit..."
+             [matChipInputFor]="benefitChipGrid"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             (matChipInputTokenEnd)="addBenefit($event)">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>How to Use</mat-label>
+      <textarea matInput formControlName="howToUse" rows="4"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Ingredients</mat-label>
+      <textarea matInput formControlName="ingredients" rows="4"></textarea>
+    </mat-form-field> -->
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!productForm.valid">Save</button>
+  </mat-dialog-actions>
+</form>
