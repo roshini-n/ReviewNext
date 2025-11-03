@@ -13,6 +13,8 @@ import {
   limit,
   QueryConstraint,
   documentId,
+  updateDoc,
+  deleteDoc,
 } from '@angular/fire/firestore';
 import { Observable, from, of, throwError } from 'rxjs';
 import { Game } from '../models/game.model';
@@ -100,37 +102,9 @@ export class GameFirebaseService {
     };
   }
 
-  addGame(
-    title: string,
-    platforms: string[],
-    developer: string,
-    description: string,
-    releaseDate: string,
-    publisher: string,
-    genres: String[],
-    imageUrl: string,
-    rating: number,
-    numRatings: number,
-    totalRatingScore: number,
-  ): Observable<String> {
-    const gameToCreate = {
-      title,
-      platforms,
-      developer,
-      description,
-      releaseDate,
-      publisher,
-      genres,
-      imageUrl,
-      rating,
-      numRatings,
-      totalRatingScore
-    };
-    const promise = addDoc(this.gamesCollection, gameToCreate).then(
-      (response) => response.id
-    );
-    // converts our promise to an observable
-    return from(promise);
+  addGame(game: Omit<Game, 'id'>): Observable<void> {
+    const gamesRef = collection(this.firestore, 'games');
+    return from(addDoc(gamesRef, game).then(() => void 0));
   }
 
   // search for games by title, currenlty grabbing all games and filtering client side. we dont want this. going to update it.
@@ -154,5 +128,30 @@ export class GameFirebaseService {
     return collectionData(gamesQuery, { idField: 'id' }).pipe(
       map((games) => games.map((game) => this.mapToGameModel(game as any)))
     );
+  }
+
+  updateGame(game: Game): Observable<void> {
+    if (!game.id) {
+      return throwError(() => new Error('Game ID is required for update'));
+    }
+    const gameDoc = doc(this.firestore, `games/${game.id}`);
+    return from(updateDoc(gameDoc, {
+      title: game.title,
+      description: game.description,
+      platforms: game.platforms,
+      releaseDate: game.releaseDate,
+      developer: game.developer,
+      publisher: game.publisher,
+      rating: game.rating,
+      imageUrl: game.imageUrl,
+      playersPlayed: game.playersPlayed,
+      numRatings: game.numRatings,
+      totalRatingScore: game.totalRatingScore
+    }));
+  }
+
+  deleteGame(id: string): Observable<void> {
+    const gameRef = doc(this.firestore, 'games', id);
+    return from(deleteDoc(gameRef));
   }
 }

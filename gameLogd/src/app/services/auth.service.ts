@@ -14,6 +14,8 @@ import { Observable, from } from 'rxjs';
 import { UserInterface } from '../user.interface';
 import { Firestore, doc, setDoc } from '@angular/fire/firestore';
 import { User } from '../models/user.model';
+import { UserActivityService } from './user-activity.service';
+import { RoutePersistenceService } from './route-persistence.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +25,25 @@ export class AuthService {
   firestore = inject(Firestore);
   user$ = user(this.firebaseAuth);
   currentUserSig = signal<UserInterface | null | undefined>(undefined);
+
+  constructor(
+    private userActivityService: UserActivityService,
+    private routePersistenceService: RoutePersistenceService
+  ) {
+    // Set up auto-logout listener
+    this.userActivityService.userLoggedOut$.subscribe(() => {
+      this.logout().subscribe();
+    });
+
+    // Start activity monitoring when user logs in
+    this.user$.subscribe(user => {
+      if (user) {
+        this.userActivityService.initializeActivityMonitoring();
+      } else {
+        this.userActivityService.stopActivityMonitoring();
+      }
+    });
+  }
 
   register(
     email: string,
@@ -62,7 +83,13 @@ export class AuthService {
       this.firebaseAuth,
       email,
       password
-    ).then(() => {});
+    ).then(() => {
+      // After successful login, redirect to the last visited route if exists
+      const lastRoute = this.routePersistenceService.getLastRoute();
+      if (lastRoute && lastRoute !== '/') {
+        this.routePersistenceService.redirectToLastRoute();
+      }
+    });
     return from(promise);
   }
 
@@ -72,7 +99,10 @@ export class AuthService {
 }
 
   logout(): Observable<void> {
-    const promise = signOut(this.firebaseAuth);
+    const promise = signOut(this.firebaseAuth).then(() => {
+      // Stop activity monitoring on logout
+      this.userActivityService.stopActivityMonitoring();
+    });
     return from(promise);
   }
 

@@ -1,0 +1,10 @@
+<div class="search-container">
+  <h2 *ngIf="searchQuery" class="search-title">Movie results for "{{ searchQuery }}"</h2>
+
+  <app-movie-search-list [movies]="results" [loading]="isLoading" [error]="error"></app-movie-search-list>
+
+  <div *ngIf="isLoading" class="loading">Loading...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+</div>
+
+

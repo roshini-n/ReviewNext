@@ -7,7 +7,7 @@
     [games]="searchResults"
     [loading]="isLoading"
     [error]="error"
-    [emptyMessage]="'No games found matching \'' + searchQuery + '\''"
+    emptyMessage="No games found matching '{{ searchQuery }}'"
   >
   </app-game-search-list>
 </div>

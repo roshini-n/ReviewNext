@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { GameFirebaseService } from '../../services/gameFirebase.service';
 import { Game } from '../../models/game.model';
 import { GameSearchListComponent } from '../game-search-list/game-search-list.component';
+// Game-only search page. Category-specific pages exist for books and movies.
 
 @Component({
   selector: 'app-search',
@@ -37,6 +38,7 @@ export class SearchComponent implements OnInit {
   performSearch() {
     if (!this.searchQuery.trim()) {
       this.searchResults = [];
+      
       return;
     }
 
@@ -44,16 +46,54 @@ export class SearchComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    this.gameFirebaseService.searchGames(this.searchQuery, 'title').subscribe({
-      next: (results) => {
-        this.searchResults = results;
+    const normalizedQuery = this.searchQuery.toLowerCase().replace(/\s+/g, '');
+
+    this.gameFirebaseService.getGames().subscribe({
+      next: (results: Game[]) => {
+        const exactMatches = results.filter((game: Game) => {
+          const normalizedTitle = game.title.toLowerCase().replace(/\s+/g, '');
+          return normalizedTitle.includes(normalizedQuery);
+        });
+
+        if (exactMatches.length > 0) {
+          this.searchResults = exactMatches;
+        } else {
+          const similarGames = results
+            .map((game) => {
+              const title = game.title.toLowerCase();
+              const score = this.getSimilarityScore(title, normalizedQuery);
+              return { game, score };
+            })
+            .filter(entry => entry.score > 0.3)
+            .sort((a, b) => b.score - a.score)
+            .map(entry => entry.game);
+
+          this.searchResults = similarGames;
+
+          if (similarGames.length === 0) {
+            this.error = `No games found matching "${this.searchQuery}", and no similar results found.`;
+          }
+        }
+
         this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error searching games:', err);
         this.error = 'Failed to search games. Please try again.';
         this.isLoading = false;
-      },
+      }
     });
+
   }
+
+  getSimilarityScore(title: string, query: string): number {
+    let matches = 0;
+    const titleSet = new Set(title);
+    for (const char of query) {
+      if (titleSet.has(char)) matches++;
+    }
+    return matches / query.length;
+  }
+
+  
 }
