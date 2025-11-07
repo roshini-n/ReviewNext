@@ -20,8 +20,8 @@ import { CommonModule } from '@angular/common';
     MatButtonModule, 
     MatIconModule, 
     MatToolbarModule, 
-  MatMenuModule,
-  MatDividerModule,
+    MatMenuModule,
+    MatDividerModule,
     RouterLink, 
     FormsModule
   ],
@@ -38,48 +38,26 @@ export class NavbarComponent implements OnInit {
   isUserDashboard: boolean = false;
   isHomePage: boolean = false;
   isAdmin: boolean = false;
-
-<<<<<<< Updated upstream
-  constructor(public router: Router, private themeService: ThemeService) {
-=======
-  private readonly adminEmails = [
-    'admin@example.com',
-    'roshininaguru12@gmail.com',
-    'admin@reviewnext.com',
-    'super@admin.com'
-  ];
+  isMobileMenuOpen: boolean = false;
 
   constructor(private router: Router, private themeService: ThemeService) {
->>>>>>> Stashed changes
-    // Use effect to watch for auth state changes
     effect(() => {
       const user = this.authService.currentUserSig();
       if (user) {
         this.loadUserAvatar();
-        this.checkAdminStatus();
       } else {
         this.avatarUrl = 'assets/default-avatar.png';
         this.isAdmin = false;
       }
     });
 
-    // Subscribe to router events to detect current page
-    this.router.events.subscribe(() => {
-      this.checkCurrentRoute();
-    });
+    this.router.events.subscribe(() => this.checkCurrentRoute());
   }
 
   ngOnInit() {
     this.loadUserAvatar();
-    this.checkAdminStatus();
-    // Check current route on initialization
     this.checkCurrentRoute();
-  }
-
-  private checkAdminStatus() {
-    this.adminService.isAdmin().subscribe(isAdmin => {
-      this.isAdmin = isAdmin;
-    });
+    this.adminService.isAdmin().subscribe(isAdmin => this.isAdmin = isAdmin);
   }
 
   private checkCurrentRoute() {
@@ -102,71 +80,33 @@ export class NavbarComponent implements OnInit {
   }
 
   onSearch() {
-    if (this.searchQuery.trim()) {
-      const url = this.router.url.split('?')[0];
-      if (url === '/' || url.startsWith('/dashboard')) {
-        this.router.navigate(['/search-all'], { queryParams: { q: this.searchQuery } });
-      } else if (url.startsWith('/books') || url.startsWith('/book-search')) {
-        this.router.navigate(['/book-search'], { queryParams: { q: this.searchQuery } });
-      } else if (url.startsWith('/movies') || url.startsWith('/movie-search')) {
-        this.router.navigate(['/movie-search'], { queryParams: { q: this.searchQuery } });
-      } else if (url.startsWith('/beauty-products') || url.startsWith('/beauty-product-search')) {
-        this.router.navigate(['/beauty-product-search'], { queryParams: { q: this.searchQuery } });
-      } else if (url.startsWith('/web-series') || url.startsWith('/web-series-search')) {
-        this.router.navigate(['/web-series-search'], { queryParams: { q: this.searchQuery } });
-      } else if (url.startsWith('/electronic-gadgets') || url.startsWith('/electronic-gadget-search')) {
-        this.router.navigate(['/electronic-gadget-search'], { queryParams: { q: this.searchQuery } });
-      } else if (url.startsWith('/games') || url.startsWith('/search')) {
-        this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
-      } else {
-        this.router.navigate(['/search-all'], { queryParams: { q: this.searchQuery } });
-      }
-      this.searchQuery = '';
-    }
+    if (!this.searchQuery.trim()) return;
+    const url = this.router.url.split('?')[0];
+    const params = { queryParams: { q: this.searchQuery } };
+    if (url === '/' || url.startsWith('/dashboard')) this.router.navigate(['/search-all'], params);
+    else if (url.startsWith('/books')) this.router.navigate(['/book-search'], params);
+    else if (url.startsWith('/movies')) this.router.navigate(['/movie-search'], params);
+    else if (url.startsWith('/beauty-products')) this.router.navigate(['/beauty-product-search'], params);
+    else if (url.startsWith('/web-series')) this.router.navigate(['/web-series-search'], params);
+    else if (url.startsWith('/electronic-gadgets')) this.router.navigate(['/electronic-gadget-search'], params);
+    else if (url.startsWith('/games') || url.startsWith('/search')) this.router.navigate(['/search'], params);
+    else this.router.navigate(['/search-all'], params);
+    this.searchQuery = '';
   }
 
   logout() {
     this.authService.logout();
     this.router.navigateByUrl('/');
-  }
-
-  // Switch to dark theme
-  switchToDarkTheme() {
-    this.themeService.setTheme('dark');
-  }
-
-  // Switch to light theme
-  switchToLightTheme() {
-    this.themeService.setTheme('light');
-  }
-
-  // Switch to custom theme
-  switchToCustomTheme() {
-    this.themeService.setTheme('custom');
-  }
-<<<<<<< Updated upstream
-=======
-
-  // Mobile menu methods
-  toggleMobileMenu() {
-    this.isMobileMenuOpen = !this.isMobileMenuOpen;
-  }
-
-  closeMobileMenu() {
     this.isMobileMenuOpen = false;
   }
 
-  onMobileMenuItemClick() {
-    this.closeMobileMenu();
-  }
+  switchToDarkTheme() { this.themeService.setTheme('dark'); }
+  switchToLightTheme() { this.themeService.setTheme('light'); }
+  switchToCustomTheme() { this.themeService.setTheme('custom'); }
 
-  isAdmin(): boolean {
-    const user = this.authService.currentUserSig();
-    return user?.email ? this.adminEmails.includes(user.email) : false;
-  }
+  toggleMobileMenu() { this.isMobileMenuOpen = !this.isMobileMenuOpen; }
+  closeMobileMenu() { this.isMobileMenuOpen = false; }
+  onMobileMenuItemClick() { this.closeMobileMenu(); }
 
-  navigateToAdmin() {
-    this.router.navigate(['/admin']);
-  }
->>>>>>> Stashed changes
+  navigateToAdmin() { this.router.navigate(['/admin']); this.closeMobileMenu(); }
 }

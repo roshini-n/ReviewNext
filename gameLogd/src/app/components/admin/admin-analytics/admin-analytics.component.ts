@@ -57,8 +57,15 @@ export class AdminAnalyticsComponent implements OnInit {
   private async loadAnalytics() {
     try {
       this.loading.set(true);
-      const analyticsData = await this.adminService.getAnalytics();
-      this.analytics.set(analyticsData);
+      const [productStats, dashboardStats] = await Promise.all([
+        this.adminService.getProductStats(),
+        this.adminService.getDashboardStats()
+      ]);
+      this.analytics.set({
+        users: { newUsersLast30Days: dashboardStats.newUsersToday, registrationTrend: {} },
+        reviews: { reviewsLast30Days: dashboardStats.reviewsToday, reviewTrend: {}, reviewsByCategory: {} },
+        products: productStats
+      });
     } catch (error) {
       console.error('Error loading analytics:', error);
     } finally {

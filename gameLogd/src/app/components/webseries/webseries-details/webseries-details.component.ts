@@ -59,10 +59,7 @@ import { AdminConfirmDialogComponent } from '../../admin/admin-confirm-dialog/ad
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatAutocompleteModule,
-    GeneralDeleteButtonComponent,
-    WebSeriesEditDialogComponent,
-    LogWebSeriesPopupComponent
+    MatAutocompleteModule
   ],
   templateUrl: './webseries-details.component.html',
   styleUrls: ['./webseries-details.component.css']
@@ -73,10 +70,10 @@ export class WebSeriesDetailsComponent implements OnInit {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   public authService = inject(AuthService);
-  private webSeriesFirebaseService = inject(WebSeriesFirebaseService);
-  private firestore = inject(Firestore);
-  private seriesReviewService = inject(WebSeriesReviewService);
-  private reviewEventService = inject(ReviewEventService);
+  private webSeriesFirebaseService: WebSeriesFirebaseService = inject(WebSeriesFirebaseService);
+  private firestore: Firestore = inject(Firestore);
+  private seriesReviewService: WebSeriesReviewService = inject(WebSeriesReviewService);
+  private reviewEventService: ReviewEventService = inject(ReviewEventService);
 
   webSeries?: WebSeries;
   reviews: Review[] = [];
@@ -84,10 +81,13 @@ export class WebSeriesDetailsComponent implements OnInit {
   error: string | null = null;
   currentUserId: string | null = null;
   seriesId: string | null = null;
+  isAdmin: boolean = false;
 
   async ngOnInit() {
     this.seriesId = this.route.snapshot.paramMap.get('id');
     this.currentUserId = await this.authService.getUid();
+    const user = this.authService.currentUserSig();
+    this.isAdmin = isAdminEmail(user?.email);
 
     if (this.seriesId) {
       this.loadSeriesDetails();
@@ -264,7 +264,7 @@ export class WebSeriesDetailsComponent implements OnInit {
     if (!review || !review.id) return;
 
     const isOwner = review.userId === this.currentUserId;
-    const admin = this.isAdmin();
+    const admin = this.isAdmin;
     if (!isOwner && !admin) {
       this.snackBar.open('You can only delete your own reviews', 'Close', { duration: 3000 });
       return;
@@ -295,10 +295,5 @@ export class WebSeriesDetailsComponent implements OnInit {
         }
       });
     });
-  }
-
-  isAdmin(): boolean {
-    const user = this.authService.currentUserSig();
-    return isAdminEmail(user?.email);
   }
 }

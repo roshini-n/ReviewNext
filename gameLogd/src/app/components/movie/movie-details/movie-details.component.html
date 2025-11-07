@@ -53,19 +53,8 @@
       </div>
     </mat-tab>
     <mat-tab label="Reviews">
-<<<<<<< Updated upstream
-      <div class="tab-content">
-        <!-- Reviews will be implemented here -->
-      </div>
-    </mat-tab>
-    <mat-tab label="Logs">
-      <div class="tab-content">
-        <!-- Logs will be implemented here -->
-=======
       <div class="tab-content reviews-content">
-        <div *ngIf="reviews.length === 0" class="no-reviews">
-          No reviews yet. Be the first to review this movie!
-        </div>
+        <div *ngIf="reviews.length === 0" class="no-reviews">No reviews yet. Be the first to review this movie!</div>
         <div *ngFor="let review of reviews" class="review-item">
           <mat-card>
             <mat-card-header>
@@ -75,35 +64,24 @@
             <mat-card-content>
               <p>{{review.reviewText}}</p>
               <div class="review-rating">
-                <mat-icon *ngFor="let star of [1,2,3,4,5]" 
-                         [class.filled]="star <= review.rating">
+                <mat-icon *ngFor="let star of [1,2,3,4,5]" [class.filled]="star <= review.rating">
                   {{star <= review.rating ? 'star' : 'star_border'}}
                 </mat-icon>
               </div>
             </mat-card-content>
             @if (authService.currentUserSig() && review.userId === currentUserId) {
             <mat-card-actions>
-              <button mat-button color="primary" (click)="editReview(review)">
-                <mat-icon>edit</mat-icon>
-                Edit
-              </button>
-              <button mat-button color="warn" (click)="deleteReview(review)">
-                <mat-icon>delete</mat-icon>
-                Delete
-              </button>
+              <button mat-button color="primary" (click)="editReview(review)"><mat-icon>edit</mat-icon> Edit</button>
+              <button mat-button color="warn" (click)="deleteReview(review)"><mat-icon>delete</mat-icon> Delete</button>
             </mat-card-actions>
             }
             @if (authService.currentUserSig() && isAdmin()) {
               <mat-card-actions>
-                <button mat-button color="warn" (click)="deleteReview(review)">
-                  <mat-icon>delete_forever</mat-icon>
-                  Admin Delete
-                </button>
+                <button mat-button color="warn" (click)="deleteReview(review)"><mat-icon>delete_forever</mat-icon> Admin Delete</button>
               </mat-card-actions>
             }
           </mat-card>
         </div>
->>>>>>> Stashed changes
       </div>
     </mat-tab>
   </mat-tab-group>
