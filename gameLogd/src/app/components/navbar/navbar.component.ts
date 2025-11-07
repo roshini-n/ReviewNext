@@ -31,6 +31,7 @@ export class NavbarComponent implements OnInit {
   isLoginOrRegister: boolean = false;
   isUserDashboard: boolean = false;
   isHomePage: boolean = false;
+  isMobileMenuOpen: boolean = false;
 
   constructor(private router: Router, private themeService: ThemeService) {
     // Use effect to watch for auth state changes
@@ -119,5 +120,18 @@ export class NavbarComponent implements OnInit {
   // Switch to custom theme
   switchToCustomTheme() {
     this.themeService.setTheme('custom');
+  }
+
+  // Mobile menu methods
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
+  }
+
+  onMobileMenuItemClick() {
+    this.closeMobileMenu();
   }
 }
