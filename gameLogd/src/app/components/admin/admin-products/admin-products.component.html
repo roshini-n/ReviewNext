@@ -1,0 +1,159 @@
+<div class="admin-products-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>inventory</mat-icon>
+        Product Management
+      </mat-card-title>
+      <mat-card-subtitle>
+        Manage products across all categories
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Product Stats Overview -->
+      <div class="stats-overview">
+        <h3>Product Statistics</h3>
+        <div class="stats-grid">
+          <mat-card *ngFor="let category of categories" class="stat-card" 
+                    [class.selected]="selectedCategory === category.value"
+                    (click)="selectedCategory = category.value; onCategoryChange()">
+            <mat-card-content>
+              <div class="stat-header">
+                <mat-icon [color]="selectedCategory === category.value ? 'primary' : ''">
+                  {{ category.icon }}
+                </mat-icon>
+                <span class="stat-label">{{ category.label }}</span>
+              </div>
+              <div class="stat-number">{{ getStatsForCategory(category.value) }}</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Category Selection and Search -->
+      <div class="filter-section">
+        <mat-form-field appearance="outline" class="category-field">
+          <mat-label>Category</mat-label>
+          <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onCategoryChange()">
+            <mat-option *ngFor="let category of categories" [value]="category.value">
+              <mat-icon>{{ category.icon }}</mat-icon>
+              {{ category.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search {{ getCategoryLabel(selectedCategory) }}...</mat-label>
+          <input matInput 
+                 [(ngModel)]="searchTerm" 
+                 (input)="onSearch()"
+                 [placeholder]="'Search by title, description, or ' + (selectedCategory === 'games' ? 'developer' : selectedCategory === 'books' ? 'author' : 'brand')">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        
+        <div class="product-count">
+          <mat-chip-set>
+            <mat-chip>Total: {{ products().length }}</mat-chip>
+            <mat-chip>Showing: {{ filteredProducts().length }}</mat-chip>
+          </mat-chip-set>
+        </div>
+      </div>
+
+      <!-- Products Table -->
+      <div class="table-container" *ngIf="!loading(); else loadingTemplate">
+        <table mat-table [dataSource]="filteredProducts()" class="products-table" matSort>
+          
+          <!-- Image Column -->
+          <ng-container matColumnDef="image">
+            <th mat-header-cell *matHeaderCellDef>Image</th>
+            <td mat-cell *matCellDef="let product">                <img [src]="getProductImage(product)" 
+                   [alt]="getProductTitle(product)" 
+                   class="product-image"
+                   (error)="onImageError($event)">
+            </td>
+          </ng-container>
+
+          <!-- Title Column -->
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+            <td mat-cell *matCellDef="let product">
+              <div class="product-title">
+                <strong>{{ getProductTitle(product) }}</strong>
+                <span class="product-id">ID: {{ product.id }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Details Column -->
+          <ng-container matColumnDef="details">
+            <th mat-header-cell *matHeaderCellDef>Details</th>
+            <td mat-cell *matCellDef="let product">
+              <div class="product-details">
+                {{ getProductDetails(product) }}
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Rating Column -->
+          <ng-container matColumnDef="rating">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Rating</th>
+            <td mat-cell *matCellDef="let product">
+              <div class="rating-cell">
+                {{ getProductRating(product) }}
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Reviews Column -->
+          <ng-container matColumnDef="reviews">
+            <th mat-header-cell *matHeaderCellDef>Reviews</th>
+            <td mat-cell *matCellDef="let product">
+              <span class="reviews-count">{{ product.numRatings || 0 }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let product">
+              <div class="action-buttons">
+                <button mat-icon-button 
+                        matTooltip="View Product"
+                        color="primary"
+                        (click)="viewProduct(product)">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                
+                <button mat-icon-button 
+                        (click)="deleteProduct(product)"
+                        matTooltip="Delete Product"
+                        color="warn">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <!-- Empty State -->
+        <div *ngIf="filteredProducts().length === 0" class="empty-state">
+          <mat-icon>{{ getCategoryIcon(selectedCategory) }}</mat-icon>
+          <h3>No {{ getCategoryLabel(selectedCategory).toLowerCase() }} found</h3>
+          <p>{{ searchTerm ? 'No products match your search criteria' : 'No products in this category yet' }}</p>
+        </div>
+      </div>
+
+      <!-- Loading Template -->
+      <ng-template #loadingTemplate>
+        <div class="loading-container">
+          <mat-spinner></mat-spinner>
+          <p>Loading {{ getCategoryLabel(selectedCategory).toLowerCase() }}...</p>
+        </div>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</div>

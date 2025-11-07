@@ -1,0 +1,134 @@
+<div class="admin-dashboard">
+  <mat-toolbar color="primary" class="admin-toolbar">
+    <button mat-icon-button (click)="sidenavOpened = !sidenavOpened">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>ReviewNext Admin Dashboard</span>
+    <span class="spacer"></span>
+    <span class="admin-email">{{ authService.currentUserSig()?.email }}</span>
+    <button mat-icon-button (click)="logout()" matTooltip="Logout">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="admin-container">
+    <mat-sidenav [opened]="sidenavOpened" mode="side" class="admin-sidenav">
+      <mat-nav-list>
+        <h3 mat-subheader>Dashboard</h3>
+        <a mat-list-item routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <mat-icon matListItemIcon>dashboard</mat-icon>
+          <span matListItemTitle>Overview</span>
+        </a>
+
+        <h3 mat-subheader>Management</h3>
+        <a mat-list-item (click)="navigateToUsers()">
+          <mat-icon matListItemIcon>people</mat-icon>
+          <span matListItemTitle>Users</span>
+        </a>
+        
+        <a mat-list-item (click)="navigateToProducts()">
+          <mat-icon matListItemIcon>inventory</mat-icon>
+          <span matListItemTitle>Products</span>
+        </a>
+
+        <h3 mat-subheader>Analytics</h3>
+        <a mat-list-item (click)="navigateToAnalytics()">
+          <mat-icon matListItemIcon>analytics</mat-icon>
+          <span matListItemTitle>Analytics</span>
+        </a>
+
+        <h3 mat-subheader>System</h3>
+        <a mat-list-item (click)="navigateToSettings()">
+          <mat-icon matListItemIcon>settings</mat-icon>
+          <span matListItemTitle>Settings</span>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="admin-content">
+      <!-- Dashboard Overview -->
+      <div class="dashboard-overview" *ngIf="router.url === '/admin'">
+        <div class="stats-cards">
+          <mat-card class="stat-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>people</mat-icon>
+                Total Users
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="stat-number">{{ dashboardStats().totalUsers }}</div>
+              <div class="stat-subtitle">+{{ dashboardStats().newUsersToday }} today</div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="stat-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>rate_review</mat-icon>
+                Total Reviews
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="stat-number">{{ dashboardStats().totalReviews }}</div>
+              <div class="stat-subtitle">+{{ dashboardStats().reviewsToday }} today</div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="stat-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>inventory</mat-icon>
+                Total Products
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="stat-number">{{ dashboardStats().totalProducts }}</div>
+              <div class="stat-subtitle">All categories</div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="stat-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>list</mat-icon>
+                User Lists
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="stat-number">{{ dashboardStats().totalLists }}</div>
+              <div class="stat-subtitle">Created by users</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <div class="quick-actions">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Quick Actions</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="action-buttons">
+                <button mat-raised-button color="primary" (click)="navigateToUsers()">
+                  <mat-icon>people</mat-icon>
+                  Manage Users
+                </button>
+                <button mat-raised-button color="warn" (click)="navigateToProducts()">
+                  <mat-icon>inventory</mat-icon>
+                  Manage Products
+                </button>
+                <button mat-raised-button (click)="navigateToAnalytics()">
+                  <mat-icon>analytics</mat-icon>
+                  View Analytics
+                </button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Router outlet for admin sub-components -->
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

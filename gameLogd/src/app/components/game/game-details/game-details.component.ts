@@ -25,7 +25,12 @@ import { GameReviewEditComponent } from '../game-review-edit/game-review-edit.co
 import { GameEditDialogComponent } from '../game-edit-dialog/game-edit-dialog.component';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+<<<<<<< Updated upstream
 import { AdminService } from '../../../services/admin.service';
+=======
+import { isAdminEmail } from '../../../utils/admin.util';
+import { AdminConfirmDialogComponent } from '../../admin/admin-confirm-dialog/admin-confirm-dialog.component';
+>>>>>>> Stashed changes
 
 @Component({
   selector: 'app-game-details',
@@ -121,6 +126,11 @@ export class GameDetailsComponent implements OnInit {
     this.getReviews();
   }
 
+  isAdmin(): boolean {
+    const user = this.authService.currentUserSig();
+    return isAdminEmail(user?.email);
+  }
+
   openLogGamePopup() {
     if (!this.authService.currentUserSig()) {
       this.snackBar.open('Please log in to add games to your log', 'Close', {
@@ -190,6 +200,7 @@ export class GameDetailsComponent implements OnInit {
 
   deleteReview(review: Review) {
     if (!review || !review.id) return;
+<<<<<<< Updated upstream
     this.reviewService.deleteReview(review.id).subscribe({
       next: () => {
         this.reviews = this.reviews.filter(r => r.id !== review.id);
@@ -197,7 +208,40 @@ export class GameDetailsComponent implements OnInit {
       error: (error) => {
         console.error('Error deleting review:', error);
         this.error = 'Failed to delete review. Please try again later.';
+=======
+    // If user is not owner and not admin, block
+    const isOwner = review.userId === this.currentUserId;
+    const admin = this.isAdmin();
+    if (!isOwner && !admin) {
+      this.snackBar.open('You can only delete your own reviews', 'Close', { duration: 3000 });
+      return;
+    }
+
+    const dialogRef = this.dialog.open(AdminConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Delete Review',
+        message: admin && !isOwner ? 'Delete this review as Admin? This cannot be undone.' : 'Are you sure you want to delete your review? This cannot be undone.',
+        confirmText: 'Delete',
+        confirmColor: 'warn'
+>>>>>>> Stashed changes
       }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (!confirmed) return;
+      this.reviewService.deleteReview(review.id).subscribe({
+        next: () => {
+          this.reviews = this.reviews.filter(r => r.id !== review.id);
+          this.reviewEventService.notifyReviewChanged();
+          this.snackBar.open('Review deleted', 'Close', { duration: 3000 });
+        },
+        error: (error) => {
+          console.error('Error deleting review:', error);
+          this.error = 'Failed to delete review. Please try again later.';
+          this.snackBar.open('Failed to delete review', 'Close', { duration: 3000 });
+        }
+      });
     });
   }
 

@@ -122,5 +122,9 @@ export class UserDashboardComponent implements OnInit {
   navigateToCategory(category: string): void {
     this.router.navigate([category]);
   }
+<<<<<<< Updated upstream
 
 } 
+=======
+}
+>>>>>>> Stashed changes

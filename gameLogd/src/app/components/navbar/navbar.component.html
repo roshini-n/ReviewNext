@@ -43,6 +43,7 @@
     </div>
   }
 
+<<<<<<< Updated upstream
   <!--Buttons on the right-->
   <div class="right-buttons">
     @if (authService.currentUserSig() && !isUserDashboard) {
@@ -60,6 +61,24 @@
           <mat-icon>arrow_drop_down</mat-icon>
         </button>
       }
+=======
+  <!--Desktop Navigation - Hidden on mobile-->
+  <div class="right-buttons hidden-mobile">
+    @if (authService.currentUserSig()) {
+      <button mat-button [matMenuTriggerFor]="categoryMenu" color="grey-back" class="categories-button">
+        <span class="navbar_button">Categories</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+      @if (isAdmin()) {
+        <button mat-button (click)="navigateToAdmin()" color="warn" class="admin-button">
+          <mat-icon>admin_panel_settings</mat-icon>
+          <span class="navbar_button">Admin</span>
+        </button>
+      }
+      <a routerLink="profile" class="profile-button">
+        <img [src]="avatarUrl" alt="Profile" class="profile-image">
+      </a>
+>>>>>>> Stashed changes
     }
     @if (authService.currentUserSig() == null && !isLoginOrRegister) {
     <button mat-button color="grey-back" routerLink="login">
@@ -84,6 +103,135 @@
 
 </mat-toolbar>
 
+<<<<<<< Updated upstream
+=======
+<!--Mobile Search Bar - Visible only when menu is open on mobile-->
+@if (!isLoginOrRegister && isMobileMenuOpen) {
+  <div class="mobile-search-container visible-mobile">
+    <form class="mobile-search-form">
+      <input 
+        class="mobile-search-input" 
+        type="search" 
+        placeholder="Search..."
+        [(ngModel)]="searchQuery"
+        name="search"
+      />
+      <button class="mobile-search-button" type="submit" (click)="onSearch(); closeMobileMenu()">
+        <mat-icon>search</mat-icon>
+      </button>
+    </form>
+  </div>
+}
+
+<!--Mobile Menu Overlay-->
+@if (isMobileMenuOpen) {
+  <div class="mobile-menu-overlay" (click)="closeMobileMenu()"></div>
+}
+
+<!--Mobile Side Menu-->
+<div class="mobile-menu" [class.active]="isMobileMenuOpen">
+  <div class="mobile-menu-header">
+    <h3>Menu</h3>
+    <button class="mobile-menu-close" (click)="closeMobileMenu()" aria-label="Close menu">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  
+  <div class="mobile-menu-content">
+    <!-- User Profile Section -->
+    @if (authService.currentUserSig()) {
+      <div class="mobile-menu-profile">
+        <img [src]="avatarUrl" alt="Profile" class="mobile-profile-image">
+        <span class="mobile-profile-name">Profile</span>
+      </div>
+      <div class="mobile-menu-divider"></div>
+    }
+
+    <!-- Categories -->
+    @if (authService.currentUserSig()) {
+      <div class="mobile-menu-section">
+        <h4 class="mobile-menu-section-title">Categories</h4>
+        <a class="mobile-menu-item" routerLink="games" (click)="onMobileMenuItemClick()">
+          <mat-icon>sports_esports</mat-icon>
+          <span>Games</span>
+        </a>
+        <a class="mobile-menu-item" routerLink="books" (click)="onMobileMenuItemClick()">
+          <mat-icon>menu_book</mat-icon>
+          <span>Books</span>
+        </a>
+        <a class="mobile-menu-item" routerLink="movies" (click)="onMobileMenuItemClick()">
+          <mat-icon>movie</mat-icon>
+          <span>Movies</span>
+        </a>
+        <a class="mobile-menu-item" routerLink="electronic-gadgets" (click)="onMobileMenuItemClick()">
+          <mat-icon>devices</mat-icon>
+          <span>Electronic Gadgets</span>
+        </a>
+        <a class="mobile-menu-item" routerLink="web-series" (click)="onMobileMenuItemClick()">
+          <mat-icon>live_tv</mat-icon>
+          <span>Web Series</span>
+        </a>
+        <a class="mobile-menu-item" routerLink="beauty-products" (click)="onMobileMenuItemClick()">
+          <mat-icon>spa</mat-icon>
+          <span>Beauty Products</span>
+        </a>
+      </div>
+      <div class="mobile-menu-divider"></div>
+    }
+
+    <!-- Account Actions -->
+    @if (authService.currentUserSig()) {
+      <div class="mobile-menu-section">
+        <h4 class="mobile-menu-section-title">Account</h4>
+        <a class="mobile-menu-item" routerLink="profile" (click)="onMobileMenuItemClick()">
+          <mat-icon>person</mat-icon>
+          <span>Profile</span>
+        </a>
+        @if (isAdmin()) {
+          <a class="mobile-menu-item admin-item" (click)="navigateToAdmin(); closeMobileMenu()">
+            <mat-icon>admin_panel_settings</mat-icon>
+            <span>Admin Dashboard</span>
+          </a>
+        }
+        <button class="mobile-menu-item mobile-menu-button" (click)="logout(); closeMobileMenu()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </div>
+    } @else if (!isLoginOrRegister) {
+      <div class="mobile-menu-section">
+        <a class="mobile-menu-item" routerLink="login" (click)="onMobileMenuItemClick()">
+          <mat-icon>login</mat-icon>
+          <span>Login</span>
+        </a>
+        <a class="mobile-menu-item" routerLink="register" (click)="onMobileMenuItemClick()">
+          <mat-icon>person_add</mat-icon>
+          <span>Register</span>
+        </a>
+      </div>
+    }
+
+    <!-- Theme Settings -->
+    <div class="mobile-menu-divider"></div>
+    <div class="mobile-menu-section">
+      <h4 class="mobile-menu-section-title">Theme</h4>
+      <button class="mobile-menu-item mobile-menu-button" (click)="switchToLightTheme(); closeMobileMenu()">
+        <mat-icon>light_mode</mat-icon>
+        <span>Light Mode</span>
+      </button>
+      <button class="mobile-menu-item mobile-menu-button" (click)="switchToDarkTheme(); closeMobileMenu()">
+        <mat-icon>dark_mode</mat-icon>
+        <span>Dark Mode</span>
+      </button>
+      <button class="mobile-menu-item mobile-menu-button" (click)="switchToCustomTheme(); closeMobileMenu()">
+        <mat-icon>palette</mat-icon>
+        <span>Custom Theme</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+>>>>>>> Stashed changes
 <!-- Always present in DOM -->
 <mat-menu #categoryMenu="matMenu">
   <button mat-menu-item routerLink="games">

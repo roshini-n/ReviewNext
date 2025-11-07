@@ -1,0 +1,234 @@
+<div class="admin-analytics-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>analytics</mat-icon>
+        Analytics Dashboard
+      </mat-card-title>
+      <mat-card-subtitle>
+        Platform insights and statistics
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content *ngIf="!loading(); else loadingTemplate">
+      <mat-tab-group>
+        <!-- Overview Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>dashboard</mat-icon>
+            Overview
+          </ng-template>
+          
+          <div class="overview-content">
+            <!-- Key Metrics -->
+            <div class="metrics-grid">
+              <mat-card class="metric-card">
+                <mat-card-content>
+                  <div class="metric-header">
+                    <mat-icon color="primary">people</mat-icon>
+                    <span>New Users (30 days)</span>
+                  </div>
+                  <div class="metric-value">{{ analytics().users.newUsersLast30Days }}</div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="metric-card">
+                <mat-card-content>
+                  <div class="metric-header">
+                    <mat-icon color="accent">rate_review</mat-icon>
+                    <span>New Reviews (30 days)</span>
+                  </div>
+                  <div class="metric-value">{{ analytics().reviews.reviewsLast30Days }}</div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="metric-card">
+                <mat-card-content>
+                  <div class="metric-header">
+                    <mat-icon color="warn">inventory</mat-icon>
+                    <span>Total Products</span>
+                  </div>
+                  <div class="metric-value">{{ getTotalProducts() }}</div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="metric-card">
+                <mat-card-content>
+                  <div class="metric-header">
+                    <mat-icon color="primary">trending_up</mat-icon>
+                    <span>Most Popular Category</span>
+                  </div>
+                  <div class="metric-value">{{ getMostPopularCategory() }}</div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <!-- Product Distribution -->
+            <mat-card class="chart-card">
+              <mat-card-header>
+                <mat-card-title>Product Distribution by Category</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="product-distribution">
+                  <div *ngFor="let item of getProductDistributionData()" class="distribution-item">
+                    <div class="distribution-label">
+                      <span>{{ item.category }}</span>
+                      <span class="count">{{ item.count }}</span>
+                    </div>
+                    <mat-progress-bar 
+                      mode="determinate" 
+                      [value]="getPercentageForCategory(item.category, getTotalProducts())"
+                      [color]="'primary'">
+                    </mat-progress-bar>
+                    <span class="percentage">{{ getPercentageForCategory(item.category, getTotalProducts()) }}%</span>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+
+        <!-- User Analytics Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>people</mat-icon>
+            Users
+          </ng-template>
+          
+          <div class="analytics-content">
+            <mat-card class="chart-card">
+              <mat-card-header>
+                <mat-card-title>User Registration Trend (Last 30 Days)</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="trend-chart" *ngIf="getRegistrationTrendData().length > 0; else noUserData">
+                  <div class="chart-table">
+                    <table mat-table [dataSource]="getRegistrationTrendData()" class="trend-table">
+                      <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef>Date</th>
+                        <td mat-cell *matCellDef="let element">{{ formatDate(element.date) }}</td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="count">
+                        <th mat-header-cell *matHeaderCellDef>New Users</th>
+                        <td mat-cell *matCellDef="let element">
+                          <div class="count-cell">
+                            <span>{{ element.count }}</span>
+                            <mat-progress-bar 
+                              mode="determinate" 
+                              [value]="getRegistrationPercentage(element.count)">
+                            </mat-progress-bar>
+                          </div>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="['date', 'count']"></tr>
+                      <tr mat-row *matRowDef="let row; columns: ['date', 'count'];"></tr>
+                    </table>
+                  </div>
+                </div>
+                
+                <ng-template #noUserData>
+                  <div class="no-data">
+                    <mat-icon>people_outline</mat-icon>
+                    <p>No new user registrations in the last 30 days</p>
+                  </div>
+                </ng-template>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+
+        <!-- Review Analytics Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>rate_review</mat-icon>
+            Reviews
+          </ng-template>
+          
+          <div class="analytics-content">
+            <!-- Review Trend -->
+            <mat-card class="chart-card">
+              <mat-card-header>
+                <mat-card-title>Review Activity (Last 30 Days)</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="trend-chart" *ngIf="getReviewTrendData().length > 0; else noReviewData">
+                  <div class="chart-table">
+                    <table mat-table [dataSource]="getReviewTrendData()" class="trend-table">
+                      <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef>Date</th>
+                        <td mat-cell *matCellDef="let element">{{ formatDate(element.date) }}</td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="count">
+                        <th mat-header-cell *matHeaderCellDef>Reviews</th>
+                        <td mat-cell *matCellDef="let element">
+                          <div class="count-cell">
+                            <span>{{ element.count }}</span>
+                            <mat-progress-bar 
+                              mode="determinate" 
+                              [value]="getReviewPercentage(element.count)"
+                              color="accent">
+                            </mat-progress-bar>
+                          </div>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="['date', 'count']"></tr>
+                      <tr mat-row *matRowDef="let row; columns: ['date', 'count'];"></tr>
+                    </table>
+                  </div>
+                </div>
+                
+                <ng-template #noReviewData>
+                  <div class="no-data">
+                    <mat-icon>rate_review</mat-icon>
+                    <p>No reviews posted in the last 30 days</p>
+                  </div>
+                </ng-template>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- Reviews by Category -->
+            <mat-card class="chart-card">
+              <mat-card-header>
+                <mat-card-title>Reviews by Category</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="category-reviews" *ngIf="getReviewsByCategoryData().length > 0; else noCategoryData">
+                  <div *ngFor="let item of getReviewsByCategoryData()" class="category-item">
+                    <div class="category-label">
+                      <span>{{ item.category }}</span>
+                      <span class="count">{{ item.count }} reviews</span>
+                    </div>
+                    <mat-progress-bar 
+                      mode="determinate" 
+                      [value]="getCategoryPercentage(item.count)"
+                      color="accent">
+                    </mat-progress-bar>
+                  </div>
+                </div>
+                
+                <ng-template #noCategoryData>
+                  <div class="no-data">
+                    <mat-icon>category</mat-icon>
+                    <p>No category data available</p>
+                  </div>
+                </ng-template>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+
+    <!-- Loading Template -->
+    <ng-template #loadingTemplate>
+      <div class="loading-container">
+        <mat-spinner></mat-spinner>
+        <p>Loading analytics data...</p>
+      </div>
+    </ng-template>
+  </mat-card>
+</div>

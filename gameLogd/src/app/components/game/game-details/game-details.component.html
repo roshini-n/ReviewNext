@@ -81,6 +81,13 @@
                 }
               </div>
               }
+              @if (authService.currentUserSig() && isAdmin()) {
+                <div class="action-buttons" style="margin-top: 8px;">
+                  <button mat-raised-button color="warn" (click)="deleteReview(review)">
+                    Delete as Admin
+                  </button>
+                </div>
+              }
             </mat-card-content>
           </mat-card>
         </div>

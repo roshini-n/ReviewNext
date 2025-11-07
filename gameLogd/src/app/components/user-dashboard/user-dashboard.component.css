@@ -59,7 +59,36 @@
     animation: welcomeFadeIn 1s ease-out;
 }
 
+.admin-section {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 103, 71, 0.2);
+}
+
+.admin-dashboard-btn {
+    background: linear-gradient(45deg, #f44336, #e91e63);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+    transition: all 0.3s ease;
+    text-transform: none;
+}
+
+.admin-dashboard-btn:hover {
+    background: linear-gradient(45deg, #d32f2f, #c2185b);
+    box-shadow: 0 6px 16px rgba(244, 67, 54, 0.4);
+    transform: translateY(-2px);
+}
+
+.admin-dashboard-btn mat-icon {
+    margin-right: 8px;
+}
+
 .welcome-text {
+<<<<<<< Updated upstream
     font-size: 2.2rem;
     font-weight: 600;
     color: #0b1220;
@@ -71,6 +100,8 @@
 }
 
 .subtitle {
+=======
+>>>>>>> Stashed changes
     font-size: 1.2rem;
     color: #1f2937;
     font-weight: 400;

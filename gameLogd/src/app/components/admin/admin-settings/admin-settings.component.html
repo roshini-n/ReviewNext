@@ -1,0 +1,211 @@
+<div class="admin-settings-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>settings</mat-icon>
+        Admin Settings
+      </mat-card-title>
+      <mat-card-subtitle>
+        System configuration and administrative tools
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Data Management -->
+      <mat-card class="settings-section">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>storage</mat-icon>
+            Data Management
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item>
+              <mat-icon matListItemIcon>people</mat-icon>
+              <div matListItemTitle>Export User Data</div>
+              <div matListItemLine>Download all user information as CSV</div>
+              <button mat-raised-button color="primary" (click)="exportUserData()" matListItemMeta>
+                <mat-icon>download</mat-icon>
+                Export
+              </button>
+            </mat-list-item>
+            
+            <mat-divider></mat-divider>
+            
+            <mat-list-item>
+              <mat-icon matListItemIcon>rate_review</mat-icon>
+              <div matListItemTitle>Export Review Data</div>
+              <div matListItemLine>Download all reviews and ratings as CSV</div>
+              <button mat-raised-button color="primary" (click)="exportReviewData()" matListItemMeta>
+                <mat-icon>download</mat-icon>
+                Export
+              </button>
+            </mat-list-item>
+            
+            <mat-divider></mat-divider>
+            
+            <mat-list-item>
+              <mat-icon matListItemIcon>inventory</mat-icon>
+              <div matListItemTitle>Export Product Data</div>
+              <div matListItemLine>Download all product information as CSV</div>
+              <button mat-raised-button color="primary" (click)="exportProductData()" matListItemMeta>
+                <mat-icon>download</mat-icon>
+                Export
+              </button>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- External Services -->
+      <mat-card class="settings-section">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>cloud</mat-icon>
+            External Services
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item>
+              <mat-icon matListItemIcon>firebase</mat-icon>
+              <div matListItemTitle>Firebase Console</div>
+              <div matListItemLine>Manage Firebase project settings</div>
+              <button mat-raised-button color="accent" (click)="openFirebaseConsole()" matListItemMeta>
+                <mat-icon>open_in_new</mat-icon>
+                Open
+              </button>
+            </mat-list-item>
+            
+            <mat-divider></mat-divider>
+            
+            <mat-list-item>
+              <mat-icon matListItemIcon>analytics</mat-icon>
+              <div matListItemTitle>Google Analytics</div>
+              <div matListItemLine>View detailed website analytics</div>
+              <button mat-raised-button color="accent" (click)="openAnalytics()" matListItemMeta>
+                <mat-icon>open_in_new</mat-icon>
+                Open
+              </button>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- System Information -->
+      <mat-card class="settings-section">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>info</mat-icon>
+            System Information
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item>
+              <mat-icon matListItemIcon>description</mat-icon>
+              <div matListItemTitle>Documentation</div>
+              <div matListItemLine>View system documentation and guides</div>
+              <button mat-raised-button (click)="viewDocumentation()" matListItemMeta>
+                <mat-icon>menu_book</mat-icon>
+                View
+              </button>
+            </mat-list-item>
+            
+            <mat-divider></mat-divider>
+            
+            <mat-list-item>
+              <mat-icon matListItemIcon>list_alt</mat-icon>
+              <div matListItemTitle>System Logs</div>
+              <div matListItemLine>View application logs and error reports</div>
+              <button mat-raised-button (click)="viewSystemLogs()" matListItemMeta>
+                <mat-icon>visibility</mat-icon>
+                View
+              </button>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- System Status -->
+      <mat-card class="settings-section">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>monitor_heart</mat-icon>
+            System Status
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="status-grid">
+            <div class="status-item">
+              <mat-icon color="primary">cloud_done</mat-icon>
+              <div class="status-info">
+                <span class="status-label">Firebase</span>
+                <span class="status-value online">Online</span>
+              </div>
+            </div>
+            
+            <div class="status-item">
+              <mat-icon color="primary">storage</mat-icon>
+              <div class="status-info">
+                <span class="status-label">Database</span>
+                <span class="status-value online">Connected</span>
+              </div>
+            </div>
+            
+            <div class="status-item">
+              <mat-icon color="primary">security</mat-icon>
+              <div class="status-info">
+                <span class="status-label">Authentication</span>
+                <span class="status-value online">Active</span>
+              </div>
+            </div>
+            
+            <div class="status-item">
+              <mat-icon color="primary">backup</mat-icon>
+              <div class="status-info">
+                <span class="status-label">Backup</span>
+                <span class="status-value online">Enabled</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Application Info -->
+      <mat-card class="settings-section">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>info_outline</mat-icon>
+            Application Information
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="app-info">
+            <div class="info-row">
+              <span class="info-label">Application Name:</span>
+              <span class="info-value">ReviewNext</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Version:</span>
+              <span class="info-value">1.0.0</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Angular Version:</span>
+              <span class="info-value">19.1.0</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Firebase Project:</span>
+              <span class="info-value">gamelogd</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Last Updated:</span>
+              <span class="info-value">{{ getCurrentDate() }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-card-content>
+  </mat-card>
+</div>

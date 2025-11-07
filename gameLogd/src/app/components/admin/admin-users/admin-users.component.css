@@ -1,0 +1,176 @@
+.admin-users-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.search-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+
+.search-field {
+  flex: 1;
+  max-width: 400px;
+}
+
+.user-stats {
+  display: flex;
+  gap: 10px;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.users-table {
+  width: 100%;
+  min-width: 800px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.username-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-id {
+  font-size: 12px;
+  color: var(--muted-text);
+  font-family: monospace;
+}
+
+.stat-badge {
+  background-color: rgba(0, 103, 71, 0.10);
+  color: var(--primary-color);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.action-buttons button {
+  width: 36px;
+  height: 36px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.empty-state mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  margin: 16px 0 8px 0;
+  font-weight: 400;
+}
+
+.empty-state p {
+  margin: 0;
+  opacity: 0.7;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 20px;
+}
+
+.loading-container p {
+  margin: 0;
+  color: #666;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .search-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-field {
+    max-width: none;
+  }
+  
+  .user-stats {
+    justify-content: center;
+  }
+  
+  .users-table {
+    min-width: 600px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-users-container {
+    padding: 10px;
+  }
+  
+  .users-table {
+    font-size: 14px;
+  }
+  
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* Table styling */
+.mat-mdc-table {
+  background: var(--input-bg);
+}
+
+.mat-mdc-header-row {
+  background-color: var(--card-bg);
+}
+
+.mat-mdc-row:hover {
+  background-color: rgba(0,0,0,0.03);
+}
+
+.mat-mdc-cell, .mat-mdc-header-cell {
+  padding: 16px 8px;
+}
+
+/* Chip styling */
+.mat-mdc-chip {
+  font-size: 12px;
+  height: 28px;
+}
+
+/* Dark */
+[data-theme='dark'] .mat-mdc-header-row {
+  background-color: rgba(255,255,255,0.06);
+}
+
+[data-theme='dark'] .mat-mdc-row:hover {
+  background-color: rgba(255,255,255,0.04);
+}

@@ -1,12 +1,16 @@
 import { Injectable, inject } from '@angular/core';
+<<<<<<< Updated upstream
 import { AuthService } from './auth.service';
 import { Observable, map, of, forkJoin, combineLatest, switchMap, catchError } from 'rxjs';
+=======
+>>>>>>> Stashed changes
 import {
   Firestore,
   collection,
   collectionData,
   doc,
   deleteDoc,
+<<<<<<< Updated upstream
   query,
   orderBy,
   where,
@@ -19,11 +23,71 @@ import { ReviewService } from './review.service';
 import { GameLogService } from './gamelog.service';
 import { MovieLogService } from './movieLog.service';
 import { BookLogService } from './booklog.service';
+=======
+  updateDoc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  limit,
+  Timestamp,
+  writeBatch,
+  getCountFromServer
+} from '@angular/fire/firestore';
+import { Observable, from, forkJoin, map } from 'rxjs';
+
+export interface AdminUser {
+  id: string;
+  email: string;
+  username: string;
+  avatarUrl?: string;
+  role: string;
+  createdAt: any;
+  lastLogin?: any;
+  totalReviews: number;
+  totalLists: number;
+}
+
+export interface AdminReview {
+  id: string;
+  userId: string;
+  username: string;
+  userAvatarUrl?: string;
+  productType: string;
+  productId: string;
+  productTitle: string;
+  reviewText: string;
+  rating: number;
+  datePosted: any;
+  lastUpdated?: any;
+  likes?: number;
+}
+
+export interface DashboardStats {
+  totalUsers: number;
+  totalReviews: number;
+  totalProducts: number;
+  totalLists: number;
+  newUsersToday: number;
+  reviewsToday: number;
+}
+
+export interface ProductStats {
+  games: number;
+  books: number;
+  movies: number;
+  webSeries: number;
+  electronicGadgets: number;
+  beautyProducts: number;
+}
+>>>>>>> Stashed changes
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
+<<<<<<< Updated upstream
   
   private firestore = inject(Firestore);
   private authService = inject(AuthService);
@@ -236,3 +300,374 @@ export class AdminService {
     };
   }
 }
+=======
+  firestore = inject(Firestore);
+
+  // Dashboard Statistics
+  async getDashboardStats(): Promise<DashboardStats> {
+    try {
+      const [users, reviews, products, lists] = await Promise.all([
+        this.getTotalCount('users'),
+        this.getTotalCount('reviews'),
+        this.getTotalProductsCount(),
+        this.getTotalCount('user-lists')
+      ]);
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const todayTimestamp = Timestamp.fromDate(today);
+
+      const [newUsersToday, reviewsToday] = await Promise.all([
+        this.getCountSinceDate('users', 'createdAt', todayTimestamp),
+        this.getCountSinceDate('reviews', 'datePosted', todayTimestamp)
+      ]);
+
+      return {
+        totalUsers: users,
+        totalReviews: reviews,
+        totalProducts: products,
+        totalLists: lists,
+        newUsersToday,
+        reviewsToday
+      };
+    } catch (error) {
+      console.error('Error getting dashboard stats:', error);
+      throw error;
+    }
+  }
+
+  private async getTotalCount(collectionName: string): Promise<number> {
+    const collectionRef = collection(this.firestore, collectionName);
+    const snapshot = await getCountFromServer(collectionRef as any);
+    return snapshot.data().count as number;
+  }
+
+  private async getTotalProductsCount(): Promise<number> {
+    const collections = ['games', 'books', 'movies', 'web-series', 'electronic-gadgets', 'beauty-products'];
+    const counts = await Promise.all(
+      collections.map(col => this.getTotalCount(col))
+    );
+    return counts.reduce((total, count) => total + count, 0);
+  }
+
+  private async getCountSinceDate(collectionName: string, dateField: string, since: Timestamp): Promise<number> {
+    const collectionRef = collection(this.firestore, collectionName);
+    const q = query(collectionRef, where(dateField, '>=', since));
+    const snapshot = await getDocs(q);
+    return snapshot.size;
+  }
+
+  // User Management
+  getAllUsers(): Observable<AdminUser[]> {
+    const usersCollection = collection(this.firestore, 'users');
+    return collectionData(usersCollection, { idField: 'id' }).pipe(
+      map((users: any[]) =>
+        users.map(user => ({
+          ...user,
+          totalReviews: user.totalReviews ?? 0,
+          totalLists: user.totalLists ?? 0
+        }))
+      )
+    );
+  }
+
+  async deleteUser(userId: string): Promise<void> {
+    try {
+      const batch = writeBatch(this.firestore);
+      
+      // Delete user document
+      const userRef = doc(this.firestore, 'users', userId);
+      batch.delete(userRef);
+
+      // Delete all user's reviews
+      const reviewsQuery = query(
+        collection(this.firestore, 'reviews'),
+        where('userId', '==', userId)
+      );
+      const reviewsSnapshot = await getDocs(reviewsQuery);
+      reviewsSnapshot.docs.forEach(doc => batch.delete(doc.ref));
+
+      // Delete all user's ratings
+      const ratingsQuery = query(
+        collection(this.firestore, 'ratings'),
+        where('userId', '==', userId)
+      );
+      const ratingsSnapshot = await getDocs(ratingsQuery);
+      ratingsSnapshot.docs.forEach(doc => batch.delete(doc.ref));
+
+      // Delete all user's lists
+      const listsQuery = query(
+        collection(this.firestore, 'user-lists'),
+        where('userId', '==', userId)
+      );
+      const listsSnapshot = await getDocs(listsQuery);
+      listsSnapshot.docs.forEach(doc => batch.delete(doc.ref));
+
+      await batch.commit();
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      throw error;
+    }
+  }
+
+  async getUserDetails(userId: string): Promise<AdminUser | null> {
+    try {
+      const userRef = doc(this.firestore, 'users', userId);
+      const userDoc = await getDoc(userRef);
+      
+      if (!userDoc.exists()) {
+        return null;
+      }
+
+      const userData = userDoc.data();
+      
+      // Get user's review count
+      const reviewsQuery = query(
+        collection(this.firestore, 'reviews'),
+        where('userId', '==', userId)
+      );
+      const reviewsSnapshot = await getDocs(reviewsQuery);
+      
+      // Get user's lists count
+      const listsQuery = query(
+        collection(this.firestore, 'user-lists'),
+        where('userId', '==', userId)
+      );
+      const listsSnapshot = await getDocs(listsQuery);
+
+      return {
+        id: userDoc.id,
+        ...userData,
+        totalReviews: reviewsSnapshot.size,
+        totalLists: listsSnapshot.size
+      } as AdminUser;
+    } catch (error) {
+      console.error('Error getting user details:', error);
+      throw error;
+    }
+  }
+
+  // Review Management
+  getAllReviews(): Observable<AdminReview[]> {
+    const reviewsCollection = collection(this.firestore, 'reviews');
+    const q = query(reviewsCollection, orderBy('datePosted', 'desc'));
+    
+    return collectionData(q, { idField: 'id' }) as Observable<AdminReview[]>;
+  }
+
+  getReviewsByProduct(productType: string, productId: string): Observable<AdminReview[]> {
+    const reviewsCollection = collection(this.firestore, 'reviews');
+    const q = query(
+      reviewsCollection,
+      where('productType', '==', productType),
+      where('productId', '==', productId),
+      orderBy('datePosted', 'desc')
+    );
+    
+    return collectionData(q, { idField: 'id' }) as Observable<AdminReview[]>;
+  }
+
+  getReviewsByUser(userId: string): Observable<AdminReview[]> {
+    const reviewsCollection = collection(this.firestore, 'reviews');
+    const q = query(
+      reviewsCollection,
+      where('userId', '==', userId),
+      orderBy('datePosted', 'desc')
+    );
+    
+    return collectionData(q, { idField: 'id' }) as Observable<AdminReview[]>;
+  }
+
+  async deleteReview(reviewId: string): Promise<void> {
+    try {
+      const reviewRef = doc(this.firestore, 'reviews', reviewId);
+      await deleteDoc(reviewRef);
+    } catch (error) {
+      console.error('Error deleting review:', error);
+      throw error;
+    }
+  }
+
+  async updateReview(reviewId: string, updates: Partial<AdminReview>): Promise<void> {
+    try {
+      const reviewRef = doc(this.firestore, 'reviews', reviewId);
+      await updateDoc(reviewRef, {
+        ...updates,
+        lastUpdated: Timestamp.now()
+      });
+    } catch (error) {
+      console.error('Error updating review:', error);
+      throw error;
+    }
+  }
+
+  // Product Management
+  async getProductStats(): Promise<ProductStats> {
+    try {
+      const [games, books, movies, webSeries, electronicGadgets, beautyProducts] = await Promise.all([
+        this.getTotalCount('games'),
+        this.getTotalCount('books'),
+        this.getTotalCount('movies'),
+        this.getTotalCount('web-series'),
+        this.getTotalCount('electronic-gadgets'),
+        this.getTotalCount('beauty-products')
+      ]);
+
+      return {
+        games,
+        books,
+        movies,
+        webSeries,
+        electronicGadgets,
+        beautyProducts
+      };
+    } catch (error) {
+      console.error('Error getting product stats:', error);
+      throw error;
+    }
+  }
+
+  getProductsByCategory(category: string): Observable<any[]> {
+    const productsCollection = collection(this.firestore, category);
+    return collectionData(productsCollection, { idField: 'id' }).pipe(
+      map((items: any[]) =>
+        items
+          .map(it => ({ ...it, _sortKey: (it.title || it.name || '').toString().toLowerCase() }))
+          .sort((a, b) => a._sortKey.localeCompare(b._sortKey))
+          .map(({ _sortKey, ...rest }) => rest)
+      )
+    );
+  }
+
+  async deleteProduct(category: string, productId: string): Promise<void> {
+    try {
+      const batch = writeBatch(this.firestore);
+      
+      // Delete product document
+      const productRef = doc(this.firestore, category, productId);
+      batch.delete(productRef);
+
+      // Delete all reviews for this product
+      const reviewsQuery = query(
+        collection(this.firestore, 'reviews'),
+        where('productId', '==', productId),
+        where('productType', '==', category)
+      );
+      const reviewsSnapshot = await getDocs(reviewsQuery);
+      reviewsSnapshot.docs.forEach(doc => batch.delete(doc.ref));
+
+      // Delete all ratings for this product
+      const ratingsQuery = query(
+        collection(this.firestore, 'ratings'),
+        where('productId', '==', productId),
+        where('productType', '==', category)
+      );
+      const ratingsSnapshot = await getDocs(ratingsQuery);
+      ratingsSnapshot.docs.forEach(doc => batch.delete(doc.ref));
+
+      await batch.commit();
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      throw error;
+    }
+  }
+
+  // Analytics
+  async getAnalytics(): Promise<any> {
+    try {
+      const [userStats, reviewStats, productStats] = await Promise.all([
+        this.getUserAnalytics(),
+        this.getReviewAnalytics(),
+        this.getProductStats()
+      ]);
+
+      return {
+        users: userStats,
+        reviews: reviewStats,
+        products: productStats
+      };
+    } catch (error) {
+      console.error('Error getting analytics:', error);
+      throw error;
+    }
+  }
+
+  private async getUserAnalytics(): Promise<any> {
+    // Get users registered in the last 30 days
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const thirtyDaysTimestamp = Timestamp.fromDate(thirtyDaysAgo);
+
+    const usersQuery = query(
+      collection(this.firestore, 'users'),
+      where('createdAt', '>=', thirtyDaysTimestamp),
+      orderBy('createdAt', 'asc')
+    );
+    
+    const snapshot = await getDocs(usersQuery);
+    const usersByDay: { [key: string]: number } = {};
+    
+    snapshot.docs.forEach(doc => {
+      const date = doc.data()['createdAt'].toDate().toDateString();
+      usersByDay[date] = (usersByDay[date] || 0) + 1;
+    });
+
+    return {
+      newUsersLast30Days: snapshot.size,
+      registrationTrend: usersByDay
+    };
+  }
+
+  private async getReviewAnalytics(): Promise<any> {
+    // Get reviews from the last 30 days
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const thirtyDaysTimestamp = Timestamp.fromDate(thirtyDaysAgo);
+
+    const reviewsQuery = query(
+      collection(this.firestore, 'reviews'),
+      where('datePosted', '>=', thirtyDaysTimestamp),
+      orderBy('datePosted', 'asc')
+    );
+    
+    const snapshot = await getDocs(reviewsQuery);
+    const reviewsByDay: { [key: string]: number } = {};
+    const reviewsByCategory: { [key: string]: number } = {};
+    
+    snapshot.docs.forEach(doc => {
+      const data = doc.data();
+      const date = data['datePosted'].toDate().toDateString();
+      const category = data['productType'];
+      
+      reviewsByDay[date] = (reviewsByDay[date] || 0) + 1;
+      reviewsByCategory[category] = (reviewsByCategory[category] || 0) + 1;
+    });
+
+    return {
+      reviewsLast30Days: snapshot.size,
+      reviewTrend: reviewsByDay,
+      reviewsByCategory
+    };
+  }
+
+  // Search functionality
+  searchUsers(searchTerm: string): Observable<AdminUser[]> {
+    return this.getAllUsers().pipe(
+      map(users => users.filter(user => 
+        user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      ))
+    );
+  }
+
+  searchReviews(searchTerm: string): Observable<AdminReview[]> {
+    return this.getAllReviews().pipe(
+      map(reviews => reviews.filter(review => 
+        review.reviewText.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        review.productTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        review.username.toLowerCase().includes(searchTerm.toLowerCase())
+      ))
+    );
+  }
+}
+>>>>>>> Stashed changes

@@ -39,7 +39,18 @@ export class NavbarComponent implements OnInit {
   isHomePage: boolean = false;
   isAdmin: boolean = false;
 
+<<<<<<< Updated upstream
   constructor(public router: Router, private themeService: ThemeService) {
+=======
+  private readonly adminEmails = [
+    'admin@example.com',
+    'roshininaguru12@gmail.com',
+    'admin@reviewnext.com',
+    'super@admin.com'
+  ];
+
+  constructor(private router: Router, private themeService: ThemeService) {
+>>>>>>> Stashed changes
     // Use effect to watch for auth state changes
     effect(() => {
       const user = this.authService.currentUserSig();
@@ -133,4 +144,29 @@ export class NavbarComponent implements OnInit {
   switchToCustomTheme() {
     this.themeService.setTheme('custom');
   }
+<<<<<<< Updated upstream
+=======
+
+  // Mobile menu methods
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
+  }
+
+  onMobileMenuItemClick() {
+    this.closeMobileMenu();
+  }
+
+  isAdmin(): boolean {
+    const user = this.authService.currentUserSig();
+    return user?.email ? this.adminEmails.includes(user.email) : false;
+  }
+
+  navigateToAdmin() {
+    this.router.navigate(['/admin']);
+  }
+>>>>>>> Stashed changes
 }

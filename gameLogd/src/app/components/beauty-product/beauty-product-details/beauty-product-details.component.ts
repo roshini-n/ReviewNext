@@ -1,0 +1,322 @@
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { GeneralDeleteButtonComponent } from '../../shared/general-delete-button/general-delete-button.component';
+import { AuthService } from '../../../services/auth.service';
+import { ReviewEventService } from '../../../services/review-event.service';
+import { Review } from '../../../models/review.model';
+import { BeautyProductFirebaseService } from '../../../services/beautyProductFirebase.service';
+import { BeautyProduct } from '../../../models/beauty-product.model';
+import { Firestore, collection, query, where, orderBy, collectionData } from '@angular/fire/firestore';
+import { BeautyProductEditDialogComponent } from '../beauty-product-edit-dialog/beauty-product-edit-dialog.component';
+import { LogBeautyProductPopupComponent } from '../../log-beauty-product-popup/log-beauty-product-popup.component';
+import { BeautyProductReviewService } from '../../../services/beautyProductReview.service';
+import { isAdminEmail } from '../../../utils/admin.util';
+import { AdminConfirmDialogComponent } from '../../admin/admin-confirm-dialog/admin-confirm-dialog.component';
+
+@Component({
+  selector: 'app-beauty-product-details',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    MatChipsModule,
+    MatMenuModule,
+    MatDividerModule,
+    MatListModule,
+    MatCardModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
+    MatBadgeModule,
+    MatTabsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatAutocompleteModule,
+    GeneralDeleteButtonComponent,
+    BeautyProductEditDialogComponent,
+    LogBeautyProductPopupComponent
+  ],
+  templateUrl: './beauty-product-details.component.html',
+  styleUrls: ['./beauty-product-details.component.css']
+})
+export class BeautyProductDetailsComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  public router = inject(Router);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
+  public authService = inject(AuthService);
+  private beautyProductFirebaseService = inject(BeautyProductFirebaseService);
+  private firestore = inject(Firestore);
+  private productReviewService = inject(BeautyProductReviewService);
+  private reviewEventService = inject(ReviewEventService);
+
+  product?: BeautyProduct;
+  reviews: Review[] = [];
+  isLoading: boolean = true;
+  error: string | null = null;
+  currentUserId: string | null = null;
+  productId: string | null = null;
+
+  async ngOnInit() {
+    this.productId = this.route.snapshot.paramMap.get('id');
+    this.currentUserId = await this.authService.getUid();
+
+    if (this.productId) {
+      this.loadProductDetails();
+      this.getReviews();
+    }
+  }
+
+  private loadProductDetails() {
+    if (!this.productId) return;
+    
+    this.isLoading = true;
+    this.beautyProductFirebaseService.getBeautyProductById(this.productId).subscribe({
+      next: (product) => {
+        if (product) {
+          this.product = product;
+          console.log('Product loaded:', product);
+          console.log('Product name:', product?.name);
+          console.log('All product keys:', Object.keys(product || {}));
+          this.isLoading = false;
+        } else {
+          this.error = 'Product not found.';
+          this.isLoading = false;
+        }
+      },
+      error: (error: Error) => {
+        this.error = 'Failed to load product details. Please try again later.';
+        this.isLoading = false;
+        console.error('Error loading product:', error);
+      }
+    });
+  }
+
+  private getReviews() {
+    if (!this.productId) return;
+
+    this.productReviewService.getReviewsByProductId(this.productId).subscribe({
+      next: (reviews: Review[]) => {
+        this.reviews = reviews.map(review => ({
+          ...review,
+          datePosted: review.datePosted instanceof Date ? review.datePosted : new Date(review.datePosted)
+        }));
+        this.updateProductRating();
+      },
+      error: (error: Error) => {
+        console.error('Error loading reviews:', error);
+        this.snackBar.open('Failed to load reviews', 'Close', {
+          duration: 3000
+        });
+      }
+    });
+  }
+
+  private updateProductRating() {
+    if (!this.product || !this.reviews.length) return;
+
+    const totalRating = this.reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalRating / this.reviews.length;
+
+    const updatedProduct = {
+      ...this.product,
+      rating: averageRating,
+      numRatings: this.reviews.length,
+      totalRatingScore: totalRating
+    };
+
+    if (this.productId) {
+      this.beautyProductFirebaseService.updateBeautyProduct(this.productId, updatedProduct).then(() => {
+        this.product = updatedProduct;
+      }).catch((error) => {
+        console.error('Error updating product rating:', error);
+      });
+    }
+  }
+
+  onEditProduct() {
+    if (!this.product || !this.productId) return;
+
+    const dialogRef = this.dialog.open(BeautyProductEditDialogComponent, {
+      width: '600px',
+      data: { ...this.product }
+    });
+
+    dialogRef.afterClosed().subscribe(async result => {
+      if (result) {
+        try {
+          await this.beautyProductFirebaseService.updateBeautyProduct(this.productId!, result);
+          this.product = result;
+          this.snackBar.open('Product updated successfully', 'Close', {
+            duration: 3000
+          });
+        } catch (error) {
+          console.error('Error updating product:', error);
+          this.snackBar.open('Failed to update product', 'Close', {
+            duration: 3000
+          });
+        }
+      }
+    });
+  }
+
+  onTabChange(index: number) {
+    // Handle tab change if needed
+  }
+
+  openLogProductPopup() {
+    if (!this.authService.currentUserSig()) {
+      this.snackBar.open('Please log in to add products to your collection', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
+    if (!this.product || !this.productId) return;
+
+    const dialogRef = this.dialog.open(LogBeautyProductPopupComponent, {
+      maxWidth: '550px',
+      width: '95vw',
+      panelClass: ['product-log-dialog', 'minimal-theme-dialog'],
+      autoFocus: false,
+      backdropClass: 'minimal-backdrop',
+      data: {
+        product: this.product,
+        productId: this.productId
+      }
+    });
+
+    dialogRef.componentInstance.reviewUpdated.subscribe((updatedReview) => {
+      console.log('Review updated:', updatedReview);
+      const index = this.reviews.findIndex(r => r.id === updatedReview.id);
+      if (index !== -1) {
+        this.reviews[index] = updatedReview;
+      } else {
+        this.reviews.unshift(updatedReview);
+      }
+      this.updateProductRating();
+      // Notify dashboard that a review was added/updated
+      this.reviewEventService.notifyReviewChanged();
+      if (this.productId) {
+        this.loadProductDetails();
+      }
+    });
+
+    dialogRef.afterClosed().subscribe();
+  }
+
+  editReview(review: Review) {
+    if (!this.authService.currentUserSig()) {
+      this.snackBar.open('Please log in to edit reviews', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
+    if (!review || !review.id || review.userId !== this.currentUserId) {
+      this.snackBar.open('You can only edit your own reviews', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
+    // Open edit dialog with review data
+    const dialogRef = this.dialog.open(LogBeautyProductPopupComponent, {
+      maxWidth: '550px',
+      width: '95vw',
+      panelClass: ['product-log-dialog', 'minimal-theme-dialog'],
+      autoFocus: false,
+      backdropClass: 'minimal-backdrop',
+      data: {
+        product: this.product,
+        productId: this.productId,
+        review: review
+      }
+    });
+
+    dialogRef.componentInstance.reviewUpdated.subscribe((updatedReview) => {
+      const index = this.reviews.findIndex(r => r.id === updatedReview.id);
+      if (index !== -1) {
+        this.reviews[index] = updatedReview;
+      }
+      this.updateProductRating();
+      // Notify dashboard that a review was updated
+      this.reviewEventService.notifyReviewChanged();
+    });
+  }
+
+  deleteReview(review: Review) {
+    if (!this.authService.currentUserSig()) {
+      this.snackBar.open('Please log in to delete reviews', 'Close', { duration: 3000 });
+      return;
+    }
+
+    if (!review || !review.id) return;
+
+    const isOwner = review.userId === this.currentUserId;
+    const admin = this.isAdmin();
+    if (!isOwner && !admin) {
+      this.snackBar.open('You can only delete your own reviews', 'Close', { duration: 3000 });
+      return;
+    }
+
+    const dialogRef = this.dialog.open(AdminConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Delete Review',
+        message: admin && !isOwner ? 'Delete this review as Admin? This cannot be undone.' : 'Are you sure you want to delete your review? This cannot be undone.',
+        confirmText: 'Delete',
+        confirmColor: 'warn'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (!confirmed) return;
+      this.productReviewService.deleteReview(review.id).subscribe({
+        next: () => {
+          this.reviews = this.reviews.filter(r => r.id !== review.id);
+          this.updateProductRating();
+          this.reviewEventService.notifyReviewChanged();
+          this.snackBar.open('Review deleted successfully', 'Close', { duration: 3000 });
+        },
+        error: (error: Error) => {
+          console.error('Error deleting review:', error);
+          this.snackBar.open('Failed to delete review', 'Close', { duration: 3000 });
+        }
+      });
+    });
+  }
+
+  isAdmin(): boolean {
+    const user = this.authService.currentUserSig();
+    return isAdminEmail(user?.email);
+  }
+}
