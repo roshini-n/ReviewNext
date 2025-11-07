@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserService } from '../../../services/user.service';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,21 +17,18 @@ import { MatIconModule } from '@angular/material/icon';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule,
-    MatDialogModule
+    MatIconModule
   ]
 })
 export class UsernameDialog {
   username: string = '';
-  private userId: string | null = null;
 
   constructor(
     public dialogRef: MatDialogRef<UsernameDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: { currentUsername: string; userId: string },
+    @Inject(MAT_DIALOG_DATA) public data: { currentUsername: string },
     private userService: UserService
   ) {
     this.username = data.currentUsername;
-    this.userId = data.userId;
   }
 
   submitUsername(): void {
@@ -39,18 +36,14 @@ export class UsernameDialog {
       return;
     }
 
-    if (!this.userId) {
-      console.error('Missing userId for username update');
-      return;
-    }
-
-    this.userService.updateUser(this.userId, { username: this.username.trim() }).subscribe({
+    this.userService.updateUsername(this.username.trim()).subscribe({
       next: () => {
         this.dialogRef.close(this.username.trim());
       },
-      error: (error: Error) => {
+      error: (error) => {
         console.error('Error updating username:', error);
+        // You might want to show an error message to the user here
       }
     });
   }
-}
+} 

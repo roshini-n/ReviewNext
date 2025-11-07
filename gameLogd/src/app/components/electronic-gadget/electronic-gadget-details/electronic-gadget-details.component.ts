@@ -20,8 +20,15 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ElectronicGadgetFirebaseService } from '../../../services/electronicGadgetFirebase.service';
 import { ElectronicGadget } from '../../../models/electronic-gadget.model';
+<<<<<<< Updated upstream
 import { AdminService } from '../../../services/admin.service';
+=======
+import { ElectronicGadgetEditDialogComponent } from '../electronic-gadget-edit-dialog/electronic-gadget-edit-dialog.component';
+import { LogElectronicGadgetPopupComponent } from '../../log-electronic-gadget-popup/log-electronic-gadget-popup.component';
+import { ElectronicGadgetReviewService } from '../../../services/electronicGadgetReview.service';
+import { isAdminEmail } from '../../../utils/admin.util';
 import { AdminConfirmDialogComponent } from '../../admin/admin-confirm-dialog/admin-confirm-dialog.component';
+>>>>>>> Stashed changes
 
 @Component({
   selector: 'app-electronic-gadget-details',
@@ -143,42 +150,57 @@ export class ElectronicGadgetDetailsComponent implements OnInit {
   }
 
   deleteReview(review: Review) {
+<<<<<<< Updated upstream
+    // TODO: Implement delete review functionality
+=======
     if (!this.authService.currentUserSig()) {
       this.snackBar.open('Please log in to delete reviews', 'Close', { duration: 3000 });
       return;
     }
+
     if (!review || !review.id) return;
+
     const isOwner = review.userId === this.currentUserId;
-    if (!isOwner && !this.isAdmin) {
+    const admin = this.isAdmin();
+    if (!isOwner && !admin) {
       this.snackBar.open('You can only delete your own reviews', 'Close', { duration: 3000 });
       return;
     }
+
     const dialogRef = this.dialog.open(AdminConfirmDialogComponent, {
       width: '400px',
       data: {
         title: 'Delete Review',
-        message: this.isAdmin && !isOwner ? 'Delete this review as Admin? This cannot be undone.' : 'Are you sure you want to delete your review? This cannot be undone.',
+        message: admin && !isOwner ? 'Delete this review as Admin? This cannot be undone.' : 'Are you sure you want to delete your review? This cannot be undone.',
         confirmText: 'Delete',
         confirmColor: 'warn'
       }
     });
+
     dialogRef.afterClosed().subscribe(confirmed => {
       if (!confirmed) return;
-      this.reviewService.deleteReview(review.id).subscribe({
+      this.gadgetReviewService.deleteReview(review.id).subscribe({
         next: () => {
           this.reviews = this.reviews.filter(r => r.id !== review.id);
+          this.updateGadgetRating();
+          this.reviewEventService.notifyReviewChanged();
           this.snackBar.open('Review deleted successfully', 'Close', { duration: 3000 });
         },
-        error: () => this.snackBar.open('Failed to delete review', 'Close', { duration: 3000 })
+        error: (error: Error) => {
+          console.error('Error deleting review:', error);
+          this.snackBar.open('Failed to delete review', 'Close', { duration: 3000 });
+        }
       });
     });
+>>>>>>> Stashed changes
   }
 
   onTabChange(index: number) {
     // Handle tab change if needed
   }
 
-  isAdminUser(): boolean {
-    return this.isAdmin;
+  isAdmin(): boolean {
+    const user = this.authService.currentUserSig();
+    return isAdminEmail(user?.email);
   }
 }

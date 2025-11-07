@@ -10,13 +10,6 @@
     "src/main.ts"
   ],
   "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "src/**/*.spec.ts",
-    "src/test.ts",
-    "src/app/app.module.ts",
-    "src/app/components/admin-dashboard/**",
-    "src/app/components/beauty-product/beauty-product/**"
+    "src/**/*.d.ts"
   ]
 }

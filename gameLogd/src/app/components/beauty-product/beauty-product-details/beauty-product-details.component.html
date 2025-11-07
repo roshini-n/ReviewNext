@@ -1,10 +1,10 @@
 <div class="book-details-container" *ngIf="!isLoading">
   <div class="book-header">
     <div class="book-image">
-      <img [src]="product?.imageUrl" [alt]="product?.title" class="book-cover">
+      <img [src]="product?.imageUrl" [alt]="product?.name" class="book-cover">
     </div>
     <div class="book-info">
-      <h1>{{product?.title}}</h1>
+      <h1>{{product?.name}}</h1>
       <div class="book-meta">
         <p><strong>Brand:</strong> {{product?.brand}}</p>
         <p><strong>Category:</strong> {{product?.category}}</p>
@@ -16,7 +16,7 @@
       </div>
       <div class="book-genres">
         <mat-chip-listbox>
-          <mat-chip *ngFor="let concern of product?.skinType">{{concern}}</mat-chip>
+          <mat-chip *ngFor="let concern of product?.skinConcerns">{{concern}}</mat-chip>
         </mat-chip-listbox>
       </div>
       @if (authService.currentUserSig()) {
@@ -84,7 +84,7 @@
               </button>
             </mat-card-actions>
             }
-            @if (authService.currentUserSig() && isAdmin) {
+            @if (authService.currentUserSig() && isAdmin()) {
               <mat-card-actions>
                 <button mat-button color="warn" (click)="deleteReview(review)">
                   <mat-icon>delete_forever</mat-icon>

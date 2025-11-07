@@ -79,6 +79,13 @@
               }
             </div>
             }
+            @if (authService.currentUserSig() && isAdmin()) {
+              <div class="review-actions">
+                <button mat-icon-button color="warn" (click)="deleteReview(review)">
+                  <mat-icon>delete_forever</mat-icon>
+                </button>
+              </div>
+            }
           </div>
         </div>
       </div>

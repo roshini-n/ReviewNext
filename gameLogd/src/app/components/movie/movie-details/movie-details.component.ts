@@ -31,9 +31,14 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+<<<<<<< Updated upstream
+=======
+import { MovieEditDialogComponent } from '../movie-edit-dialog/movie-edit-dialog.component';
+import { LogMoviePopupComponent } from '../../log-movie-popup/log-movie-popup.component';
 import { Review } from '../../../models/review.model';
-import { AdminConfirmDialogComponent } from '../../admin/admin-confirm-dialog/admin-confirm-dialog.component';
 import { isAdminEmail } from '../../../utils/admin.util';
+import { AdminConfirmDialogComponent } from '../../admin/admin-confirm-dialog/admin-confirm-dialog.component';
+>>>>>>> Stashed changes
 
 @Component({
   selector: 'app-movie-details',
@@ -78,14 +83,9 @@ export class MovieDetailsComponent implements OnInit {
   selectedTab = 0;
   isLoading = true;
   error: string | null = null;
-  reviews: Review[] = [];
-  currentUserId: string | null = null;
-  movieId: string | null = null;
 
   ngOnInit() {
     const movieId = this.route.snapshot.paramMap.get('id');
-    this.movieId = movieId;
-    this.authService.getUid().then(uid => this.currentUserId = uid);
     if (movieId) {
       this.loadMovieDetails(movieId);
     }
@@ -125,38 +125,91 @@ export class MovieDetailsComponent implements OnInit {
     // Implement add review functionality
   }
 
+<<<<<<< Updated upstream
+=======
+  editReview(review: Review) {
+    if (!this.authService.currentUserSig()) {
+      this.snackBar.open('Please log in to edit reviews', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
+    if (!review || !review.id || review.userId !== this.currentUserId) {
+      this.snackBar.open('You can only edit your own reviews', 'Close', {
+        duration: 3000
+      });
+      return;
+    }
+
+    // Open edit dialog with review data
+    const dialogRef = this.dialog.open(LogMoviePopupComponent, {
+      maxWidth: '550px',
+      width: '95vw',
+      panelClass: ['movie-log-dialog', 'minimal-theme-dialog'],
+      autoFocus: false,
+      backdropClass: 'minimal-backdrop',
+      data: {
+        movie: this.movie,
+        movieId: this.movieId,
+        existingReview: review
+      }
+    });
+
+    dialogRef.componentInstance.reviewUpdated.subscribe((updatedReview) => {
+      const index = this.reviews.findIndex(r => r.id === updatedReview.id);
+      if (index !== -1) {
+        this.reviews[index] = updatedReview;
+      }
+      this.updateMovieRating();
+    });
+  }
+
   deleteReview(review: Review) {
     if (!this.authService.currentUserSig()) {
       this.snackBar.open('Please log in to delete reviews', 'Close', { duration: 3000 });
       return;
     }
-    if (!review || !review.id) return;
+
+    if (!review || !review.id) {
+      return;
+    }
+
     const isOwner = review.userId === this.currentUserId;
-    const admin = isAdminEmail(this.authService.currentUserSig()?.email);
+    const admin = this.isAdmin();
     if (!isOwner && !admin) {
       this.snackBar.open('You can only delete your own reviews', 'Close', { duration: 3000 });
       return;
     }
+
     const dialogRef = this.dialog.open(AdminConfirmDialogComponent, {
       width: '400px',
-      data: { title: 'Delete Review', message: 'This action cannot be undone.', confirmText: 'Delete', confirmColor: 'warn' }
+      data: {
+        title: 'Delete Review',
+        message: admin && !isOwner ? 'Delete this review as Admin? This cannot be undone.' : 'Are you sure you want to delete your review? This cannot be undone.',
+        confirmText: 'Delete',
+        confirmColor: 'warn'
+      }
     });
+
     dialogRef.afterClosed().subscribe(confirmed => {
       if (!confirmed) return;
       this.movieReviewService.deleteReview(review.id).subscribe({
         next: () => {
           this.reviews = this.reviews.filter(r => r.id !== review.id);
+          this.updateMovieRating();
+          this.reviewEventService.notifyReviewChanged();
           this.snackBar.open('Review deleted successfully', 'Close', { duration: 3000 });
         },
-        error: () => this.snackBar.open('Failed to delete review', 'Close', { duration: 3000 })
+        error: (error: Error) => {
+          console.error('Error deleting review:', error);
+          this.snackBar.open('Failed to delete review', 'Close', { duration: 3000 });
+        }
       });
     });
   }
 
-  editReview(review: Review) {
-    // TODO: Implement movie review edit dialog
-  }
-
+>>>>>>> Stashed changes
   onEditMovie() {
     if (!this.authService.currentUserSig()) {
       this.snackBar.open('Please log in to edit movies', 'Close', {

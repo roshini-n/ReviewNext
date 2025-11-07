@@ -21,13 +21,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AvatarDialogComponent } from '../avatar-dialog/avatar-dialog.component';
 import { ReviewService } from '../../../services/review.service';
 import { GameListService } from '../../../services/gameList.service';
 import { GameLogService } from '../../../services/gamelog.service';
 import { MovieLogService } from '../../../services/movieLog.service';
 import { BookLogService } from '../../../services/booklog.service';
 import { Observable, combineLatest, map } from 'rxjs';
-import { AvatarDialogComponent } from '../avatar-dialog/avatar-dialog.component'; // re-added for dialog usage
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
@@ -44,7 +45,8 @@ import { AvatarDialogComponent } from '../avatar-dialog/avatar-dialog.component'
     MatInputModule,
     FormsModule,
     MatTabsModule,
-    MatTooltipModule
+    MatTooltipModule,
+    AvatarDialogComponent
   ],
   standalone: true,
   templateUrl: './profile.component.html',

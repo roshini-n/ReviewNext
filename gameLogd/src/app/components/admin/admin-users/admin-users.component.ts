@@ -109,9 +109,9 @@ export class AdminUsersComponent implements OnInit {
     }
 
     const filtered = this.users().filter(user =>
-      (user.username || '').toLowerCase().includes(term) ||
-      (user.email || '').toLowerCase().includes(term) ||
-      ((user.role || '').toLowerCase().includes(term))
+      user.username.toLowerCase().includes(term) ||
+      user.email.toLowerCase().includes(term) ||
+      user.role.toLowerCase().includes(term)
     );
     this.filteredUsers.set(filtered);
   }
@@ -159,7 +159,7 @@ export class AdminUsersComponent implements OnInit {
     });
   }
 
-  getRoleColor(role: string | undefined): string {
+  getRoleColor(role: string): string {
     switch (role) {
       case 'admin': return 'accent';
       case 'moderator': return 'primary';

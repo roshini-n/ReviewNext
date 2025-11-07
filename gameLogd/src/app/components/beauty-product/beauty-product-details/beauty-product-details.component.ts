@@ -59,7 +59,10 @@ import { AdminConfirmDialogComponent } from '../../admin/admin-confirm-dialog/ad
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    GeneralDeleteButtonComponent,
+    BeautyProductEditDialogComponent,
+    LogBeautyProductPopupComponent
   ],
   templateUrl: './beauty-product-details.component.html',
   styleUrls: ['./beauty-product-details.component.css']
@@ -70,10 +73,10 @@ export class BeautyProductDetailsComponent implements OnInit {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   public authService = inject(AuthService);
-  private beautyProductFirebaseService: BeautyProductFirebaseService = inject(BeautyProductFirebaseService);
-  private firestore: Firestore = inject(Firestore);
-  private productReviewService: BeautyProductReviewService = inject(BeautyProductReviewService);
-  private reviewEventService: ReviewEventService = inject(ReviewEventService);
+  private beautyProductFirebaseService = inject(BeautyProductFirebaseService);
+  private firestore = inject(Firestore);
+  private productReviewService = inject(BeautyProductReviewService);
+  private reviewEventService = inject(ReviewEventService);
 
   product?: BeautyProduct;
   reviews: Review[] = [];
@@ -81,13 +84,10 @@ export class BeautyProductDetailsComponent implements OnInit {
   error: string | null = null;
   currentUserId: string | null = null;
   productId: string | null = null;
-  isAdmin: boolean = false;
 
   async ngOnInit() {
     this.productId = this.route.snapshot.paramMap.get('id');
     this.currentUserId = await this.authService.getUid();
-    const user = this.authService.currentUserSig();
-    this.isAdmin = isAdminEmail(user?.email);
 
     if (this.productId) {
       this.loadProductDetails();
@@ -104,7 +104,7 @@ export class BeautyProductDetailsComponent implements OnInit {
         if (product) {
           this.product = product;
           console.log('Product loaded:', product);
-          console.log('Product name:', (product as any)?.title);
+          console.log('Product name:', product?.name);
           console.log('All product keys:', Object.keys(product || {}));
           this.isLoading = false;
         } else {
@@ -282,7 +282,7 @@ export class BeautyProductDetailsComponent implements OnInit {
     if (!review || !review.id) return;
 
     const isOwner = review.userId === this.currentUserId;
-    const admin = this.isAdmin; // updated
+    const admin = this.isAdmin();
     if (!isOwner && !admin) {
       this.snackBar.open('You can only delete your own reviews', 'Close', { duration: 3000 });
       return;
@@ -313,5 +313,10 @@ export class BeautyProductDetailsComponent implements OnInit {
         }
       });
     });
+  }
+
+  isAdmin(): boolean {
+    const user = this.authService.currentUserSig();
+    return isAdminEmail(user?.email);
   }
 }

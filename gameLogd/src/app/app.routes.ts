@@ -31,8 +31,11 @@ import { ElectronicGadgetDetailsComponent } from './components/electronic-gadget
 import { UserDashboardComponent } from './components/user-dashboard/user-dashboard.component';
 import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
+<<<<<<< Updated upstream
+=======
 import { WebSeriesDetailsComponent } from './components/webseries/webseries-details/webseries-details.component';
 import { BeautyProductDetailsComponent } from './components/beauty-product/beauty-product-details/beauty-product-details.component';
+>>>>>>> Stashed changes
 
 export const routes: Routes = [
   { path: '', component: HomeComponent }, // default route
@@ -82,6 +85,11 @@ export const routes: Routes = [
   { path: 'reset_password', component: ResetPasswordComponent },
   { path: 'search-all', component: AllSearchComponent },
   { path: 'mylog', component: MylogComponent, canActivate: [authGuard] },
+<<<<<<< Updated upstream
+  
+  // Admin routes
+  { path: 'admin', loadComponent: () => import('./components/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent), canActivate: [authGuard, adminGuard] }
+=======
 
   // Admin routes - Protected by admin guard
   { 
@@ -89,11 +97,27 @@ export const routes: Routes = [
     loadComponent: () => import('./components/admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent),
     canActivate: [adminGuard],
     children: [
-      { path: 'users', loadComponent: () => import('./components/admin/admin-users/admin-users.component').then(m => m.AdminUsersComponent) },
-      { path: 'reviews', loadComponent: () => import('./components/admin/admin-reviews/admin-reviews.component').then(m => m.AdminReviewsComponent) },
-      { path: 'products', loadComponent: () => import('./components/admin/admin-products/admin-products.component').then(m => m.AdminProductsComponent) },
-      { path: 'analytics', loadComponent: () => import('./components/admin/admin-analytics/admin-analytics.component').then(m => m.AdminAnalyticsComponent) },
-      { path: 'settings', loadComponent: () => import('./components/admin/admin-settings/admin-settings.component').then(m => m.AdminSettingsComponent) }
+      {
+        path: 'users',
+        loadComponent: () => import('./components/admin/admin-users/admin-users.component').then(m => m.AdminUsersComponent)
+      },
+      {
+        path: 'reviews',
+        loadComponent: () => import('./components/admin/admin-reviews/admin-reviews.component').then(m => m.AdminReviewsComponent)
+      },
+      {
+        path: 'products',
+        loadComponent: () => import('./components/admin/admin-products/admin-products.component').then(m => m.AdminProductsComponent)
+      },
+      {
+        path: 'analytics',
+        loadComponent: () => import('./components/admin/admin-analytics/admin-analytics.component').then(m => m.AdminAnalyticsComponent)
+      },
+      {
+        path: 'settings',
+        loadComponent: () => import('./components/admin/admin-settings/admin-settings.component').then(m => m.AdminSettingsComponent)
+      }
     ]
   }
+>>>>>>> Stashed changes
 ];
