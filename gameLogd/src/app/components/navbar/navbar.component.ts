@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { ThemeService } from '../../services/theme.service';
+import { AdminAuthService } from '../../services/admin-auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -26,12 +27,14 @@ import { ThemeService } from '../../services/theme.service';
 export class NavbarComponent implements OnInit {
   authService = inject(AuthService);
   userService = inject(UserService);
+  adminAuthService = inject(AdminAuthService);
   searchQuery: string = '';
   avatarUrl: string = 'assets/default-avatar.png';
   isLoginOrRegister: boolean = false;
   isUserDashboard: boolean = false;
   isHomePage: boolean = false;
   isMobileMenuOpen: boolean = false;
+  isAdmin: boolean = false;
 
   constructor(private router: Router, private themeService: ThemeService) {
     // Use effect to watch for auth state changes
@@ -39,8 +42,14 @@ export class NavbarComponent implements OnInit {
       const user = this.authService.currentUserSig();
       if (user) {
         this.loadUserAvatar();
+        // Check admin status when user changes
+        this.adminAuthService.isAdmin().subscribe(isAdmin => {
+          console.log('Navbar: Admin status changed to:', isAdmin, 'for user:', user.email);
+          this.isAdmin = isAdmin;
+        });
       } else {
         this.avatarUrl = 'assets/default-avatar.png';
+        this.isAdmin = false;
       }
     });
 
@@ -133,5 +142,27 @@ export class NavbarComponent implements OnInit {
 
   onMobileMenuItemClick() {
     this.closeMobileMenu();
+  }
+
+  // Navigate to admin dashboard with proper error handling
+  navigateToAdmin() {
+    console.log('Admin button clicked, checking admin status...');
+    this.adminAuthService.isAdmin().subscribe(isAdmin => {
+      console.log('Admin status check result:', isAdmin);
+      if (isAdmin) {
+        console.log('Navigating to admin dashboard...');
+        this.router.navigate(['/admin']).then(
+          (success) => {
+            console.log('Navigation successful:', success);
+          },
+          (error) => {
+            console.error('Navigation failed:', error);
+          }
+        );
+      } else {
+        console.warn('Access denied: User is not an admin');
+        alert('Access denied: Admin privileges required');
+      }
+    });
   }
 }

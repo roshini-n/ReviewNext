@@ -24,6 +24,7 @@ import { ElectronicGadget } from '../../../models/electronic-gadget.model';
 import { ElectronicGadgetEditDialogComponent } from '../electronic-gadget-edit-dialog/electronic-gadget-edit-dialog.component';
 import { LogElectronicGadgetPopupComponent } from '../../log-electronic-gadget-popup/log-electronic-gadget-popup.component';
 import { ElectronicGadgetReviewService } from '../../../services/electronicGadgetReview.service';
+import { AdminDeleteButtonComponent } from '../../admin/admin-delete-button/admin-delete-button.component';
 
 @Component({
   selector: 'app-electronic-gadget-details',
@@ -42,6 +43,7 @@ import { ElectronicGadgetReviewService } from '../../../services/electronicGadge
     MatDialogModule,
     MatTabsModule,
     ReactiveFormsModule,
+    AdminDeleteButtonComponent,
     GeneralDeleteButtonComponent,
     ElectronicGadgetEditDialogComponent,
     LogElectronicGadgetPopupComponent,
@@ -305,6 +307,14 @@ export class ElectronicGadgetDetailsComponent implements OnInit {
         }
       });
     }
+  }
+
+  onAdminDeleteReview(reviewId: string) {
+    // Remove the deleted review from local array
+    this.reviews = this.reviews.filter(r => r.id !== reviewId);
+    this.updateGadgetRating();
+    // Notify dashboard that a review was deleted
+    this.reviewEventService.notifyReviewChanged();
   }
 
   onTabChange(index: number) {

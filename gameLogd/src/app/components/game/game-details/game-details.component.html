@@ -64,18 +64,27 @@
             </mat-card-header>
             <mat-card-content>
               <p class="review-text">{{ review.reviewText }}</p>
-              @if (authService.currentUserSig() && review.userId === currentUserId) {
-              <div class="action-buttons">
-                <button mat-raised-button color="blue" (click)="editReview(review)" class="action-button">
-                  Edit
-                </button>
-                <app-general-delete-button
-                  [objectToDelete]="review"
-                  (deleteConfirmed)="deleteReview($event)"
-                  class="action-button"
-                ></app-general-delete-button>
+              <div class="review-actions">
+                @if (authService.currentUserSig() && review.userId === currentUserId) {
+                <div class="user-actions">
+                  <button mat-raised-button color="blue" (click)="editReview(review)" class="action-button">
+                    Edit
+                  </button>
+                  <app-general-delete-button
+                    [objectToDelete]="review"
+                    (deleteConfirmed)="deleteReview($event)"
+                    class="action-button"
+                  ></app-general-delete-button>
+                </div>
+                }
+                <!-- Admin delete button - always visible to admins -->
+                <app-admin-delete-button
+                  [reviewId]="review.id"
+                  [reviewText]="review.reviewText"
+                  (deleted)="onAdminDeleteReview($event)"
+                  class="admin-action">
+                </app-admin-delete-button>
               </div>
-              }
             </mat-card-content>
           </mat-card>
         </div>

@@ -527,3 +527,21 @@ mat-tab-group ::ng-deep .mat-mdc-tab-header-pagination-chevron {
 mat-tab-group ::ng-deep .mat-mdc-tab-header-pagination-disabled .mat-mdc-tab-header-pagination-chevron {
   border-color: var(--text-secondary);
 }
+
+/* Review Actions Layout */
+.review-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.user-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-action {
+  margin-left: auto;
+}

@@ -113,6 +113,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
 }
 
 /* Tab Content Styles */
@@ -225,6 +226,24 @@ mat-tab-group ::ng-deep .mat-mdc-tab-header-pagination-disabled .mat-mdc-tab-hea
   border-radius: 8px;
 }
 
+/* Review actions layout */
+.review-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.user-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-action {
+  margin-left: auto;
+}
+
 /* Loading and Error States */
 .loading-container {
   display: flex;
@@ -287,4 +306,14 @@ mat-tab-group ::ng-deep .mat-mdc-tab-header-pagination-disabled .mat-mdc-tab-hea
   .movie-actions button {
     width: 100%;
   }
-} 
+
+  .review-actions {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+  
+  .admin-action {
+    margin-left: 0;
+  }
+}

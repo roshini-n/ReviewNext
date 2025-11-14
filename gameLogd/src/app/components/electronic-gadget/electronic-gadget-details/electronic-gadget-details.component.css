@@ -109,6 +109,10 @@
   margin-top: auto;
 }
 
+.book-actions button {
+  width: 100%;
+}
+
 /* .book-actions button {
   display: flex;
   align-items: center;
@@ -270,6 +274,37 @@ mat-tab-group ::ng-deep .mdc-tab-indicator__content--underline {
 
 .review-actions {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  margin-top: 8px;
+  border-top: 1px solid var(--border-color);
+}
+
+.user-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.admin-action {
+  margin-left: auto;
+}
+
+@media (max-width: 768px) {
+  .review-actions {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+  
+  .admin-action {
+    margin-left: 0;
+  }
+}
+
+.review-actions {
+  display: flex;
   gap: 10px;
   margin-top: 10px;
 }
@@ -319,4 +354,4 @@ mat-tab-group ::ng-deep .mdc-tab-indicator__content--underline {
   .book-actions button {
     width: 100%;
   }
-} 
+}

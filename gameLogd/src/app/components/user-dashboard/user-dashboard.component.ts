@@ -7,6 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
+import { AdminAuthService } from '../../services/admin-auth.service';
 import { GameLogService } from '../../services/gamelog.service';
 import { WebSeriesLogService } from '../../services/webSeriesLog.service';
 import { ElectronicGadgetLogService } from '../../services/electronicGadgetLog.service';
@@ -50,12 +51,14 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   private totalElectronicGadgetLogs: number = 0;
   private totalBeautyProductLogs: number = 0;
   isLoading: boolean = true;
+  isAdmin: boolean = false;
   private reviewChangeSubscription?: Subscription;
   private currentUserId?: string;
 
   constructor(
     private authService: AuthService,
     private userService: UserService,
+    public adminAuthService: AdminAuthService,
     private gameLogService: GameLogService,
     private bookLogService: BookLogService,
     private movieLogService: MovieLogService,
@@ -74,6 +77,11 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadUserData();
+    
+    // Check admin status
+    this.adminAuthService.isAdmin().subscribe(isAdmin => {
+      this.isAdmin = isAdmin;
+    });
     
     // Subscribe to review change events
     this.reviewChangeSubscription = this.reviewEventService.reviewChanged$.subscribe(() => {

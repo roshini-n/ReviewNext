@@ -506,6 +506,24 @@ mat-chip {
   min-width: 100px;
 }
 
+/* New review actions layout */
+.review-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.user-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-action {
+  margin-left: auto;
+}
+
 .no-reviews {
   text-align: center;
   color: var(--text-secondary);

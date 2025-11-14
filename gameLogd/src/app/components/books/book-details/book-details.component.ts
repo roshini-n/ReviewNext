@@ -35,6 +35,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Review } from '../../../models/review.model';
 import { GeneralDeleteButtonComponent } from '../../shared/general-delete-button/general-delete-button.component';
+import { AdminDeleteButtonComponent } from '../../admin/admin-delete-button/admin-delete-button.component';
 import { BookReviewEditComponent } from '../book-review-edit/book-review-edit.component';
 import { BookEditDialogComponent } from '../book-edit-dialog/book-edit-dialog.component';
 import { LogBookPopupComponent } from '../../log-book-popup/log-book-popup.component';
@@ -64,7 +65,8 @@ import { LogBookPopupComponent } from '../../log-book-popup/log-book-popup.compo
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule,
-    GeneralDeleteButtonComponent
+    GeneralDeleteButtonComponent,
+    AdminDeleteButtonComponent
   ],
   templateUrl: './book-details.component.html',
   styleUrls: ['./book-details.component.css']
@@ -345,5 +347,13 @@ export class BookDetailsComponent implements OnInit {
 
   onTabChange(index: number) {
     // Handle tab change if needed
+  }
+
+  onAdminDeleteReview(reviewId: string) {
+    console.log('Admin deleted review:', reviewId);
+    // Remove the review from the local array
+    this.reviews = this.reviews.filter(r => r.id !== reviewId);
+    // Notify dashboard that a review was deleted
+    this.reviewEventService.notifyReviewChanged();
   }
 }

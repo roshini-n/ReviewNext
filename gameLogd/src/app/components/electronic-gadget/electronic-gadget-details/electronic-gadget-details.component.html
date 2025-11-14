@@ -59,17 +59,26 @@
               </mat-icon>
             </div>
             <p class="review-text">{{review.reviewText}}</p>
-            @if (authService.currentUserSig() && review.userId === currentUserId) {
             <div class="review-actions">
-              <button mat-icon-button (click)="editReview(review)">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <app-general-delete-button
-                [objectToDelete]="review"
-                (deleteConfirmed)="deleteReview(review)">
-              </app-general-delete-button>
+              @if (authService.currentUserSig() && review.userId === currentUserId) {
+              <div class="user-actions">
+                <button mat-icon-button (click)="editReview(review)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <app-general-delete-button
+                  [objectToDelete]="review"
+                  (deleteConfirmed)="deleteReview(review)">
+                </app-general-delete-button>
+              </div>
+              }
+              <div class="admin-action">
+                <app-admin-delete-button 
+                  [reviewId]="review.id!" 
+                  [reviewText]="review.reviewText" 
+                  (deleted)="onAdminDeleteReview($event)">
+                </app-admin-delete-button>
+              </div>
             </div>
-            }
           </div>
         </div>
       </div>
