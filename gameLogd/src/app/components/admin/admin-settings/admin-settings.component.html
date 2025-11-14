@@ -1,0 +1,188 @@
+<div class="settings-container">
+  <div class="header-section">
+    <h1>
+      <mat-icon>settings</mat-icon>
+      System Settings
+    </h1>
+    <p class="subtitle">Manage system configuration, exports, and maintenance</p>
+  </div>
+
+  <div class="settings-grid">
+    <!-- Data Export Section -->
+    <mat-card class="settings-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>download</mat-icon>
+          Data Export
+        </mat-card-title>
+        <mat-card-subtitle>Export system data for backup or analysis</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item>
+            <mat-icon matListItemIcon>group</mat-icon>
+            <div matListItemTitle>User Data</div>
+            <div matListItemLine>Export all user accounts and profiles</div>
+            <button mat-button color="primary" (click)="exportUsers()">Export</button>
+          </mat-list-item>
+          
+          <mat-divider></mat-divider>
+          
+          <mat-list-item>
+            <mat-icon matListItemIcon>analytics</mat-icon>
+            <div matListItemTitle>Analytics Data</div>
+            <div matListItemLine>Export comprehensive analytics and metrics</div>
+            <button mat-button color="primary" (click)="exportAnalytics()">Export</button>
+          </mat-list-item>
+          
+          <mat-divider></mat-divider>
+          
+          <mat-list-item>
+            <mat-icon matListItemIcon>inventory</mat-icon>
+            <div matListItemTitle>Complete Dataset</div>
+            <div matListItemLine>Export all system data (users, reviews, products)</div>
+            <button mat-raised-button color="primary" (click)="exportAllData()">
+              <mat-icon>cloud_download</mat-icon>
+              Export All
+            </button>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- System Information -->
+    <mat-card class="settings-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>info</mat-icon>
+          System Information
+        </mat-card-title>
+        <mat-card-subtitle>Current system status and details</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item>
+            <mat-icon matListItemIcon class="status-online">verified</mat-icon>
+            <div matListItemTitle>Version</div>
+            <div matListItemLine>{{ systemInfo.version }}</div>
+          </mat-list-item>
+          
+          <mat-list-item>
+            <mat-icon matListItemIcon class="status-online">public</mat-icon>
+            <div matListItemTitle>Environment</div>
+            <div matListItemLine>{{ systemInfo.environment }}</div>
+          </mat-list-item>
+          
+          <mat-list-item>
+            <mat-icon matListItemIcon class="status-online">storage</mat-icon>
+            <div matListItemTitle>Database</div>
+            <div matListItemLine>{{ systemInfo.databaseStatus }}</div>
+          </mat-list-item>
+          
+          <mat-list-item>
+            <mat-icon matListItemIcon class="status-online">folder</mat-icon>
+            <div matListItemTitle>Storage Usage</div>
+            <div matListItemLine>{{ systemInfo.storageUsage }}</div>
+          </mat-list-item>
+          
+          <mat-list-item>
+            <mat-icon matListItemIcon class="status-online">schedule</mat-icon>
+            <div matListItemTitle>Uptime</div>
+            <div matListItemLine>{{ systemInfo.uptime }}</div>
+          </mat-list-item>
+          
+          <mat-list-item>
+            <mat-icon matListItemIcon class="status-online">backup</mat-icon>
+            <div matListItemTitle>Last Backup</div>
+            <div matListItemLine>{{ systemInfo.lastBackup | date:'medium' }}</div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Maintenance Tools -->
+    <mat-card class="settings-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>build</mat-icon>
+          Maintenance Tools
+        </mat-card-title>
+        <mat-card-subtitle>System maintenance and optimization</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="maintenance-actions">
+          <button mat-raised-button color="primary" (click)="backupDatabase()">
+            <mat-icon>backup</mat-icon>
+            Backup Database
+          </button>
+          
+          <button mat-raised-button color="accent" (click)="clearCache()">
+            <mat-icon>cached</mat-icon>
+            Clear Cache
+          </button>
+          
+          <button mat-raised-button (click)="restartServices()">
+            <mat-icon>refresh</mat-icon>
+            Restart Services
+          </button>
+          
+          <button mat-raised-button color="primary" (click)="viewLogs()">
+            <mat-icon>receipt_long</mat-icon>
+            View Logs
+          </button>
+          
+          <button mat-raised-button color="accent" (click)="generateReport()">
+            <mat-icon>assessment</mat-icon>
+            Generate Report
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- External Links -->
+    <mat-card class="settings-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>link</mat-icon>
+          External Resources
+        </mat-card-title>
+        <mat-card-subtitle>Quick access to external tools and services</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item *ngFor="let link of externalLinks" (click)="openExternalLink(link.url)">
+            <mat-icon matListItemIcon>{{ link.icon }}</mat-icon>
+            <div matListItemTitle>{{ link.title }}</div>
+            <div matListItemLine>{{ link.description }}</div>
+            <mat-icon matListItemIcon class="external-icon">open_in_new</mat-icon>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Quick Actions Bar -->
+  <div class="quick-actions-bar">
+    <h2>
+      <mat-icon>flash_on</mat-icon>
+      Quick Actions
+    </h2>
+    <div class="quick-actions-grid">
+      <button mat-fab color="primary" (click)="exportAllData()" matTooltip="Export All Data">
+        <mat-icon>cloud_download</mat-icon>
+      </button>
+      
+      <button mat-fab color="accent" (click)="backupDatabase()" matTooltip="Backup Database">
+        <mat-icon>backup</mat-icon>
+      </button>
+      
+      <button mat-fab (click)="generateReport()" matTooltip="Generate Report">
+        <mat-icon>assessment</mat-icon>
+      </button>
+      
+      <button mat-fab color="warn" (click)="clearCache()" matTooltip="Clear Cache">
+        <mat-icon>cached</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

@@ -66,7 +66,6 @@
 .mat-toolbar.mat-primary.home-navbar {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   min-height: 64px;
   position: fixed;
   top: 0;
@@ -484,6 +483,38 @@
   font-family: 'Inter', sans-serif;
   position: relative;
   z-index: 1001;
+}
+
+/* Admin button styling */
+.admin-button {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a52) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  margin-right: 8px !important;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.admin-button:hover {
+  background: linear-gradient(135deg, #ee5a52, #dc4c3e) !important;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+.admin-button mat-icon {
+  margin-right: 4px !important;
+}
+
+/* Mobile admin button styling */
+.mobile-menu-item[href="/admin"] {
+  background: rgba(255, 107, 107, 0.1);
+  border-left: 4px solid #ff6b6b;
+  color: #ff6b6b !important;
+}
+
+.mobile-menu-item[href="/admin"]:hover {
+  background: rgba(255, 107, 107, 0.2);
 }
 
 /* ================================

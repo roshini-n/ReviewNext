@@ -1,0 +1,298 @@
+<div class="products-container">
+  <div class="header-section">
+    <h1>
+      <mat-icon>inventory</mat-icon>
+      Product Management
+    </h1>
+    <p class="subtitle">Manage products across all categories</p>
+    
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="exportProducts()">
+        <mat-icon>download</mat-icon>
+        Export Products
+      </button>
+      <button mat-raised-button color="accent" (click)="bulkDelete()">
+        <mat-icon>delete_sweep</mat-icon>
+        Bulk Actions
+      </button>
+      <button mat-raised-button (click)="loadProducts()">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Category Statistics -->
+  <div class="stats-section">
+    <h2>
+      <mat-icon>bar_chart</mat-icon>
+      Category Statistics
+    </h2>
+    <div class="stats-grid">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon class="stat-icon games">sports_esports</mat-icon>
+            <div class="stat-info">
+              <h3>{{ categoryStats.games }}</h3>
+              <p>Games</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon class="stat-icon books">menu_book</mat-icon>
+            <div class="stat-info">
+              <h3>{{ categoryStats.books }}</h3>
+              <p>Books</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon class="stat-icon movies">movie</mat-icon>
+            <div class="stat-info">
+              <h3>{{ categoryStats.movies }}</h3>
+              <p>Movies</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon class="stat-icon webseries">live_tv</mat-icon>
+            <div class="stat-info">
+              <h3>{{ categoryStats.webSeries }}</h3>
+              <p>Web Series</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon class="stat-icon gadgets">devices</mat-icon>
+            <div class="stat-info">
+              <h3>{{ categoryStats.electronicGadgets }}</h3>
+              <p>Gadgets</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon class="stat-icon beauty">spa</mat-icon>
+            <div class="stat-info">
+              <h3>{{ categoryStats.beautyProducts }}</h3>
+              <p>Beauty</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-section">
+    <mat-card>
+      <mat-card-content>
+        <div class="filters-container">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Search products...</mat-label>
+            <input
+              matInput
+              [(ngModel)]="searchQuery"
+              (keyup.enter)="applyFilter()"
+              placeholder="Search by title or description"
+            >
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Category</mat-label>
+            <mat-select [(ngModel)]="selectedCategory" (selectionChange)="applyFilter()">
+              <mat-option *ngFor="let category of categories" [value]="category.value">
+                {{ category.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+          <div class="filter-actions">
+            <button mat-raised-button color="primary" (click)="applyFilter()">
+              <mat-icon>filter_list</mat-icon>
+              Apply
+            </button>
+            <button mat-button (click)="clearFilters()">
+              <mat-icon>clear</mat-icon>
+              Clear
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading products...</p>
+  </div>
+
+  <!-- Products Table -->
+  <div *ngIf="!isLoading" class="table-section">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>inventory_2</mat-icon>
+          Products ({{ dataSource.data.length }})
+        </mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="table-container">
+          <table mat-table [dataSource]="dataSource" matSort class="products-table">
+            
+            <!-- Image Column -->
+            <ng-container matColumnDef="image">
+              <th mat-header-cell *matHeaderCellDef>Image</th>
+              <td mat-cell *matCellDef="let product">
+                <div class="image-container">
+                  <img 
+                    [src]="product.imageUrl || 'assets/default-product.png'"
+                    [alt]="product.title"
+                    class="product-image"
+                    (error)="onImageError($event)"
+                  >
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Title Column -->
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+              <td mat-cell *matCellDef="let product">
+                <div class="title-cell">
+                  <strong>{{ product.title }}</strong>
+                  <p class="description" *ngIf="product.description">
+                    {{ product.description }}
+                  </p>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Category Column -->
+            <ng-container matColumnDef="category">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
+              <td mat-cell *matCellDef="let product">
+                <div class="category-cell">
+                  <mat-chip-set>
+                    <mat-chip [color]="getCategoryColor(product.category)" selected>
+                      <mat-icon>{{ getCategoryIcon(product.category) }}</mat-icon>
+                      {{ product.category | titlecase }}
+                    </mat-chip>
+                  </mat-chip-set>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Rating Column -->
+            <ng-container matColumnDef="rating">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Rating</th>
+              <td mat-cell *matCellDef="let product">
+                <div class="rating-cell">
+                  <div class="stars">
+                    <mat-icon 
+                      *ngFor="let star of getStarArray(product.rating)" 
+                      [class.filled]="star <= product.rating"
+                      class="star-icon">
+                      star
+                    </mat-icon>
+                  </div>
+                  <span class="rating-text">{{ product.rating }}/5</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let product">
+                <div class="actions-cell">
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="viewProduct(product)"
+                    matTooltip="View Product"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  
+                  <button
+                    mat-icon-button
+                    color="accent"
+                    (click)="editProduct(product)"
+                    matTooltip="Edit Product"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="deleteProduct(product)"
+                    matTooltip="Delete Product"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="product-row"></tr>
+          </table>
+        </div>
+
+        <!-- Paginator -->
+        <mat-paginator
+          [pageSizeOptions]="[10, 25, 50, 100]"
+          [pageSize]="25"
+          showFirstLastButtons
+        ></mat-paginator>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- No Products State -->
+  <div *ngIf="!isLoading && dataSource.data.length === 0" class="no-products-container">
+    <mat-card>
+      <mat-card-content>
+        <div class="no-products-content">
+          <mat-icon class="no-products-icon">inventory_2</mat-icon>
+          <h3>No Products Found</h3>
+          <p *ngIf="searchQuery || selectedCategory !== 'all'; else noProductsAtAll">
+            No products match your filter criteria. Try adjusting your filters.
+          </p>
+          <ng-template #noProductsAtAll>
+            <p>There are no products in the system yet.</p>
+          </ng-template>
+          <button mat-raised-button color="primary" (click)="clearFilters()" 
+                  *ngIf="searchQuery || selectedCategory !== 'all'">
+            Clear Filters
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

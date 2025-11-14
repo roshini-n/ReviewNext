@@ -29,6 +29,12 @@
         <span class="navbar_button">Categories</span>
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
+      @if (isAdmin) {
+        <button mat-button (click)="navigateToAdmin()" color="accent" class="admin-button">
+          <mat-icon>admin_panel_settings</mat-icon>
+          <span class="navbar_button">Admin</span>
+        </button>
+      }
       <a routerLink="profile" class="profile-button">
         <img [src]="avatarUrl" alt="Profile" class="profile-image">
       </a>
@@ -133,6 +139,12 @@
           <mat-icon>person</mat-icon>
           <span>Profile</span>
         </a>
+        @if (isAdmin) {
+          <a class="mobile-menu-item" routerLink="/admin" (click)="onMobileMenuItemClick()">
+            <mat-icon>admin_panel_settings</mat-icon>
+            <span>Admin Dashboard</span>
+          </a>
+        }
         <button class="mobile-menu-item mobile-menu-button" (click)="logout(); closeMobileMenu()">
           <mat-icon>logout</mat-icon>
           <span>Logout</span>

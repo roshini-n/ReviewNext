@@ -33,6 +33,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { MovieEditDialogComponent } from '../movie-edit-dialog/movie-edit-dialog.component';
 import { LogMoviePopupComponent } from '../../log-movie-popup/log-movie-popup.component';
+import { AdminDeleteButtonComponent } from '../../admin/admin-delete-button/admin-delete-button.component';
 import { Review } from '../../../models/review.model';
 
 @Component({
@@ -59,6 +60,7 @@ import { Review } from '../../../models/review.model';
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule,
+    AdminDeleteButtonComponent,
     LogMoviePopupComponent
   ],
   templateUrl: './movie-details.component.html',
@@ -270,6 +272,14 @@ export class MovieDetailsComponent implements OnInit {
         }
       });
     }
+  }
+
+  onAdminDeleteReview(reviewId: string) {
+    // Remove the deleted review from local array
+    this.reviews = this.reviews.filter(r => r.id !== reviewId);
+    this.updateMovieRating();
+    // Notify dashboard that a review was deleted
+    this.reviewEventService.notifyReviewChanged();
   }
 
   onEditMovie() {

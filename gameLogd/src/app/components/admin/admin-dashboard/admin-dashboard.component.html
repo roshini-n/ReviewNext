@@ -1,0 +1,128 @@
+<div class="admin-dashboard-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="header-content">
+      <div class="header-text">
+        <h1>
+          <mat-icon>admin_panel_settings</mat-icon>
+          Admin Dashboard
+        </h1>
+        <p class="subtitle">Manage and monitor your ReviewNext platform</p>
+      </div>
+      <div class="admin-info" *ngIf="currentUser()">
+        <div class="admin-badge">
+          <mat-icon>verified</mat-icon>
+          <span>Admin</span>
+        </div>
+        <p class="welcome-text">{{ currentUser()?.username || currentUser()?.email }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Admin Features -->
+  <div class="admin-features">
+    <h2>
+      <mat-icon>dashboard</mat-icon>
+      Management Tools
+    </h2>
+    <div class="features-grid">
+      <mat-card 
+        *ngFor="let feature of adminFeatures" 
+        class="feature-card"
+        [class]="'card-' + feature.color"
+        [routerLink]="feature.route">
+        
+        <mat-card-header>
+          <div class="card-header-content">
+            <mat-icon class="feature-icon" [class]="'icon-' + feature.color">
+              {{ feature.icon }}
+            </mat-icon>
+            <div class="header-text">
+              <mat-card-title>{{ feature.title }}</mat-card-title>
+              <mat-card-subtitle>{{ feature.description }}</mat-card-subtitle>
+            </div>
+          </div>
+        </mat-card-header>
+        
+        <mat-card-actions>
+          <button mat-raised-button [color]="feature.color" [routerLink]="feature.route">
+            <mat-icon>arrow_forward</mat-icon>
+            Access
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Quick Actions Section -->
+  <div class="quick-actions-section">
+    <h2>
+      <mat-icon>flash_on</mat-icon>
+      Quick Actions
+    </h2>
+    <div class="quick-actions-grid">
+      <button class="quick-action-button" routerLink="/admin/analytics">
+        <mat-icon>trending_up</mat-icon>
+        View Analytics
+      </button>
+      <button class="quick-action-button" routerLink="/admin/users">
+        <mat-icon>person_search</mat-icon>
+        Manage Users
+      </button>
+      <button class="quick-action-button" routerLink="/admin/products">
+        <mat-icon>inventory</mat-icon>
+        Manage Content
+      </button>
+      <button class="quick-action-button" routerLink="/admin/settings">
+        <mat-icon>download</mat-icon>
+        Export Data
+      </button>
+      <button class="quick-action-button" routerLink="/admin/reports">
+        <mat-icon>assessment</mat-icon>
+        View Reports
+      </button>
+      <button class="quick-action-button" routerLink="/admin/backup">
+        <mat-icon>backup</mat-icon>
+        Backup System
+      </button>
+    </div>
+  </div>
+
+  <!-- System Status Section -->
+  <div class="system-status-section">
+    <h2>
+      <mat-icon>monitor_heart</mat-icon>
+      System Status
+    </h2>
+    <div class="status-grid">
+      <div class="status-item online">
+        <mat-icon class="status-icon online">cloud_done</mat-icon>
+        <div class="status-info">
+          <h4>Database Connection</h4>
+          <p>All systems operational</p>
+        </div>
+      </div>
+      <div class="status-item online">
+        <mat-icon class="status-icon online">storage</mat-icon>
+        <div class="status-info">
+          <h4>Storage System</h4>
+          <p>85% capacity available</p>
+        </div>
+      </div>
+      <div class="status-item online">
+        <mat-icon class="status-icon online">security</mat-icon>
+        <div class="status-info">
+          <h4>Security Status</h4>
+          <p>All protocols active</p>
+        </div>
+      </div>
+      <div class="status-item warning">
+        <mat-icon class="status-icon warning">backup</mat-icon>
+        <div class="status-info">
+          <h4>Last Backup</h4>
+          <p>2 hours ago</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

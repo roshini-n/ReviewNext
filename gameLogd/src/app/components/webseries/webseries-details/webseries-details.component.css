@@ -102,6 +102,28 @@ mat-chip {
   gap: 8px;
 }
 
+.book-actions button {
+  width: 100%;
+}
+
+/* Review actions layout */
+.review-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.user-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-action {
+  margin-left: auto;
+}
+
 .tab-content {
   padding: 20px;
   background-color: var(--tab-content-bg);
@@ -221,5 +243,15 @@ mat-chip {
 
   .book-actions button {
     width: 100%;
+  }
+
+  .review-actions {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+  
+  .admin-action {
+    margin-left: 0;
   }
 }

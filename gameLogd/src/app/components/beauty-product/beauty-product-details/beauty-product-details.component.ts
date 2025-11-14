@@ -32,6 +32,7 @@ import { Firestore, collection, query, where, orderBy, collectionData } from '@a
 import { BeautyProductEditDialogComponent } from '../beauty-product-edit-dialog/beauty-product-edit-dialog.component';
 import { LogBeautyProductPopupComponent } from '../../log-beauty-product-popup/log-beauty-product-popup.component';
 import { BeautyProductReviewService } from '../../../services/beautyProductReview.service';
+import { AdminDeleteButtonComponent } from '../../admin/admin-delete-button/admin-delete-button.component';
 
 @Component({
   selector: 'app-beauty-product-details',
@@ -58,6 +59,7 @@ import { BeautyProductReviewService } from '../../../services/beautyProductRevie
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule,
+    AdminDeleteButtonComponent,
     GeneralDeleteButtonComponent,
     BeautyProductEditDialogComponent,
     LogBeautyProductPopupComponent
@@ -305,5 +307,13 @@ export class BeautyProductDetailsComponent implements OnInit {
         }
       });
     }
+  }
+
+  onAdminDeleteReview(reviewId: string) {
+    // Remove the deleted review from local array
+    this.reviews = this.reviews.filter(r => r.id !== reviewId);
+    this.updateProductRating();
+    // Notify dashboard that a review was deleted
+    this.reviewEventService.notifyReviewChanged();
   }
 }

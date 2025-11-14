@@ -32,6 +32,7 @@ import { WebSeries } from '../../../models/web-series.model';
 import { Firestore, collection, query, where, orderBy, collectionData } from '@angular/fire/firestore';
 import { LogWebSeriesPopupComponent } from '../../log-webseries-popup/log-webseries-popup.component';
 import { WebSeriesReviewService } from '../../../services/webSeriesReview.service';
+import { AdminDeleteButtonComponent } from '../../admin/admin-delete-button/admin-delete-button.component';
 
 @Component({
   selector: 'app-webseries-details',
@@ -58,6 +59,7 @@ import { WebSeriesReviewService } from '../../../services/webSeriesReview.servic
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule,
+    AdminDeleteButtonComponent,
     GeneralDeleteButtonComponent,
     WebSeriesEditDialogComponent,
     LogWebSeriesPopupComponent
@@ -287,5 +289,13 @@ export class WebSeriesDetailsComponent implements OnInit {
         }
       });
     }
+  }
+
+  onAdminDeleteReview(reviewId: string) {
+    // Remove the deleted review from local array
+    this.reviews = this.reviews.filter(r => r.id !== reviewId);
+    this.updateSeriesRating();
+    // Notify dashboard that a review was deleted
+    this.reviewEventService.notifyReviewChanged();
   }
 }

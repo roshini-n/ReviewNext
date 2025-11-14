@@ -21,6 +21,7 @@ import { ReviewService } from '../../../services/review.service';
 import { ReviewEventService } from '../../../services/review-event.service';
 import { Review } from '../../../models/review.model';
 import { GeneralDeleteButtonComponent } from '../../shared/general-delete-button/general-delete-button.component';
+import { AdminDeleteButtonComponent } from '../../admin/admin-delete-button/admin-delete-button.component';
 import { GameReviewEditComponent } from '../game-review-edit/game-review-edit.component';
 import { GameEditDialogComponent } from '../game-edit-dialog/game-edit-dialog.component';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -45,6 +46,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     ReactiveFormsModule,
     LogGamePopupComponent,
     GeneralDeleteButtonComponent,
+    AdminDeleteButtonComponent,
     GameReviewEditComponent,
   ],
   templateUrl: './game-details.component.html',
@@ -258,5 +260,13 @@ export class GameDetailsComponent implements OnInit {
 
   onTabChange(index: number) {
     // Handle tab change if needed
+  }
+
+  onAdminDeleteReview(reviewId: string) {
+    console.log('Admin deleted review:', reviewId);
+    // Remove the review from the local array
+    this.reviews = this.reviews.filter(r => r.id !== reviewId);
+    // Notify dashboard that a review was deleted
+    this.reviewEventService.notifyReviewChanged();
   }
 }

@@ -27,8 +27,15 @@ import { ElectronicGadgetComponent } from './components/electronic-gadgets/elect
 import { ElectronicGadgetDetailsComponent } from './components/electronic-gadget/electronic-gadget-details/electronic-gadget-details.component';
 import { UserDashboardComponent } from './components/user-dashboard/user-dashboard.component';
 import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
 import { WebSeriesDetailsComponent } from './components/webseries/webseries-details/webseries-details.component';
 import { BeautyProductDetailsComponent } from './components/beauty-product/beauty-product-details/beauty-product-details.component';
+import { AdminDashboardComponent } from './components/admin/admin-dashboard/admin-dashboard.component';
+import { AdminAnalyticsComponent } from './components/admin/admin-analytics/admin-analytics.component';
+import { AdminUsersComponent } from './components/admin/admin-users/admin-users.component';
+import { AdminReviewsComponent } from './components/admin/admin-reviews/admin-reviews.component';
+import { AdminProductsComponent } from './components/admin/admin-products/admin-products.component';
+import { AdminSettingsComponent } from './components/admin/admin-settings/admin-settings.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent }, // default route
@@ -77,5 +84,13 @@ export const routes: Routes = [
   { path: 'search', component: SearchComponent },
   { path: 'reset_password', component: ResetPasswordComponent },
   { path: 'search-all', component: AllSearchComponent },
-  { path: 'mylog', component: MylogComponent, canActivate: [authGuard] }
+  { path: 'mylog', component: MylogComponent, canActivate: [authGuard] },
+  
+  // Admin routes - protected by admin guard
+  { path: 'admin', component: AdminDashboardComponent, canActivate: [adminGuard] },
+  { path: 'admin/analytics', component: AdminAnalyticsComponent, canActivate: [adminGuard] },
+  { path: 'admin/users', component: AdminUsersComponent, canActivate: [adminGuard] },
+  { path: 'admin/reviews', component: AdminReviewsComponent, canActivate: [adminGuard] },
+  { path: 'admin/products', component: AdminProductsComponent, canActivate: [adminGuard] },
+  { path: 'admin/settings', component: AdminSettingsComponent, canActivate: [adminGuard] }
 ];

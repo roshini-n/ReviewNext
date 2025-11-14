@@ -160,4 +160,37 @@ export class ReviewService {
     
     return collectionData(reviewsQuery, { idField: 'id' }) as Observable<Review[]>;
   }
+
+  // get all reviews for admin dashboard
+  getAllReviews(): Observable<Review[]> {
+    const reviewsQuery = query(
+      collection(this.firestore, 'reviews'),
+      orderBy('datePosted', 'desc')
+    );
+    
+    return collectionData(reviewsQuery, { idField: 'id' }) as Observable<Review[]>;
+  }
+
+  // Admin method to delete any review
+  adminDeleteReview(reviewId: string): Observable<void> {
+    const reviewDoc = doc(this.firestore, `reviews/${reviewId}`);
+    return from(deleteDoc(reviewDoc));
+  }
+
+  // Admin method to get review statistics
+  getReviewStats(): Observable<any> {
+    return this.getAllReviews().pipe(
+      map(reviews => ({
+        totalReviews: reviews.length,
+        averageRating: reviews.length > 0 ? 
+          reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length : 0,
+        reviewsThisMonth: reviews.filter(review => {
+          const reviewDate = new Date(review.datePosted);
+          const now = new Date();
+          return reviewDate.getMonth() === now.getMonth() && 
+                 reviewDate.getFullYear() === now.getFullYear();
+        }).length
+      }))
+    );
+  }
 }

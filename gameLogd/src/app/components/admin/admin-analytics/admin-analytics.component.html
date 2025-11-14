@@ -1,0 +1,218 @@
+<div class="analytics-container">
+  <div class="header-section">
+    <h1>
+      <mat-icon>analytics</mat-icon>
+      Admin Analytics
+    </h1>
+    <p class="subtitle">Monitor your platform's performance and user engagement</p>
+    <button mat-raised-button color="primary" (click)="refresh()">
+      <mat-icon>refresh</mat-icon>
+      Refresh Data
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading analytics data...</p>
+  </div>
+
+  <div *ngIf="!isLoading && analytics" class="analytics-content">
+    <!-- User Statistics -->
+    <div class="stats-section">
+      <h2>
+        <mat-icon>people</mat-icon>
+        User Statistics
+      </h2>
+      <div class="stats-grid">
+        <mat-card class="stat-card primary">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">group</mat-icon>
+              <div class="stat-info">
+                <h3>{{ analytics.userStats.totalUsers }}</h3>
+                <p>Total Users</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card accent">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">person_outline</mat-icon>
+              <div class="stat-info">
+                <h3>{{ analytics.userStats.activeUsers }}</h3>
+                <p>Active Users</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card warn">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">person_add</mat-icon>
+              <div class="stat-info">
+                <h3>{{ analytics.userStats.newRegistrations }}</h3>
+                <p>New This Month</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Content Statistics -->
+    <div class="stats-section">
+      <h2>
+        <mat-icon>inventory</mat-icon>
+        Content Statistics
+      </h2>
+      <div class="stats-grid content-grid">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">rate_review</mat-icon>
+              <div class="stat-info">
+                <h3>{{ analytics.contentStats.totalReviews }}</h3>
+                <p>Total Reviews</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">star</mat-icon>
+              <div class="stat-info">
+                <h3>{{ analytics.contentStats.totalRatings }}</h3>
+                <p>Total Ratings</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">sports_esports</mat-icon>
+              <div class="stat-info">
+                <h3>{{ analytics.contentStats.gameCount }}</h3>
+                <p>Games</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">menu_book</mat-icon>
+              <div class="stat-info">
+                <h3>{{ analytics.contentStats.bookCount }}</h3>
+                <p>Books</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">movie</mat-icon>
+              <div class="stat-info">
+                <h3>{{ analytics.contentStats.movieCount }}</h3>
+                <p>Movies</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">live_tv</mat-icon>
+              <div class="stat-info">
+                <h3>{{ analytics.contentStats.webSeriesCount }}</h3>
+                <p>Web Series</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Engagement Metrics -->
+    <div class="stats-section">
+      <h2>
+        <mat-icon>trending_up</mat-icon>
+        Engagement Metrics
+      </h2>
+      <div class="stats-grid engagement-grid">
+        <mat-card class="stat-card large">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">star_rate</mat-icon>
+              <div class="stat-info">
+                <h3>{{ analytics.engagementMetrics.averageRating }}</h3>
+                <p>Average Rating</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card large">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">person</mat-icon>
+              <div class="stat-info">
+                <h3>{{ analytics.engagementMetrics.reviewsPerUser }}</h3>
+                <p>Reviews Per User</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card large">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">whatshot</mat-icon>
+              <div class="stat-info">
+                <h3>{{ analytics.engagementMetrics.mostActiveCategory | titlecase }}</h3>
+                <p>Most Active Category</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+      <h2>
+        <mat-icon>bar_chart</mat-icon>
+        Visual Analytics
+      </h2>
+      <div class="charts-grid">
+        <mat-card class="chart-card">
+          <mat-card-header>
+            <mat-card-title>User Growth Trend</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <canvas #userGrowthChart width="400" height="200"></canvas>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="chart-card">
+          <mat-card-header>
+            <mat-card-title>Content Distribution</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <canvas #contentDistributionChart width="400" height="200"></canvas>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
