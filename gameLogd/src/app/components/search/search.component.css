@@ -4,7 +4,7 @@
   min-height: calc(100vh - 64px);
   position: relative;
   overflow: hidden;
-  background: #F9F5F0;
+  background: linear-gradient(135deg, #F5F9F7 0%, #E2F0E9 40%, #8FD1B3 100%);
 }
 
 /* Subtle background overlay */
@@ -49,10 +49,10 @@
   text-align: center;
   margin: 2rem 0;
   padding: 2rem;
-  background: rgba(139, 111, 71, 0.1);
+  background: rgba(0, 103, 71, 0.1);
   border-radius: 16px;
-  border: 1px solid rgba(139, 111, 71, 0.2);
-  color: #8B6F47;
+  border: 1px solid rgba(0, 103, 71, 0.2);
+  color: #006747;
   font-size: 1.1rem;
   position: relative;
   z-index: 1;
@@ -81,10 +81,10 @@
   cursor: pointer;
   background: #FFFFFF;
   border-radius: 16px;
-  border: 1px solid #D4A574;
+  border: 1px solid rgba(0, 103, 71, 0.2);
   overflow: hidden;
   position: relative;
-  box-shadow: 0 2px 8px rgba(139, 111, 71, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 103, 71, 0.1);
 }
 
 .game-card::before {
@@ -95,9 +95,9 @@
   right: 0;
   bottom: 0;
   background: linear-gradient(120deg, 
-    rgba(139, 111, 71, 0.05),
-    rgba(139, 111, 71, 0.02) 30%,
-    rgba(212, 165, 116, 0.1) 70%);
+    rgba(0, 103, 71, 0.05),
+    rgba(0, 103, 71, 0.02) 30%,
+    rgba(59, 170, 128, 0.1) 70%);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -107,8 +107,8 @@
 }
 
 .game-card:hover {
-  border-color: #8B6F47;
-  box-shadow: 0 4px 16px rgba(139, 111, 71, 0.2);
+  border-color: #006747;
+  box-shadow: 0 4px 16px rgba(0, 103, 71, 0.2);
   transform: translateY(-2px);
   transition: all 0.3s ease;
 }
@@ -133,7 +133,7 @@ mat-card-content h3 {
   margin: 0 0 0.75rem 0;
   font-size: 1.1rem;
   font-weight: 500;
-  color: #8B6F47;
+  color: #006747;
 }
 
 a {
@@ -146,13 +146,13 @@ a {
   background: #FFFFFF;
   border-radius: 12px;
   padding: 1.25rem;
-  border: 1px solid #D4A574;
+  border: 1px solid rgba(0, 103, 71, 0.2);
 }
 
 .search-title {
   font-size: 2rem;
   margin-bottom: 2rem;
-  color: #8B6F47;
+  color: #006747;
   font-weight: 600;
   text-align: center;
   position: relative;
@@ -173,7 +173,7 @@ a {
   position: absolute;
   width: 4px;
   height: 4px;
-  background: rgba(139, 111, 71, 0.2);
+  background: rgba(0, 103, 71, 0.2);
   border-radius: 50%;
   animation: float 8s infinite;
 }
