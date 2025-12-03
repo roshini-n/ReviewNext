@@ -38,6 +38,50 @@
     </mat-card>
   </div>
 
+  <!-- Search and Filter Section -->
+  <div class="search-filter-section" *ngIf="!isLoading">
+    <mat-card class="filter-card">
+      <mat-card-content>
+        <div class="filter-container">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Search categories...</mat-label>
+            <input
+              matInput
+              [(ngModel)]="searchQuery"
+              (keyup.enter)="applyFilter()"
+              placeholder="Search by category name"
+            >
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="category-select">
+            <mat-label>Select Category</mat-label>
+            <mat-select [(ngModel)]="selectedCategory">
+              <mat-option *ngFor="let category of categories" [value]="category.value">
+                <mat-icon>{{ category.icon }}</mat-icon>
+                {{ category.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" (click)="applyFilter()" class="filter-btn">
+            <mat-icon>filter_list</mat-icon>
+            Apply Filter
+          </button>
+
+          <button mat-raised-button (click)="clearFilter()" class="clear-btn">
+            <mat-icon>clear</mat-icon>
+            Clear
+          </button>
+        </div>
+        <p class="filter-hint" *ngIf="selectedCategory !== 'all' || searchQuery.trim()">
+          <mat-icon>info</mat-icon>
+          Click "Apply Filter" to navigate to your selected category
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
   <div class="categories-section" *ngIf="!isLoading">
     <h3 class="categories-title">Browse by Category</h3>
     <div class="categories-grid">

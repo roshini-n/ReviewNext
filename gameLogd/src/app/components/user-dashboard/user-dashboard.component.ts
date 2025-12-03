@@ -4,6 +4,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
@@ -33,6 +37,10 @@ import { combineLatest, Subscription } from 'rxjs';
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    FormsModule,
     RouterModule
   ],
   templateUrl: './user-dashboard.component.html',
@@ -54,6 +62,19 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   isAdmin: boolean = false;
   private reviewChangeSubscription?: Subscription;
   private currentUserId?: string;
+
+  // Search and filter properties
+  searchQuery: string = '';
+  selectedCategory: string = 'all';
+  categories = [
+    { value: 'all', label: 'All Categories', icon: 'category' },
+    { value: 'games', label: 'Games', icon: 'sports_esports' },
+    { value: 'books', label: 'Books', icon: 'menu_book' },
+    { value: 'movies', label: 'Movies', icon: 'movie' },
+    { value: 'electronic-gadgets', label: 'Gadgets', icon: 'devices' },
+    { value: 'beauty-products', label: 'Beauty', icon: 'spa' },
+    { value: 'web-series', label: 'Web Series', icon: 'live_tv' }
+  ];
 
   constructor(
     private authService: AuthService,
@@ -177,5 +198,40 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
 
   navigateToCategory(category: string): void {
     this.router.navigate([category]);
+  }
+
+  applyFilter(): void {
+    // If a specific category is selected, navigate to that category with optional search query
+    if (this.selectedCategory && this.selectedCategory !== 'all') {
+      if (this.searchQuery.trim()) {
+        // Navigate to category-specific search with query
+        const searchRoutes: { [key: string]: string } = {
+          'games': '/search',
+          'books': '/book-search',
+          'movies': '/movie-search',
+          'beauty-products': '/beauty-product-search',
+          'web-series': '/web-series-search',
+          'electronic-gadgets': '/electronic-gadget-search'
+        };
+        
+        const searchRoute = searchRoutes[this.selectedCategory];
+        if (searchRoute) {
+          this.router.navigate([searchRoute], { queryParams: { q: this.searchQuery } });
+        } else {
+          this.router.navigate([this.selectedCategory]);
+        }
+      } else {
+        // Navigate to category page without search
+        this.router.navigate([this.selectedCategory]);
+      }
+    } else if (this.searchQuery.trim()) {
+      // If no specific category but search query exists, do global search
+      this.router.navigate(['/search-all'], { queryParams: { q: this.searchQuery } });
+    }
+  }
+
+  clearFilter(): void {
+    this.searchQuery = '';
+    this.selectedCategory = 'all';
   }
 } 
