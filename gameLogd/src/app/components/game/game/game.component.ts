@@ -7,6 +7,7 @@ import { CarouselModule } from 'primeng/carousel';
 import { GameFirebaseService } from '../../../services/gameFirebase.service';
 import { Game } from '../../../models/game.model';
 import { AuthService } from '../../../services/auth.service';
+import { AddToListButtonComponent } from '../../shared/add-to-list-button/add-to-list-button.component';
 
 @Component({
   selector: 'app-game',
@@ -16,7 +17,8 @@ import { AuthService } from '../../../services/auth.service';
     RouterModule,
     MatButtonModule,
     MatIconModule,
-    CarouselModule
+    CarouselModule,
+    AddToListButtonComponent
   ],
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css']

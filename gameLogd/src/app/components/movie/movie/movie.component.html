@@ -18,6 +18,10 @@
   <p-carousel [value]="trendingMovies" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
     <ng-template let-movie pTemplate="item">
       <div class="movie-card">
+        <app-add-to-list-button 
+          [itemId]="movie.id" 
+          [itemType]="'movie'">
+        </app-add-to-list-button>
         <a [routerLink]="['/movies', movie.id]">
           <img class="thumbnail" [src]="movie.imageUrl" [alt]="movie.title">
           <div class="movie-info">
@@ -33,6 +37,10 @@
   <p-carousel [value]="topRatedMovies" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
     <ng-template let-movie pTemplate="item">
       <div class="movie-card">
+        <app-add-to-list-button 
+          [itemId]="movie.id" 
+          [itemType]="'movie'">
+        </app-add-to-list-button>
         <a [routerLink]="['/movies', movie.id]">
           <img class="thumbnail" [src]="movie.imageUrl" [alt]="movie.title">
           <div class="movie-info">

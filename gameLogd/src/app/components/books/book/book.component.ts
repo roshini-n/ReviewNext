@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../../services/auth.service';
+import { AddToListButtonComponent } from '../../shared/add-to-list-button/add-to-list-button.component';
 
 @Component({
   selector: 'app-book',
@@ -19,7 +20,8 @@ import { AuthService } from '../../../services/auth.service';
     RouterModule,
     MatCardModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    AddToListButtonComponent
   ],
   templateUrl: './book.component.html',
   styleUrl: './book.component.css',

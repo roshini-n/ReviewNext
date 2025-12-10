@@ -55,6 +55,7 @@
 .movie-card {
   padding: 10px;
   height: 100%;
+  position: relative;
 }
 
 .movie-card mat-card {

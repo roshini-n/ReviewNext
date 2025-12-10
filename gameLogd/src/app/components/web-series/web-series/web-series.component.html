@@ -15,6 +15,10 @@
   <p-carousel [value]="trendingWebSeries" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
     <ng-template let-series pTemplate="item">
       <div class="web-series-card">
+        <app-add-to-list-button 
+          [itemId]="series.id" 
+          [itemType]="'webSeries'">
+        </app-add-to-list-button>
         <a [routerLink]="['/web-series', series.id]">
           <img class="thumbnail" [src]="series.imageUrl" [alt]="series.title">
           <div class="series-info">
@@ -30,6 +34,10 @@
   <p-carousel [value]="topRatedWebSeries" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
     <ng-template let-series pTemplate="item">
       <div class="web-series-card">
+        <app-add-to-list-button 
+          [itemId]="series.id" 
+          [itemType]="'webSeries'">
+        </app-add-to-list-button>
         <a [routerLink]="['/web-series', series.id]">
           <img class="thumbnail" [src]="series.imageUrl" [alt]="series.title">
           <div class="series-info">

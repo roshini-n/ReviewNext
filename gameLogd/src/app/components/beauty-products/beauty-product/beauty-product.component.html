@@ -15,6 +15,10 @@
   <p-carousel [value]="trendingBeautyProducts" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
     <ng-template let-product pTemplate="item">
       <div class="beauty-product-card">
+        <app-add-to-list-button 
+          [itemId]="product.id" 
+          [itemType]="'beautyProduct'">
+        </app-add-to-list-button>
         <a [routerLink]="['/beauty-products', product.id]">
           <img class="thumbnail" [src]="product.imageUrl" [alt]="product.title">
           <div class="product-info">
@@ -30,6 +34,10 @@
   <p-carousel [value]="topRatedBeautyProducts" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
     <ng-template let-product pTemplate="item">
       <div class="beauty-product-card">
+        <app-add-to-list-button 
+          [itemId]="product.id" 
+          [itemType]="'beautyProduct'">
+        </app-add-to-list-button>
         <a [routerLink]="['/beauty-products', product.id]">
           <img class="thumbnail" [src]="product.imageUrl" [alt]="product.title">
           <div class="product-info">

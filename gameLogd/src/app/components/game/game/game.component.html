@@ -21,6 +21,10 @@
              [numScroll]="5">
     <ng-template let-game pTemplate="item">
       <div class="game-card">
+        <app-add-to-list-button 
+          [itemId]="game.id" 
+          [itemType]="'game'">
+        </app-add-to-list-button>
         <a [routerLink]="['/games', game.id]">
           <img class="thumbnail" [src]="game.imageUrl" [alt]="game.title">
           <div class="game-info">
@@ -39,6 +43,10 @@
              [numScroll]="5">
     <ng-template let-game pTemplate="item">
       <div class="game-card">
+        <app-add-to-list-button 
+          [itemId]="game.id" 
+          [itemType]="'game'">
+        </app-add-to-list-button>
         <a [routerLink]="['/games', game.id]">
           <img class="thumbnail" [src]="game.imageUrl" [alt]="game.title">
           <div class="game-info">

@@ -9,6 +9,7 @@ import { MovieFirebaseService } from '../../../services/movieFirebase.service';
 import { Movie } from '../../../models/movie.model';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
+import { AddToListButtonComponent } from '../../shared/add-to-list-button/add-to-list-button.component';
 
 @Component({
   selector: 'app-movie',
@@ -19,7 +20,8 @@ import { Router } from '@angular/router';
     MatButtonModule,
     MatIconModule,
     MatCardModule,
-    CarouselModule
+    CarouselModule,
+    AddToListButtonComponent
   ],
   templateUrl: './movie.component.html',
   styleUrls: ['./movie.component.css']

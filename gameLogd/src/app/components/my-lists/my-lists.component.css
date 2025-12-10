@@ -10,6 +10,15 @@
     background: linear-gradient(135deg, #F5F9F7 0%, #E2F0E9 40%, #8FD1B3 100%);
 }
 
+/* Override PrimeNG splitter black background */
+::ng-deep .p-splitter {
+    background: transparent !important;
+}
+
+::ng-deep .p-splitter-panel {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%) !important;
+}
+
 .scrollable {
     overflow-y:scroll;
 }
@@ -23,7 +32,7 @@
     width: 100%;
     font-size: large;
     text-align: center;
-    border-bottom: solid 1px rgb(111, 107, 107);
+    border-bottom: solid 1px #4CAF50;
 }
 
 .list-card:hover {
@@ -40,9 +49,10 @@
     margin-right: 10px;
 }
 
-.create-list-button {
+/* Create List Button - Commented out for layout change */
+/* .create-list-button {
     width: 25%;
-}
+} */
 
 .edit-list-button {
     width: 95%;
@@ -59,8 +69,8 @@
 }
 
 .game-card {
-    border: 1px solid #222;
-    background-color: #1a1a1a;
+    border: 1px solid #4CAF50;
+    background-color: #2e7d32;
     transition: transform 0.2s, box-shadow 0.2s;
     overflow: hidden;
     border-radius: 4px;
@@ -96,7 +106,7 @@ text-overflow: ellipsis;
 .game-developer {
 margin: 0 0 5px 0;
 font-size: 0.85rem;
-color: #bbb;
+color: #a5d6a7;
 }
 
 img.thumbnail {

@@ -7,6 +7,7 @@ import { CarouselModule } from 'primeng/carousel';
 import { WebSeriesFirebaseService } from '../../../services/webSeriesFirebase.service';
 import { WebSeries } from '../../../models/web-series.model';
 import { AuthService } from '../../../services/auth.service';
+import { AddToListButtonComponent } from '../../shared/add-to-list-button/add-to-list-button.component';
 
 @Component({
   selector: 'app-web-series',
@@ -16,7 +17,8 @@ import { AuthService } from '../../../services/auth.service';
     RouterModule,
     MatButtonModule,
     MatIconModule,
-    CarouselModule
+    CarouselModule,
+    AddToListButtonComponent
   ],
   templateUrl: './web-series.component.html',
   styleUrls: ['./web-series.component.css']

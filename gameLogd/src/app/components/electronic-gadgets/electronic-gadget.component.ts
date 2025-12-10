@@ -7,6 +7,7 @@ import { CarouselModule } from 'primeng/carousel';
 import { ElectronicGadgetFirebaseService } from '../../services/electronicGadgetFirebase.service';
 import { ElectronicGadget } from '../../models/electronic-gadget.model';
 import { AuthService } from '../../services/auth.service';
+import { AddToListButtonComponent } from '../shared/add-to-list-button/add-to-list-button.component';
 
 @Component({
   selector: 'app-electronic-gadget',
@@ -16,7 +17,8 @@ import { AuthService } from '../../services/auth.service';
     RouterModule,
     MatButtonModule,
     MatIconModule,
-    CarouselModule
+    CarouselModule,
+    AddToListButtonComponent
   ],
   templateUrl: './electronic-gadget.component.html',
   styleUrls: ['./electronic-gadget.component.css']

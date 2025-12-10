@@ -1,0 +1,8 @@
+<button 
+  class="wishlist-button" 
+  (click)="toggleWishlist($event)"
+  [class.in-wishlist]="isInWishlist"
+  mat-icon-button
+  aria-label="Add to wishlist">
+  <mat-icon>{{ isInWishlist ? 'favorite' : 'favorite_border' }}</mat-icon>
+</button>

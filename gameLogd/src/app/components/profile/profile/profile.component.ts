@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, NgModule, OnInit, provideExperimentalZonelessChangeDetection } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
@@ -353,7 +352,6 @@ export class PasswordDialog {
   selector: 'image-dialog',
   templateUrl: 'image-dialog.html',
   imports: [
-    CommonModule,
     MatButtonModule, 
     MatDialogClose, 
     MatDialogContent, 

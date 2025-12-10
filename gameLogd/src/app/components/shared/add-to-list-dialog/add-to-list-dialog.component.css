@@ -1,0 +1,85 @@
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  gap: 20px;
+}
+
+.loading-container p {
+  color: #666;
+  margin: 0;
+}
+
+.wishlist-quick-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.wishlist-quick-button mat-icon {
+  margin-right: 8px;
+}
+
+.create-new-list-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.create-new-list-button mat-icon {
+  margin-right: 8px;
+}
+
+.no-lists {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.no-lists mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #ccc;
+  margin-bottom: 16px;
+}
+
+.no-lists p {
+  margin: 8px 0;
+}
+
+.no-lists .hint {
+  font-size: 14px;
+  color: #999;
+}
+
+.list-item {
+  cursor: pointer;
+  border-radius: 8px;
+  margin: 4px 0;
+  transition: background-color 0.2s ease;
+}
+
+.list-item:hover {
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+mat-dialog-content {
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+mat-list {
+  padding-top: 0;
+}
+
+h3[mat-subheader] {
+  color: #666;
+  font-weight: 500;
+  margin-bottom: 8px;
+}

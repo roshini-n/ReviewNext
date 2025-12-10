@@ -15,6 +15,10 @@
   <p-carousel [value]="trendingBooks" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
     <ng-template let-book pTemplate="item">
       <div class="book-card">
+        <app-add-to-list-button 
+          [itemId]="book.id" 
+          [itemType]="'book'">
+        </app-add-to-list-button>
         <a [routerLink]="['/books', book.id]">
           <img class="thumbnail" [src]="book.imageUrl" [alt]="book.title">
           <div class="book-info">
@@ -30,6 +34,10 @@
   <p-carousel [value]="topRatedBooks" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
     <ng-template let-book pTemplate="item">
       <div class="book-card">
+        <app-add-to-list-button 
+          [itemId]="book.id" 
+          [itemType]="'book'">
+        </app-add-to-list-button>
         <a [routerLink]="['/books', book.id]">
           <img class="thumbnail" [src]="book.imageUrl" [alt]="book.title">
           <div class="book-info">

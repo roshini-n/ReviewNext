@@ -15,6 +15,10 @@
       <p-carousel [value]="trendingElectronicGadgets" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
         <ng-template let-gadget pTemplate="item">
           <div class="electronic-gadget-card">
+            <app-add-to-list-button 
+              [itemId]="gadget.id" 
+              [itemType]="'gadget'">
+            </app-add-to-list-button>
             <a [routerLink]="['/electronic-gadgets', gadget.id]">
               <div class="custom-card">
                 <div class="card-image-wrapper">
@@ -34,6 +38,10 @@
   <p-carousel [value]="topRatedElectronicGadgets" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000">
     <ng-template let-gadget pTemplate="item">
       <div class="electronic-gadget-card">
+        <app-add-to-list-button 
+          [itemId]="gadget.id" 
+          [itemType]="'gadget'">
+        </app-add-to-list-button>
         <a [routerLink]="['/electronic-gadgets', gadget.id]">
           <div class="custom-card">
             <div class="card-image-wrapper">

@@ -1,0 +1,50 @@
+<h2 mat-dialog-title>Add to List</h2>
+
+<mat-dialog-content>
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading your lists...</p>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <button 
+      mat-raised-button 
+      color="accent" 
+      class="wishlist-quick-button"
+      (click)="addToWishlist()">
+      <mat-icon>favorite</mat-icon>
+      Add to Wishlist
+    </button>
+
+    <button 
+      mat-raised-button 
+      color="primary" 
+      class="create-new-list-button"
+      (click)="createNewList()">
+      <mat-icon>playlist_add</mat-icon>
+      Create New List
+    </button>
+
+    <mat-divider style="margin: 20px 0;"></mat-divider>
+
+    <div *ngIf="lists.length === 0" class="no-lists">
+      <mat-icon>playlist_add</mat-icon>
+      <p>You don't have any lists yet.</p>
+      <p class="hint">Create a list to organize items!</p>
+    </div>
+
+    <mat-list *ngIf="lists.length > 0">
+      <h3 mat-subheader>Or add to an existing list:</h3>
+      <mat-list-item *ngFor="let list of lists" (click)="addToList(list)" class="list-item">
+        <mat-icon matListItemIcon>list</mat-icon>
+        <div matListItemTitle>{{ list.title }}</div>
+        <div matListItemLine *ngIf="list.description">{{ list.description }}</div>
+        <mat-icon matListItemMeta>add</mat-icon>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+</mat-dialog-actions>
